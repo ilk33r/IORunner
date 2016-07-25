@@ -1,0 +1,394 @@
+//
+//  PopupWidget.swift
+//  IORunner/IOGUI
+//
+//  Created by ilker özcan on 14/07/16.
+//
+//
+
+#if os(Linux)
+	import Glibc
+#else
+	import Darwin
+#endif
+import Foundation
+
+public struct PopupWidget {
+	
+	public let widgetRows: Int = 0
+	
+	public enum GUIPopupTypes {
+		case CONFIRM
+		case SYNC_WAIT
+		case PROGRESS
+	}
+	
+	private var popuptype: GUIPopupTypes
+	private var popupContent: String
+	private var popupButtons: [String]
+	private var popupDelegate: MenuChoicesSelectionDelegate
+	/* ## Swift 3
+	private var mainWindow: OpaquePointer
+	private var shadowWindow: OpaquePointer?
+	*/
+	private var mainWindow: COpaquePointer
+	private var shadowWindow: COpaquePointer?
+	
+	/* ## Swift 3
+	private var popupWindow: OpaquePointer!
+	*/
+	private var popupWindow: COpaquePointer!
+	private var popupWidth: Int32 = 0
+	private var popupHeight: Int32 = 0
+	private var popupTop: Int32 = 0
+	private var popupLeft: Int32 = 0
+	private var currentSelectedButtonIdx = 0
+	private var hasShadow = false
+	private var progressSize: Int32 = 0
+	private var progressPercent: UInt = 0
+	
+	/* ## Swift 3
+	private var buttonWindows: [OpaquePointer]!
+	*/
+	private var buttonWindows: [COpaquePointer]!
+	
+	/* ## Swift 3
+	public init(popuptype: GUIPopupTypes, popupContent: String, popupButtons: [String], hasShadow: Bool, popupDelegate: MenuChoicesSelectionDelegate, mainWindow: OpaquePointer) {
+	*/
+	public init(popuptype: GUIPopupTypes, popupContent: String, popupButtons: [String], hasShadow: Bool, popupDelegate: MenuChoicesSelectionDelegate, mainWindow: COpaquePointer) {
+		
+		self.popuptype = popuptype
+		self.popupContent = popupContent
+		self.popupButtons = popupButtons
+		self.popupDelegate = popupDelegate
+		self.mainWindow = mainWindow
+		self.hasShadow = hasShadow
+		self.initWindows()
+	}
+	
+	mutating func initWindows() {
+		
+		if(!hasShadow) {
+			wclear(self.mainWindow)
+		}
+		
+		wmove(mainWindow, COLS, LINES)
+		popupWidth = (COLS / 4) * 3
+		popupHeight = (LINES / 4) * 2
+		popupLeft = (COLS - popupWidth) / 2
+		popupTop = (LINES - popupHeight) / 2
+		
+		if(hasShadow) {
+			
+			self.shadowWindow = subwin(mainWindow, popupHeight, popupWidth, popupTop + 1, popupLeft + 1)
+			/* ## Swift 3
+			wbkgd(self.shadowWindow, UInt32(COLOR_PAIR(WidgetUIColor.Background.rawValue)))
+			keypad(self.shadowWindow, true)
+			touchwin(self.shadowWindow)
+			wrefresh(self.shadowWindow)
+			*/
+			wbkgd(self.shadowWindow!, UInt32(COLOR_PAIR(WidgetUIColor.Background.rawValue)))
+			keypad(self.shadowWindow!, true)
+			touchwin(self.shadowWindow!)
+			wrefresh(self.shadowWindow!)
+		}
+		
+		self.popupWindow = subwin(mainWindow, popupHeight, popupWidth, Int32(popupTop), Int32(popupLeft))
+		wbkgd(self.popupWindow, UInt32(COLOR_PAIR(WidgetUIColor.FooterBackground.rawValue)))
+		keypad(self.popupWindow, true)
+		
+		if(popuptype == .PROGRESS) {
+			/* ## Swift 3
+			self.buttonWindows = [OpaquePointer]()
+			*/
+			self.buttonWindows = [COpaquePointer]()
+		}
+	}
+	
+	mutating func draw() {
+		
+		if(self.popupWindow == nil) {
+			
+			return
+		}
+		
+		wmove(self.popupWindow, 1, 2)
+		waddstr(self.popupWindow, self.popupContent)
+		wborder(self.popupWindow, 0, 0, 0, 0, 0, 0, 0, 0)
+		touchwin(self.popupWindow)
+		wrefresh(self.popupWindow)
+		
+		drawButtons()
+		drawProgress()
+	}
+	
+	private mutating func drawButtons() {
+		
+		if(popuptype == .CONFIRM) {
+		
+			/* ## Swift 3
+			self.buttonWindows = [OpaquePointer]()
+			*/
+			self.buttonWindows = [COpaquePointer]()
+			
+			let buttonSizes = calculatePopupButtonWidth()
+			
+			let buttonTop = popupHeight + popupTop - 4
+			var currentButtonLeft = buttonSizes.1 + popupLeft
+			var btnIdx = 0
+			
+			for buttonData in popupButtons {
+				
+				let currentButtonShadowWindow = subwin(mainWindow, 2, buttonSizes.0, buttonTop + 1, currentButtonLeft + 1)
+				wbkgd(currentButtonShadowWindow, UInt32(COLOR_PAIR(WidgetUIColor.Background.rawValue)))
+				wrefresh(currentButtonShadowWindow)
+				
+				let currentButtonWindow = subwin(mainWindow, 2, buttonSizes.0, buttonTop, currentButtonLeft)
+				wbkgd(currentButtonWindow, UInt32(COLOR_PAIR(WidgetUIColor.ButtonDanger.rawValue)))
+				
+				let buttonSpace = (buttonSizes.0 - Int32(buttonData.characters.count)) / 2
+				let buttonSpaceString = String(count: Int(buttonSpace), repeatedValue: Character(" "))
+				let buttonText = "\(buttonSpaceString)\(buttonData)\n"
+				wborder(currentButtonWindow, 1, 1, 1, 1, 1, 1, 1, 1)
+				waddstr(currentButtonWindow, buttonText)
+				
+				if(currentSelectedButtonIdx == btnIdx) {
+					
+					wattrset(currentButtonWindow, COLOR_PAIR(WidgetUIColor.ButtonDanger.rawValue))
+				}else{
+					wattrset(currentButtonWindow, COLOR_PAIR(WidgetUIColor.ButtonDangerSelected.rawValue))
+				}
+				mvwhline(currentButtonWindow, 1, 1, 0, buttonSizes.0 - 2)
+				
+				
+				wrefresh(currentButtonWindow)
+				/* ## Swift 3
+				self.buttonWindows.append(currentButtonShadowWindow!)
+				self.buttonWindows.append(currentButtonWindow!)
+				*/
+				self.buttonWindows.append(currentButtonShadowWindow)
+				self.buttonWindows.append(currentButtonWindow)
+				
+				currentButtonLeft += buttonSizes.0 + buttonSizes.1 + buttonSizes.1
+				btnIdx += 1
+			}
+		}
+	}
+	
+	func calculatePopupButtonWidth() -> (Int32, Int32) {
+		
+		var minTextWidth: Int32 = 0
+		for buttonTexts in popupButtons {
+			
+			let buttonTextCharacterCount = buttonTexts.characters.count
+			if(minTextWidth < Int32(buttonTextCharacterCount)) {
+				
+				minTextWidth = Int32(buttonTextCharacterCount)
+			}
+		}
+		
+		minTextWidth += 3
+		var buttonSpaces: Int32 = 0
+		
+		let allButtonWidth: Int32 = Int32(popupButtons.count) * minTextWidth
+		if(allButtonWidth < popupWidth) {
+			
+			let spaceLeft = popupWidth - allButtonWidth
+			buttonSpaces = (spaceLeft / Int32(popupButtons.count)) / 2
+		}
+		
+		return (minTextWidth, buttonSpaces)
+	}
+	
+	private mutating func drawProgress() {
+		
+		if(popuptype == .PROGRESS) {
+			
+			/* ## Swift 3
+			self.buttonWindows = [OpaquePointer]()
+			*/
+			self.buttonWindows = [COpaquePointer]()
+			
+			progressSize = popupWidth - 2
+			
+			if(self.buttonWindows.count == 0) {
+				
+				let progressTop = popupHeight + popupTop - 4
+				let progressLeft = popupLeft + 1
+				let progressWindow = subwin(mainWindow, 1, progressSize, progressTop, progressLeft)
+				wbkgd(progressWindow, UInt32(COLOR_PAIR(WidgetUIColor.Progress.rawValue)))
+				wrefresh(progressWindow)
+				
+				/* ## Swift 3
+				self.buttonWindows.append(progressWindow!)
+				*/
+				self.buttonWindows.append(progressWindow)
+			}else{
+				
+				wclear(self.buttonWindows[0])
+			}
+			
+			let progressPercentWidth = self.calculateProgressPercentWidth()
+			wmove(self.buttonWindows[0], 0, 0)
+			wattrset(self.buttonWindows[0], COLOR_PAIR(WidgetUIColor.ProgressBar.rawValue))
+			var stringWrited = false
+			let percentString = "\(self.progressPercent) %"
+			let percentStringStartPos = (progressSize - percentString.characters.count) / 2
+			let stringEndPos = percentStringStartPos + percentString.characters.count
+			
+			for percent in 0..<progressPercentWidth {
+				
+				wmove(self.buttonWindows[0], 0, percent)
+				
+				if(percent > percentStringStartPos && percent < stringEndPos) {
+					continue
+				}
+				
+				if(percent == percentStringStartPos) {
+				
+					wattrset(self.buttonWindows[0], COLOR_PAIR(WidgetUIColor.ProgressText.rawValue))
+					waddstr(self.buttonWindows[0], percentString)
+					stringWrited = true
+				}else{
+				
+					wattrset(self.buttonWindows[0], COLOR_PAIR(WidgetUIColor.ProgressBar.rawValue))
+					waddch(self.buttonWindows[0], 32)
+				}
+			}
+			
+			
+			if(!stringWrited) {
+				
+				wattrset(self.buttonWindows[0], COLOR_PAIR(WidgetUIColor.Progress.rawValue))
+				let spaceString = String(count: Int((percentStringStartPos - progressPercentWidth)), repeatedValue: Character(" "))
+				let percentDisplayString = "\(spaceString)\(percentString)"
+				waddstr(self.buttonWindows[0], percentDisplayString)
+			}
+			wrefresh(self.buttonWindows[0])
+		}
+	}
+	
+	private mutating func calculateProgressPercentWidth() -> Int32 {
+		
+		let currentCalculatesProgressSize = (self.progressPercent * UInt(self.progressSize)) / 100
+		let currentProgressSize: Int32
+		
+		if(currentCalculatesProgressSize > 100) {
+			
+			currentProgressSize = 100
+		}else if(currentCalculatesProgressSize < 0) {
+			
+			currentProgressSize = 0
+		}else{
+			
+			currentProgressSize = Int32(currentCalculatesProgressSize)
+		}
+		
+		return currentProgressSize
+	}
+	
+	public mutating func setPercent(newPercent: UInt) {
+		
+		self.progressPercent = newPercent
+		drawProgress()
+	}
+	
+	mutating func resize() {
+		
+		deinitWidget()
+		initWindows()
+		draw()
+	}
+	
+	mutating func deinitWidget() {
+		
+		if(self.popupWindow != nil) {
+			
+			wclear(popupWindow)
+			delwin(popupWindow)
+			self.popupWindow = nil
+		}
+		
+		if(self.hasShadow && self.shadowWindow != nil) {
+			
+			/* ## Swift 3
+			wclear(shadowWindow)
+			delwin(shadowWindow)
+			*/
+			wclear(shadowWindow!)
+			delwin(shadowWindow!)
+			self.shadowWindow = nil
+		}
+		
+		if(self.buttonWindows != nil) {
+			
+			for buttonWindow in buttonWindows {
+				
+				wclear(buttonWindow)
+				delwin(buttonWindow)
+			}
+			
+			self.buttonWindows = nil
+		}
+		
+		wrefresh(mainWindow)
+	}
+	
+	mutating func keyEvent(keyCode: Int32) {
+		
+		if(keyCode == KEY_ENTER || keyCode == 13) {
+			
+			popupDelegate(selectedChoiceIdx: currentSelectedButtonIdx)
+		}else if(keyCode == KEY_LEFT) {
+			
+			if(popuptype == .CONFIRM) {
+				
+				let newKeyIdx = currentSelectedButtonIdx - 1
+				if(newKeyIdx >= 0) {
+					
+					currentSelectedButtonIdx = newKeyIdx
+				}else{
+					
+					currentSelectedButtonIdx = popupButtons.count - 1
+				}
+				
+				if(self.buttonWindows != nil) {
+					
+					for buttonWindow in buttonWindows {
+						
+						wclear(buttonWindow)
+						delwin(buttonWindow)
+					}
+					
+					self.buttonWindows = nil
+				}
+				drawButtons()
+			}
+		}else if(keyCode == KEY_RIGHT) {
+			
+			if(popuptype == .CONFIRM) {
+				
+				let newKeyIdx = currentSelectedButtonIdx + 1
+				if(newKeyIdx < popupButtons.count) {
+					
+					currentSelectedButtonIdx = newKeyIdx
+				}else{
+					
+					currentSelectedButtonIdx = 0
+				}
+				
+				if(self.buttonWindows != nil) {
+					
+					for buttonWindow in buttonWindows {
+						
+						wclear(buttonWindow)
+						delwin(buttonWindow)
+					}
+					
+					self.buttonWindows = nil
+				}
+				drawButtons()
+			}
+		}
+	}
+}

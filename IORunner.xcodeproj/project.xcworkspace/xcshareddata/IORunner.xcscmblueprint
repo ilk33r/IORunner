@@ -1,0 +1,30 @@
+{
+  "DVTSourceControlWorkspaceBlueprintPrimaryRemoteRepositoryKey" : "F3948E8A48D077B0A7A13A99B96A6CCAA368157C",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyRepositoryLocationsKey" : {
+
+  },
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyStatesKey" : {
+    "F3948E8A48D077B0A7A13A99B96A6CCAA368157C" : 0,
+    "141327B13CF6F03AE8A8020DD61847B96EC5D0D6" : 0
+  },
+  "DVTSourceControlWorkspaceBlueprintIdentifierKey" : "8C23EFED-356B-48B8-9DF7-5CBF57835C8C",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyPathsKey" : {
+    "F3948E8A48D077B0A7A13A99B96A6CCAA368157C" : "IOProcessChecker\/",
+    "141327B13CF6F03AE8A8020DD61847B96EC5D0D6" : "IOProcessChecker\/ini\/"
+  },
+  "DVTSourceControlWorkspaceBlueprintNameKey" : "IORunner",
+  "DVTSourceControlWorkspaceBlueprintVersion" : 204,
+  "DVTSourceControlWorkspaceBlueprintRelativePathToProjectKey" : "IORunner.xcodeproj",
+  "DVTSourceControlWorkspaceBlueprintRemoteRepositoriesKey" : [
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/ilk33r\/ini",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "141327B13CF6F03AE8A8020DD61847B96EC5D0D6"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/bitbucket.org\/ilk33r\/processchecker.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "F3948E8A48D077B0A7A13A99B96A6CCAA368157C"
+    }
+  ]
+}
