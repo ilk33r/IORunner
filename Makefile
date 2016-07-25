@@ -67,7 +67,22 @@ dist-create-zip:
 	
 dist: dist-create-zip $(MODULE_NAME)Installer
 	
-.PHONY: all clean dist-clean extensions dist
+source-dist: dist-clean
+	@mkdir -p $(BUILD_ROOT_DIR)/$(MODULE_NAME)
+	@cp -r $(SOURCE_ROOT_DIR)/$(MODULE_1_NAME) $(BUILD_ROOT_DIR)/$(MODULE_NAME)
+	@cp -r $(SOURCE_ROOT_DIR)/$(MODULE_2_NAME) $(BUILD_ROOT_DIR)/$(MODULE_NAME)
+	@cp -r $(SOURCE_ROOT_DIR)/$(MODULE_3_NAME) $(BUILD_ROOT_DIR)/$(MODULE_NAME)
+	@cp -r $(SOURCE_ROOT_DIR)/$(MODULE_4_NAME) $(BUILD_ROOT_DIR)/$(MODULE_NAME)
+	@cp -r $(SOURCE_ROOT_DIR)/$(MODULE_NAME)Installer $(BUILD_ROOT_DIR)/$(MODULE_NAME)
+	@cp -r $(SOURCE_ROOT_DIR)/Extensions $(BUILD_ROOT_DIR)/$(MODULE_NAME)
+	@cp $(SOURCE_ROOT_DIR)/Makefile $(BUILD_ROOT_DIR)/$(MODULE_NAME)
+	@cp $(SOURCE_ROOT_DIR)/LICENSE $(BUILD_ROOT_DIR)/$(MODULE_NAME)
+	@cp -r $(SOURCE_ROOT_DIR)/$(MODULE_NAME).xcodeproj $(BUILD_ROOT_DIR)/$(MODULE_NAME)
+	@mv $(BUILD_ROOT_DIR)/$(MODULE_NAME) $(SOURCE_ROOT_DIR)/$(MODULE_NAME)-Src
+	@tar -cvzf $(BUILD_ROOT_DIR)/$(MODULE_NAME)-Source.tar.gz $(MODULE_NAME)-Src
+	@rm -rf $(SOURCE_ROOT_DIR)/$(MODULE_NAME)-Src
+	
+.PHONY: all extensions clean dist-clean  dist source-dist
 
 
 	

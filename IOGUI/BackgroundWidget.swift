@@ -15,22 +15,30 @@ import Foundation
 
 public struct BackgroundWidget {
 	
-	/* ## Swift 3
-	private var mainWindow: OpaquePointer
-	private var mainBgWindow: OpaquePointer!
-	*/
 	
-	private var mainWindow: COpaquePointer
-	private var mainBgWindow: COpaquePointer!
-
-	/* ## Swift 3
+#if swift(>=3)
+	
+	private var mainWindow: OpaquePointer
+	
+	private var mainBgWindow: OpaquePointer!
+	
 	public init(mainWindow: OpaquePointer) {
-	*/
-	public init(mainWindow: COpaquePointer) {
 		
 		self.mainWindow = mainWindow
 		initWindows()
 	}
+#elseif swift(>=2.2) && os(OSX)
+	
+	private var mainWindow: COpaquePointer
+	
+	private var mainBgWindow: COpaquePointer!
+	
+	public init(mainWindow: COpaquePointer) {
+	
+		self.mainWindow = mainWindow
+		initWindows()
+	}
+#endif
 	
 	mutating func initWindows() {
 		

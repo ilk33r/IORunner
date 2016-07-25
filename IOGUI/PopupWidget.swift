@@ -27,17 +27,19 @@ public struct PopupWidget {
 	private var popupContent: String
 	private var popupButtons: [String]
 	private var popupDelegate: MenuChoicesSelectionDelegate
-	/* ## Swift 3
+#if swift(>=3)
+	
 	private var mainWindow: OpaquePointer
 	private var shadowWindow: OpaquePointer?
-	*/
+	
+	private var popupWindow: OpaquePointer!
+#elseif swift(>=2.2) && os(OSX)
+	
 	private var mainWindow: COpaquePointer
 	private var shadowWindow: COpaquePointer?
 	
-	/* ## Swift 3
-	private var popupWindow: OpaquePointer!
-	*/
 	private var popupWindow: COpaquePointer!
+#endif
 	private var popupWidth: Int32 = 0
 	private var popupHeight: Int32 = 0
 	private var popupTop: Int32 = 0
@@ -47,14 +49,24 @@ public struct PopupWidget {
 	private var progressSize: Int32 = 0
 	private var progressPercent: UInt = 0
 	
-	/* ## Swift 3
+#if swift(>=3)
+	
 	private var buttonWindows: [OpaquePointer]!
-	*/
+	
+	public init(popuptype: GUIPopupTypes, popupContent: String, popupButtons: [String], hasShadow: Bool, popupDelegate: MenuChoicesSelectionDelegate, mainWindow: OpaquePointer) {
+		
+		self.popuptype = popuptype
+		self.popupContent = popupContent
+		self.popupButtons = popupButtons
+		self.popupDelegate = popupDelegate
+		self.mainWindow = mainWindow
+		self.hasShadow = hasShadow
+		self.initWindows()
+	}
+#elseif swift(>=2.2) && os(OSX)
+	
 	private var buttonWindows: [COpaquePointer]!
 	
-	/* ## Swift 3
-	public init(popuptype: GUIPopupTypes, popupContent: String, popupButtons: [String], hasShadow: Bool, popupDelegate: MenuChoicesSelectionDelegate, mainWindow: OpaquePointer) {
-	*/
 	public init(popuptype: GUIPopupTypes, popupContent: String, popupButtons: [String], hasShadow: Bool, popupDelegate: MenuChoicesSelectionDelegate, mainWindow: COpaquePointer) {
 		
 		self.popuptype = popuptype
@@ -65,6 +77,7 @@ public struct PopupWidget {
 		self.hasShadow = hasShadow
 		self.initWindows()
 	}
+#endif
 	
 	mutating func initWindows() {
 		
@@ -81,12 +94,6 @@ public struct PopupWidget {
 		if(hasShadow) {
 			
 			self.shadowWindow = subwin(mainWindow, popupHeight, popupWidth, popupTop + 1, popupLeft + 1)
-			/* ## Swift 3
-			wbkgd(self.shadowWindow, UInt32(COLOR_PAIR(WidgetUIColor.Background.rawValue)))
-			keypad(self.shadowWindow, true)
-			touchwin(self.shadowWindow)
-			wrefresh(self.shadowWindow)
-			*/
 			wbkgd(self.shadowWindow!, UInt32(COLOR_PAIR(WidgetUIColor.Background.rawValue)))
 			keypad(self.shadowWindow!, true)
 			touchwin(self.shadowWindow!)
@@ -98,10 +105,13 @@ public struct PopupWidget {
 		keypad(self.popupWindow, true)
 		
 		if(popuptype == .PROGRESS) {
-			/* ## Swift 3
+		#if swift(>=3)
+			
 			self.buttonWindows = [OpaquePointer]()
-			*/
+		#elseif swift(>=2.2) && os(OSX)
+			
 			self.buttonWindows = [COpaquePointer]()
+		#endif
 		}
 	}
 	
@@ -126,10 +136,13 @@ public struct PopupWidget {
 		
 		if(popuptype == .CONFIRM) {
 		
-			/* ## Swift 3
+		#if swift(>=3)
+			
 			self.buttonWindows = [OpaquePointer]()
-			*/
+		#elseif swift(>=2.2) && os(OSX)
+			
 			self.buttonWindows = [COpaquePointer]()
+		#endif
 			
 			let buttonSizes = calculatePopupButtonWidth()
 			
@@ -147,7 +160,13 @@ public struct PopupWidget {
 				wbkgd(currentButtonWindow, UInt32(COLOR_PAIR(WidgetUIColor.ButtonDanger.rawValue)))
 				
 				let buttonSpace = (buttonSizes.0 - Int32(buttonData.characters.count)) / 2
+			#if swift(>=3)
+				
+				let buttonSpaceString = String(repeating: Character(" "), count: Int(buttonSpace))
+			#else
+				
 				let buttonSpaceString = String(count: Int(buttonSpace), repeatedValue: Character(" "))
+			#endif
 				let buttonText = "\(buttonSpaceString)\(buttonData)\n"
 				wborder(currentButtonWindow, 1, 1, 1, 1, 1, 1, 1, 1)
 				waddstr(currentButtonWindow, buttonText)
@@ -162,12 +181,15 @@ public struct PopupWidget {
 				
 				
 				wrefresh(currentButtonWindow)
-				/* ## Swift 3
+			#if swift(>=3)
+				
 				self.buttonWindows.append(currentButtonShadowWindow!)
 				self.buttonWindows.append(currentButtonWindow!)
-				*/
+			#elseif swift(>=2.2) && os(OSX)
+				
 				self.buttonWindows.append(currentButtonShadowWindow)
 				self.buttonWindows.append(currentButtonWindow)
+			#endif
 				
 				currentButtonLeft += buttonSizes.0 + buttonSizes.1 + buttonSizes.1
 				btnIdx += 1
@@ -204,10 +226,13 @@ public struct PopupWidget {
 		
 		if(popuptype == .PROGRESS) {
 			
-			/* ## Swift 3
+		#if swift(>=3)
+			
 			self.buttonWindows = [OpaquePointer]()
-			*/
+		#elseif swift(>=2.2) && os(OSX)
+			
 			self.buttonWindows = [COpaquePointer]()
+		#endif
 			
 			progressSize = popupWidth - 2
 			
@@ -219,10 +244,13 @@ public struct PopupWidget {
 				wbkgd(progressWindow, UInt32(COLOR_PAIR(WidgetUIColor.Progress.rawValue)))
 				wrefresh(progressWindow)
 				
-				/* ## Swift 3
+			#if swift(>=3)
+				
 				self.buttonWindows.append(progressWindow!)
-				*/
+			#elseif swift(>=2.2) && os(OSX)
+				
 				self.buttonWindows.append(progressWindow)
+			#endif
 			}else{
 				
 				wclear(self.buttonWindows[0])
@@ -260,7 +288,13 @@ public struct PopupWidget {
 			if(!stringWrited) {
 				
 				wattrset(self.buttonWindows[0], COLOR_PAIR(WidgetUIColor.Progress.rawValue))
+			#if swift(>=3)
+				
+				let spaceString = String(repeating: Character(" "), count: Int((percentStringStartPos - progressPercentWidth)))
+			#else
+				
 				let spaceString = String(count: Int((percentStringStartPos - progressPercentWidth)), repeatedValue: Character(" "))
+			#endif
 				let percentDisplayString = "\(spaceString)\(percentString)"
 				waddstr(self.buttonWindows[0], percentDisplayString)
 			}
@@ -311,10 +345,6 @@ public struct PopupWidget {
 		
 		if(self.hasShadow && self.shadowWindow != nil) {
 			
-			/* ## Swift 3
-			wclear(shadowWindow)
-			delwin(shadowWindow)
-			*/
 			wclear(shadowWindow!)
 			delwin(shadowWindow!)
 			self.shadowWindow = nil

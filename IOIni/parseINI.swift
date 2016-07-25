@@ -155,7 +155,11 @@ public class parseINI {
 					break
 				}
 				
+			#if swift(>=3)
+				try updateScanStatus(scannedCharacter: character)
+			#elseif swift(>=2.2) && os(OSX)
 				try updateScanStatus(character)
+			#endif
 			}
 			
 			if(currentSettings == nil) {

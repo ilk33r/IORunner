@@ -51,10 +51,13 @@ public typealias MainGuiDelegate = (action: MainGuiActions) -> ()
 public struct GUIWidgets {
 	
 	private var delegate: MainGuiDelegate
-	/* ## Swift 3
+#if swift(>=3)
+	
 	public var mainWindow: OpaquePointer
-	*/
+#else
+	
 	public var mainWindow: COpaquePointer
+#endif
 	
 	public var titleAndFooter: TitleAndFooterWidget?
 	public var appInfo: AppInfoWidget?
@@ -358,52 +361,70 @@ public struct GUIWidgets {
 		
 		if(titleAndFooter != nil) {
 			
-			/* ## Swift 3
+		#if swift(>=3)
+			
 			titleAndFooter?.keyEvent(keyCode: keycode)
-			*/
+		#elseif swift(>=2.2) && os(OSX)
+			
 			titleAndFooter?.keyEvent(keycode)
+		#endif
 		}
 		
 		if(appInfo != nil) {
 			
-			/* ## Swift 3
+		#if swift(>=3)
+			
 			appInfo?.keyEvent(keyCode: keycode)
-			*/
+		#elseif swift(>=2.2) && os(OSX)
+			
 			appInfo?.keyEvent(keycode)
+		#endif
 		}
 		
 		if(popup != nil) {
 			
-			/* ## Swift 3
+		#if swift(>=3)
+			
 			popup?.keyEvent(keyCode: keycode)
-			*/
+		#elseif swift(>=2.2) && os(OSX)
+				
 			popup?.keyEvent(keycode)
+		#endif
 			return
 		}
 		
 		if(inputPopup != nil) {
 			
-			/* ## Swift 3
+		#if swift(>=3)
+			
 			inputPopup?.keyEvent(keyCode: keycode)
-			*/
+		#elseif swift(>=2.2) && os(OSX)
+			
 			inputPopup?.keyEvent(keycode)
+		#endif
 			return
 		}
 		
 		if(menu != nil) {
 			
-			/* ## Swift 3
+		#if swift(>=3)
+			
 			menu?.keyEvent(keyCode: keycode)
-			*/
+		#elseif swift(>=2.2) && os(OSX)
+			
 			menu?.keyEvent(keycode)
+		#endif
 		}
 		
 		if(modules != nil) {
 			
-			/* ## Swift 3
+		#if swift(>=3)
+			
 			modules?.keyEvent(keyCode: keycode)
-			*/
+		#elseif swift(>=2.2) && os(OSX)
+			
 			modules?.keyEvent(keycode)
+		#endif
 		}
 	}
 	
@@ -417,10 +438,14 @@ public struct GUIWidgets {
 		}else if(currentKey == Int32(UnicodeScalar("q").value) || currentKey == 27 || currentKey == Int32(UnicodeScalar("Q").value)) {
 			
 			if(self.hasInputPopupWidget()) {
-				/* ## Swift 3
+
+			#if swift(>=3)
+				
 				self.sendKeyEventToWidget(keycode: currentKey)
-				*/
+			#elseif swift(>=2.2) && os(OSX)
+					
 				self.sendKeyEventToWidget(currentKey)
+			#endif
 			}else{
 				self.delegate(action: MainGuiActions.EXIT)
 			}
@@ -428,20 +453,27 @@ public struct GUIWidgets {
 		}else if(currentKey == Int32(UnicodeScalar("b").value) || currentKey == Int32(UnicodeScalar("B").value)) {
 			
 			if(self.hasInputPopupWidget()) {
-				/* ## Swift 3
+
+			#if swift(>=3)
+				
 				self.sendKeyEventToWidget(keycode: currentKey)
-				*/
+			#elseif swift(>=2.2) && os(OSX)
+				
 				self.sendKeyEventToWidget(currentKey)
+			#endif
 			}else{
 				self.delegate(action: MainGuiActions.BACK)
 			}
 
 		}else{
 			
-			/* ## Swift 3
+		#if swift(>=3)
+			
 			self.sendKeyEventToWidget(keycode: currentKey)
-			*/
+		#elseif swift(>=2.2) && os(OSX)
+			
 			self.sendKeyEventToWidget(currentKey)
+		#endif
 		}
 	}
 	
@@ -454,16 +486,22 @@ public struct GUIWidgets {
 	
 	public mutating func waitPopup(waitForSecond: UInt) {
 		
-		/* ## Swift 3
+	#if swift(>=3)
+		
 		let loopStartDate: UInt = UInt(Date().timeIntervalSince1970)
-		*/
+	#else
+		
 		let loopStartDate: UInt = UInt(NSDate().timeIntervalSince1970)
+	#endif
 		repeat {
 		
-			/* ## Swift 3
+		#if swift(>=3)
+			
 			let currentDate: UInt = UInt(Date().timeIntervalSince1970)
-			*/
+		#else
+			
 			let currentDate: UInt = UInt(NSDate().timeIntervalSince1970)
+		#endif
 			let dateDif = currentDate - loopStartDate
 			
 			if(dateDif > waitForSecond) {

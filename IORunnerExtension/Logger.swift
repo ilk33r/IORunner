@@ -29,17 +29,20 @@ public final class Logger {
 			}
 		}
 	}
+
+#if swift(>=3)
 	
-	/* ## Swift 3
 	public enum LoggerError: ErrorProtocol {
 		case FileSizeTooSmall
 		case FileIsNotWritable
 	}
-	*/
+#elseif swift(>=2.2) && os(OSX)
+	
 	public enum LoggerError: ErrorType {
 		case FileSizeTooSmall
 		case FileIsNotWritable
 	}
+#endif
 	
 	private static let logFormat = "[%@] - %@ %@\n"
 	private static let logDebugFormat = "%@: %@\n"
@@ -51,10 +54,11 @@ public final class Logger {
 	private var logFileInitialized = false
 	private var currentLogFileSize: UInt64 = 0
 	private var debugMode = false
-	/* ## Swift 3
+#if swift(>=3)
 	private var logFileDescriptor: FileHandle?
-	*/
+#elseif swift(>=2.2) && os(OSX)
 	private var logFileDescriptor: NSFileHandle?
+#endif
 	
 	public init(logLevel: Int, logFilePath: String, maxLogFileSize: Int, debugMode: Bool = false) throws {
 		
@@ -72,26 +76,35 @@ public final class Logger {
 	
 	private func currentLoggerTime() -> String {
 		
-		/* ## Swift 3
+	#if swift(>=3)
+		
 		let currentDate = Date()
 		let formatter = DateFormatter()
-		formatter.dateFormat = Logger.logTimeFormat
-		formatter.timeZone = TimeZone(abbreviation: "GMT")
-		*/
+	#else
+		
 		let currentDate = NSDate()
 		let formatter = NSDateFormatter()
+	#endif
+
 		formatter.dateFormat = Logger.logTimeFormat
-		formatter.timeZone = NSTimeZone(abbreviation: "GMT")
-		/* ## Swift 3
+	
+	#if swift(>=3)
+		formatter.timeZone = TimeZone(abbreviation: "GMT")
 		return formatter.string(from: currentDate)
-		*/
+	#elseif swift(>=2.2) && os(OSX)
+		formatter.timeZone = NSTimeZone(abbreviation: "GMT")
 		return formatter.stringFromDate(currentDate)
+	#endif
+		
 	}
 	
 	public func setupLogger() throws {
 		
-		/* ## Swift 3
+	#if swift(>=3)
+		
+			
 		if(!FileManager.default().isWritableFile(atPath: getLogFileFolder())) {
+			
 			throw LoggerError.FileIsNotWritable
 		}
 		
@@ -108,26 +121,28 @@ public final class Logger {
 			}else{
 				throw LoggerError.FileIsNotWritable
 			}
-				
+			
 		}else{
 			
 			FileManager.default().createFile(atPath: logFilePath, contents: nil, attributes: nil)
 			logFileDescriptor = FileHandle(forWritingAtPath: logFilePath)
 			currentLogFileSize = 0
 		}
-		*/
+	#else
+			
 		if(!NSFileManager.defaultManager().isWritableFileAtPath(getLogFileFolder())) {
+			
 			throw LoggerError.FileIsNotWritable
 		}
-		
+			
 		if(NSFileManager.defaultManager().fileExistsAtPath(logFilePath)) {
 			
 			if(NSFileManager.defaultManager().isWritableFileAtPath(logFilePath)) {
-				
+			
 				logFileDescriptor = NSFileHandle(forWritingAtPath: logFilePath)
-				
+			
 				if(logFileDescriptor != nil) {
-					
+			
 					logFileDescriptor?.seekToEndOfFile()
 					currentLogFileSize = (logFileDescriptor?.offsetInFile)!
 				}
@@ -142,6 +157,7 @@ public final class Logger {
 			currentLogFileSize = 0
 		}
 
+	#endif
 	}
 	
 	public func writeLog(level: LogLevels, message: String) {
@@ -161,10 +177,13 @@ public final class Logger {
 				let logString = String(format: Logger.logFormat, currentLoggerTime(), level.getNameForLevel(), message)
 				let logStringSize = logString.characters.count
 				currentLogFileSize += UInt64(logStringSize)
-				logFileDescriptor?.writeData(logString.dataUsingEncoding(NSUTF8StringEncoding)!)
-				/* ## Swift 3
+			#if swift(>=3)
+					
 				logFileDescriptor?.write(logString.data(using: String.Encoding.utf8)!)
-				*/
+			#elseif swift(>=2.2) && os(OSX)
+				
+				logFileDescriptor?.writeData(logString.dataUsingEncoding(NSUTF8StringEncoding)!)
+			#endif
 			
 				if(currentLogFileSize >= maxLogFileSize) {
 					createNewLogFile()
@@ -177,24 +196,25 @@ public final class Logger {
 		
 		closeLogFile()
 		let logFileFolder = getLogFileFolder()
-		/* ## Swift 3
+
+	#if swift(>=3)
 		if(FileManager.default().isWritableFile(atPath: logFileFolder)) {
-			
+
 			if let dirFiles = try? FileManager.default().contentsOfDirectory(atPath: logFileFolder) {
-				
+
 				var lastLogNumber = 0
 				for currentFile in dirFiles {
-					
+
 					let splittedFileNamePath = currentFile.characters.split(separator: ".").map(String.init)
 					if(splittedFileNamePath.count >= 3) {
-						
+
 						let fileNumberIdx = splittedFileNamePath.count - 1
 						let fileExtensionIdx = splittedFileNamePath.count - 2
-						
+
 						if(splittedFileNamePath[fileExtensionIdx] == "log") {
-							
+
 							if let logNumberInt = Int(splittedFileNamePath[fileNumberIdx]) {
-								
+
 								if(lastLogNumber < logNumberInt) {
 									lastLogNumber = logNumberInt
 								}
@@ -202,7 +222,7 @@ public final class Logger {
 						}
 					}
 				}
-				
+
 				lastLogNumber += 1
 				let newLogFile = logFilePath + ".\(lastLogNumber)"
 				let _ = try? FileManager.default().moveItem(atPath: logFilePath, toPath: newLogFile)
@@ -211,34 +231,36 @@ public final class Logger {
 				currentLogFileSize = 0
 			}
 		}
-		*/
-		
-		if(NSFileManager.defaultManager().isWritableFileAtPath(logFileFolder)) {
+
+
+	#else
 			
+		if(NSFileManager.defaultManager().isWritableFileAtPath(logFileFolder)) {
+		
 			if let dirFiles = try? NSFileManager.defaultManager().contentsOfDirectoryAtPath(logFileFolder) {
 			
 				var lastLogNumber = 0
 				for currentFile in dirFiles {
-			
+		
 					let splittedFileNamePath = currentFile.characters.split(".").map(String.init)
 					if(splittedFileNamePath.count >= 3) {
-			
+		
 						let fileNumberIdx = splittedFileNamePath.count - 1
 						let fileExtensionIdx = splittedFileNamePath.count - 2
-			
+		
 						if(splittedFileNamePath[fileExtensionIdx] == "log") {
-			
+		
 							if let logNumberInt = Int(splittedFileNamePath[fileNumberIdx]) {
-			
+		
 								if(lastLogNumber < logNumberInt) {
-									
+		
 									lastLogNumber = logNumberInt
 								}
 							}
 						}
 					}
 				}
-			
+		
 				lastLogNumber += 1
 				let newLogFile = logFilePath + ".\(lastLogNumber)"
 				let _ = try? NSFileManager.defaultManager().moveItemAtPath(logFilePath, toPath: newLogFile)
@@ -247,6 +269,7 @@ public final class Logger {
 				currentLogFileSize = 0
 			}
 		}
+	#endif
 	}
 	
 	public func closeLogFile() {
@@ -257,10 +280,14 @@ public final class Logger {
 	
 	private func getLogFileFolder() -> String {
 		
-		/* ## Swift 3
-		let splittedLogPath = logFilePath.characters.split(separator: "/").map(String.init)
-		*/
-		let splittedLogPath = logFilePath.characters.split("/").map(String.init)
+		#if swift(>=3)
+			
+			let splittedLogPath = logFilePath.characters.split(separator: "/").map(String.init)
+		#else
+			
+			let splittedLogPath = logFilePath.characters.split("/").map(String.init)
+		#endif
+
 		var logFileFolder = ""
 		
 		for i in 0..<(splittedLogPath.count - 1) {

@@ -8,27 +8,18 @@
 
 import Foundation
 
-/* ## Swift 3
-enum ScanError: ErrorProtocol {
-    case NoMatch
-}
-enum ParseError: ErrorProtocol {
-    case InvalidSyntax(Scanner.Position)
-    case UnsupportedToken(Scanner.Position)
-}
+#if swift(>=3)
 
-extension ParseError: CustomStringConvertible {
-    var description: String {
-        switch self {
-        case let .InvalidSyntax(_, row, pos): return "Invalid syntax at row \(row), position \(pos)"
-        case let .UnsupportedToken(_, row, pos): return "Unsupported token at row \(row), position \(pos)"
-        }
-    }
-}
-*/
-
-enum ParseError: ErrorType {
+	enum ParseError: ErrorProtocol {
+		
+		case InvalidSyntax(err: String)
+		case UnsupportedToken(err: String)
+	}
+#elseif swift(>=2.2) && os(OSX)
 	
-	case InvalidSyntax(err: String)
-	case UnsupportedToken(err: String)
-}
+	enum ParseError: ErrorType {
+	
+		case InvalidSyntax(err: String)
+		case UnsupportedToken(err: String)
+	}
+#endif

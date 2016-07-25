@@ -22,36 +22,41 @@ public struct InputPopupWidget {
 	private var popupContent: String
 	private var popupButtons: [String]
 	private var popupDelegate: InputPopupDelegate
-	/* ## Swift 3
+#if swift(>=3)
+	
 	private var mainWindow: OpaquePointer
+	
 	private var shadowWindow: OpaquePointer?
 	
 	private var popupWindow: OpaquePointer!
-	*/
+#elseif swift(>=2.2) && os(OSX)
+	
 	private var mainWindow: COpaquePointer
+	
 	private var shadowWindow: COpaquePointer?
 	
 	private var popupWindow: COpaquePointer!
+#endif
 	private var popupWidth: Int32 = 0
 	private var popupHeight: Int32 = 0
 	private var popupTop: Int32 = 0
 	private var popupLeft: Int32 = 0
 	private var currentSelectedButtonIdx = 0
 	private var hasShadow = false
+#if swift(>=3)
 	
-	/* ## Swift 3
 	private var buttonWindows: [OpaquePointer]!
 	private var inputWindow: OpaquePointer?
-	*/
+#elseif swift(>=2.2) && os(OSX)
+	
 	private var buttonWindows: [COpaquePointer]!
 	private var inputWindow: COpaquePointer?
-	
+#endif
 	private var currentInputValue: String
 	
-	/* ## Swift 3
+#if swift(>=3)
+	
 	public init(defaultValue: String, popupContent: String, popupButtons: [String], hasShadow: Bool, popupDelegate: InputPopupDelegate, mainWindow: OpaquePointer) {
-	*/
-	public init(defaultValue: String, popupContent: String, popupButtons: [String], hasShadow: Bool, popupDelegate: InputPopupDelegate, mainWindow: COpaquePointer) {
 		
 		self.popupContent = popupContent
 		self.popupButtons = popupButtons
@@ -61,6 +66,19 @@ public struct InputPopupWidget {
 		self.currentInputValue = defaultValue
 		self.initWindows()
 	}
+#elseif swift(>=2.2) && os(OSX)
+	
+	public init(defaultValue: String, popupContent: String, popupButtons: [String], hasShadow: Bool, popupDelegate: InputPopupDelegate, mainWindow: COpaquePointer) {
+	
+		self.popupContent = popupContent
+		self.popupButtons = popupButtons
+		self.popupDelegate = popupDelegate
+		self.mainWindow = mainWindow
+		self.hasShadow = hasShadow
+		self.currentInputValue = defaultValue
+		self.initWindows()
+	}
+#endif
 	
 	mutating func initWindows() {
 		
@@ -77,12 +95,6 @@ public struct InputPopupWidget {
 		if(hasShadow) {
 			self.shadowWindow = subwin(mainWindow, popupHeight, popupWidth, popupTop + 1, popupLeft + 1)
 			
-			/* ## Swift 3
-			wbkgd(self.shadowWindow, UInt32(COLOR_PAIR(WidgetUIColor.Background.rawValue)))
-			keypad(self.shadowWindow, true)
-			touchwin(self.shadowWindow)
-			wrefresh(self.shadowWindow)
-			*/
 			wbkgd(self.shadowWindow!, UInt32(COLOR_PAIR(WidgetUIColor.Background.rawValue)))
 			keypad(self.shadowWindow!, true)
 			touchwin(self.shadowWindow!)
@@ -94,10 +106,6 @@ public struct InputPopupWidget {
 		keypad(self.popupWindow, true)
 		
 		self.inputWindow = subwin(mainWindow, 2, popupWidth - 2, popupTop + popupHeight - 7, popupLeft + 1)
-		/* ## Swift 3
-		wbkgd(self.inputWindow, UInt32(COLOR_PAIR(WidgetUIColor.WarningLevelDanger.rawValue)))
-		keypad(self.inputWindow, true)
-		*/
 		wbkgd(self.inputWindow!, UInt32(COLOR_PAIR(WidgetUIColor.WarningLevelDanger.rawValue)))
 		keypad(self.inputWindow!, true)
 	}
@@ -126,14 +134,6 @@ public struct InputPopupWidget {
 			return
 		}
 		
-		/* ## Swift 3
-		wmove(self.inputWindow, 0, 2)
-		wattrset(self.inputWindow, COLOR_PAIR(WidgetUIColor.WarningLevelDanger.rawValue))
-		waddstr(self.inputWindow, self.currentInputValue)
-		mvwhline(self.inputWindow, 1, 1, 0, popupWidth - 1)
-		touchwin(self.inputWindow)
-		wrefresh(self.inputWindow)
-		*/
 		wmove(self.inputWindow!, 0, 2)
 		wattrset(self.inputWindow!, COLOR_PAIR(WidgetUIColor.WarningLevelDanger.rawValue))
 		waddstr(self.inputWindow!, self.currentInputValue)
@@ -144,10 +144,13 @@ public struct InputPopupWidget {
 	
 	private mutating func drawButtons() {
 		
-		/* ## Swift 3
+	#if swift(>=3)
+		
 		self.buttonWindows = [OpaquePointer]()
-		*/
+	#elseif swift(>=2.2) && os(OSX)
+		
 		self.buttonWindows = [COpaquePointer]()
+	#endif
 			
 		let buttonSizes = calculatePopupButtonWidth()
 			
@@ -165,7 +168,13 @@ public struct InputPopupWidget {
 			wbkgd(currentButtonWindow, UInt32(COLOR_PAIR(WidgetUIColor.ButtonDanger.rawValue)))
 				
 			let buttonSpace = (buttonSizes.0 - Int32(buttonData.characters.count)) / 2
+		#if swift(>=3)
+			
+			let buttonSpaceString = String(repeating: Character(" "), count: Int(buttonSpace))
+		#else
+			
 			let buttonSpaceString = String(count: Int(buttonSpace), repeatedValue: Character(" "))
+		#endif
 			let buttonText = "\(buttonSpaceString)\(buttonData)\n"
 			wborder(currentButtonWindow, 1, 1, 1, 1, 1, 1, 1, 1)
 			waddstr(currentButtonWindow, buttonText)
@@ -180,12 +189,15 @@ public struct InputPopupWidget {
 				
 				
 			wrefresh(currentButtonWindow)
-			/* ## Swift 3
+		#if swift(>=3)
+			
 			self.buttonWindows.append(currentButtonShadowWindow!)
 			self.buttonWindows.append(currentButtonWindow!)
-			*/
+		#elseif swift(>=2.2) && os(OSX)
+			
 			self.buttonWindows.append(currentButtonShadowWindow)
 			self.buttonWindows.append(currentButtonWindow)
+		#endif
 				
 			currentButtonLeft += buttonSizes.0 + buttonSizes.1 + buttonSizes.1
 			btnIdx += 1
@@ -235,10 +247,6 @@ public struct InputPopupWidget {
 		
 		if(self.hasShadow && self.shadowWindow != nil) {
 			
-			/* ## Swift 3
-			wclear(shadowWindow)
-			delwin(shadowWindow)
-			*/
 			wclear(shadowWindow!)
 			delwin(shadowWindow!)
 			self.shadowWindow = nil
@@ -333,18 +341,24 @@ public struct InputPopupWidget {
 				let strStartIdx = currentInputValue.startIndex
 				let strEndIdx = currentInputValue.endIndex
 			
-				/* ## Swift 3
+			#if swift(>=3)
+				
 				let _startIdx = currentInputValue.index(strStartIdx, offsetBy: 0)
 				let _endIdx = currentInputValue.index(strEndIdx, offsetBy: -1)
-				*/
+			#else
+				
 				let _startIdx = strStartIdx.advancedBy(0)
 				let _endIdx = strEndIdx.advancedBy(-1)
+			#endif
 				let newInputValueRange = Range<String.Index>(_startIdx..<_endIdx)
 			
-				/* ## Swift 3
+			#if swift(>=3)
+				
 				let newInputValue = currentInputValue.substring(with: newInputValueRange)
-				*/
+			#else
+				
 				let newInputValue = currentInputValue.substringWithRange(newInputValueRange)
+			#endif
 				currentInputValue = newInputValue
 				refreshInputArea()
 			}
@@ -352,10 +366,13 @@ public struct InputPopupWidget {
 		// tab
 		}else if(keyCode == 9) {
 			
-			/* ## Swift 3
+		#if swift(>=3)
+			
 			let splittedFileNamePath = currentInputValue.characters.split(separator: "/").map(String.init)
-			*/
+		#else
+			
 			let splittedFileNamePath = currentInputValue.characters.split("/").map(String.init)
+		#endif
 			
 			let splittedFileNamePathCount = splittedFileNamePath.count - 1
 			
@@ -372,40 +389,16 @@ public struct InputPopupWidget {
 				
 				do {
 					
-					/* ## Swift 3
 					let dirList: [String]
-					
-					if(newPath.characters.count == 0) {
+				#if swift(>=3)
 						
+					if(newPath.characters.count == 0) {
+							
 						dirList = try FileManager.default().contentsOfDirectory(atPath: "/")
 					}else{
 						dirList = try FileManager.default().contentsOfDirectory(atPath: newPath)
 					}
-					
-					for files in dirList {
-						
-						let searchLen = splittedFileNamePath[splittedFileNamePathCount].characters.count
-						let dataLen = files.characters.count
-						
-						if(dataLen >= searchLen) {
-							
-							let startIdx = files.startIndex
-							
-							let _startIdx = files.index(startIdx, offsetBy: 0)
-							let _endIdx = files.index(startIdx, offsetBy: searchLen)
-							let dataRange = Range<String.Index>(_startIdx..<_endIdx)
-							let dataStr = files.substring(with: dataRange)
-							
-							if(dataStr == splittedFileNamePath[splittedFileNamePathCount]) {
-								
-								currentInputValue = "\(newPath)/\(files)"
-								refreshInputArea()
-								break
-							}
-						}
-					}
-					*/
-					let dirList: [String]
+				#elseif swift(>=2.2) && os(OSX)
 					
 					if(newPath.characters.count == 0) {
 						
@@ -413,6 +406,7 @@ public struct InputPopupWidget {
 					}else{
 						dirList = try NSFileManager.defaultManager().contentsOfDirectoryAtPath(newPath)
 					}
+				#endif
 						
 					for files in dirList {
 						
@@ -423,10 +417,23 @@ public struct InputPopupWidget {
 						
 							let startIdx = files.startIndex
 						
+						#if swift(>=3)
+							
+							let _startIdx = files.index(startIdx, offsetBy: 0)
+							let _endIdx = files.index(startIdx, offsetBy: searchLen)
+						#else
+							
 							let _startIdx = startIdx.advancedBy(0)
 							let _endIdx = startIdx.advancedBy(searchLen)
+						#endif
 							let dataRange = Range<String.Index>(_startIdx..<_endIdx)
+						#if swift(>=3)
+							
+							let dataStr = files.substring(with: dataRange)
+						#else
+							
 							let dataStr = files.substringWithRange(dataRange)
+						#endif
 						
 							if(dataStr == splittedFileNamePath[splittedFileNamePathCount]) {
 						
@@ -451,9 +458,6 @@ public struct InputPopupWidget {
 			
 			return
 		}
-		/* ## Swift 3
-		wclear(self.inputWindow)
-		*/
 		wclear(self.inputWindow!)
 		drawInputArea()
 	}

@@ -34,24 +34,30 @@ public struct ModulesWidget {
 	public var widgetRows: Int
 	
 	private var startRow: Int
-	/* ## Swift 3
+#if swift(>=3)
+	
 	private var mainWindow: OpaquePointer
-	*/
+#elseif swift(>=2.2) && os(OSX)
+	
 	private var mainWindow: COpaquePointer
+#endif
 	private var choices: [GUIModulesChoices]
 	private var selectionDelegate: ModuleChoicesSelectionDelegate
 	private var menuAreaWidth: Int32
 	private var leftSideTitle: String
 	private var rightSideTitle: String
 	
-	/* ## Swift 3
+#if swift(>=3)
+	
 	private var modulesTitleWindow: OpaquePointer!
 	private var modulesPassiveWindow: OpaquePointer!
 	private var modulesActiveWindow: OpaquePointer!
-	*/
+#elseif swift(>=2.2) && os(OSX)
+	
 	private var modulesTitleWindow: COpaquePointer!
 	private var modulesPassiveWindow: COpaquePointer!
 	private var modulesActiveWindow: COpaquePointer!
+#endif
 	private var moduleWinColumnSize: Int32 = 0
 	private var leftModulesLineCount = 0
 	private var firstLeftChoiceIdx = 0
@@ -64,10 +70,9 @@ public struct ModulesWidget {
 	private var cursorIsLeftSide = true
 	private var widgetInited = false
 	
-	/* ## Swift 3
+#if swift(>=3)
+	
 	public init(startRow: Int, widgetSize: Int, leftSideTitle: String, rightSideTitle: String, choices: [GUIModulesChoices], delegate: ModuleChoicesSelectionDelegate, mainWindow: OpaquePointer) {
-	*/
-	public init(startRow: Int, widgetSize: Int, leftSideTitle: String, rightSideTitle: String, choices: [GUIModulesChoices], delegate: ModuleChoicesSelectionDelegate, mainWindow: COpaquePointer) {
 		
 		self.startRow = startRow
 		self.widgetRows = widgetSize
@@ -81,6 +86,23 @@ public struct ModulesWidget {
 		
 		initWindows()
 	}
+#elseif swift(>=2.2) && os(OSX)
+	
+	public init(startRow: Int, widgetSize: Int, leftSideTitle: String, rightSideTitle: String, choices: [GUIModulesChoices], delegate: ModuleChoicesSelectionDelegate, mainWindow: COpaquePointer) {
+	
+		self.startRow = startRow
+		self.widgetRows = widgetSize
+		self.leftSideTitle = leftSideTitle
+		self.rightSideTitle = rightSideTitle
+		self.choices = choices
+		self.selectionDelegate = delegate
+		self.mainWindow = mainWindow
+		self.menuAreaWidth = 2
+		currentLeftChoiceIdx = 0
+	
+		initWindows()
+	}
+#endif
 	
 	mutating func initWindows() {
 		
@@ -202,7 +224,13 @@ public struct ModulesWidget {
 			if paddingSize < 0 {
 				paddingSize = 0
 			}
+		#if swift(>=3)
+			
+			let choiceStringPadding = String(repeating: Character(" "), count: Int(paddingSize))
+		#else
+			
 			let choiceStringPadding = String(count: Int(paddingSize), repeatedValue: Character(" "))
+		#endif
 			let choiceString: String
 			if(currentLeftChoiceIdx == idx) {
 				choiceString = " \u{2192} \(choices[idx].choiceName)\(choiceStringPadding)\n"
@@ -259,7 +287,13 @@ public struct ModulesWidget {
 			if paddingSize < 0 {
 				paddingSize = 0
 			}
+		#if swift(>=3)
+			
+			let choiceStringPadding = String(repeating: Character(" "), count: Int(paddingSize))
+		#else
+			
 			let choiceStringPadding = String(count: Int(paddingSize), repeatedValue: Character(" "))
+		#endif
 			let choiceString: String
 			if(currentRightChoiceIdx == idx) {
 				choiceString = " \u{2192} \(choices[idx].choiceName)\(choiceStringPadding)\n"
@@ -443,10 +477,13 @@ public struct ModulesWidget {
 			self.choiceSelected()
 			break
 		case KEY_UP:
-			/* ## Swift 3
+		#if swift(>=3)
+			
 			self.updateSelectedChoice(isUp: true)
-			*/
+		#elseif swift(>=2.2) && os(OSX)
+			
 			self.updateSelectedChoice(true)
+		#endif
 			break
 		case KEY_DOWN:
 			self.updateSelectedChoice()

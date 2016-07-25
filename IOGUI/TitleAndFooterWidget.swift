@@ -20,16 +20,20 @@ public struct TitleAndFooterWidget {
 	private var title: String
 	private var copyright: String
 	private var keyControls: (String, String)
-	/* ## Swift 3
+#if swift(>=3)
+	
 	private var mainWindow: OpaquePointer
 	
 	private var titleWindow: OpaquePointer!
 	private var footerWindow: OpaquePointer!
-	*/
+#elseif swift(>=2.2) && os(OSX)
+	
 	private var mainWindow: COpaquePointer
 	
 	private var titleWindow: COpaquePointer!
 	private var footerWindow: COpaquePointer!
+#endif
+	
 	
 	public var widgetRows: Int {
 		
@@ -38,10 +42,9 @@ public struct TitleAndFooterWidget {
 		}
 	}
 	
-	/* ## Swift 3
+#if swift(>=3)
+
 	public init(title: String, copyright: String, keyControls: (String, String), mainWindow: OpaquePointer) {
-	*/
-	public init(title: String, copyright: String, keyControls: (String, String), mainWindow: COpaquePointer) {
 		
 		self.title = title
 		self.copyright = copyright
@@ -49,7 +52,18 @@ public struct TitleAndFooterWidget {
 		self.mainWindow = mainWindow
 		self.initWindows()
 	}
+#elseif swift(>=2.2) && os(OSX)
 	
+	public init(title: String, copyright: String, keyControls: (String, String), mainWindow: COpaquePointer) {
+	
+		self.title = title
+		self.copyright = copyright
+		self.keyControls = keyControls
+		self.mainWindow = mainWindow
+		self.initWindows()
+	}
+#endif
+
 	mutating func initWindows() {
 		
 		wmove(mainWindow, 0, 0)
@@ -114,10 +128,13 @@ public struct TitleAndFooterWidget {
 		if paddingSize < 0 {
 			paddingSize = 0
 		}
-		/* ## Swift 3
+	#if swift(>=3)
+		
 		let copyrightStringPadding = String(repeating: Character(" "), count: paddingSize)
-		*/
+	#else
+		
 		let copyrightStringPadding = String(count: paddingSize, repeatedValue: Character(" "))
+	#endif
 		let copyrightString = "   \(self.copyright)\(copyrightStringPadding)"
 		waddstr(footerWindow, copyrightString)
 		

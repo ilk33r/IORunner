@@ -38,17 +38,12 @@ public struct AppInfoWidget {
 	public var widgetRows: Int
 	private var appInfo: [GUIAppInfo]
 	private var startRow: Int32
-	/* ## Swift 3
+#if swift(>=3)
+	
 	private var mainWindow: OpaquePointer
 	private var appInfoWindow: OpaquePointer!
-	*/
-	private var mainWindow: COpaquePointer
-	private var appInfoWindow: COpaquePointer!
 	
-	/* ## Swift 3
 	public init(appInfo: [GUIAppInfo], startRow: Int32, mainWindow: OpaquePointer) {
-	*/
-	public init(appInfo: [GUIAppInfo], startRow: Int32, mainWindow: COpaquePointer) {
 		
 		self.widgetRows = appInfo.count + 1
 		self.appInfo = appInfo
@@ -56,6 +51,20 @@ public struct AppInfoWidget {
 		self.mainWindow = mainWindow
 		self.initWindows()
 	}
+#elseif swift(>=2.2) && os(OSX)
+	
+	private var mainWindow: COpaquePointer
+	private var appInfoWindow: COpaquePointer!
+	
+	public init(appInfo: [GUIAppInfo], startRow: Int32, mainWindow: COpaquePointer) {
+	
+		self.widgetRows = appInfo.count + 1
+		self.appInfo = appInfo
+		self.startRow = startRow
+		self.mainWindow = mainWindow
+		self.initWindows()
+	}
+#endif
 	
 	mutating func initWindows() {
 		

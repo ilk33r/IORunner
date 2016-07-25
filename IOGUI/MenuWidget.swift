@@ -32,27 +32,32 @@ public struct MenuWidget {
 	var widgetRows: Int
 	
 	private var startRow: Int
-	/* ## Swift 3
+#if swift(>=3)
+	
 	private var mainWindow: OpaquePointer
-	*/
+#elseif swift(>=2.2) && os(OSX)
+	
 	private var mainWindow: COpaquePointer
+#endif
 	private var choices: [GUIMenuChoices]
 	private var selectionDelegate: MenuChoicesSelectionDelegate
 	private var menuAreaWidth: Int32
+#if swift(>=3)
 	
-	/* ## Swift 3
 	private var menuWindow: OpaquePointer!
-	*/
+#elseif swift(>=2.2) && os(OSX)
+	
 	private var menuWindow: COpaquePointer!
+#endif
 	private var currentChoiceIdx = 0
 	private var firstChoiceIdx = 0
 	private var choicesLineCount = 0
 	private var selectedChoiceCode = -1
 	
-	/* ## Swift 3
+#if swift(>=3)
+
 	public init(startRow: Int, widgetSize: Int, choices: [GUIMenuChoices], delegate: MenuChoicesSelectionDelegate, mainWindow: OpaquePointer) {
-	*/
-	public init(startRow: Int, widgetSize: Int, choices: [GUIMenuChoices], delegate: MenuChoicesSelectionDelegate, mainWindow: COpaquePointer) {
+		
 		self.startRow = startRow
 		self.widgetRows = widgetSize
 		self.choices = choices
@@ -61,6 +66,19 @@ public struct MenuWidget {
 		self.menuAreaWidth = 2
 		initWindows()
 	}
+#elseif swift(>=2.2) && os(OSX)
+	
+	public init(startRow: Int, widgetSize: Int, choices: [GUIMenuChoices], delegate: MenuChoicesSelectionDelegate, mainWindow: COpaquePointer) {
+	
+		self.startRow = startRow
+		self.widgetRows = widgetSize
+		self.choices = choices
+		self.selectionDelegate = delegate
+		self.mainWindow = mainWindow
+		self.menuAreaWidth = 2
+		initWindows()
+	}
+#endif
 	
 	mutating func initWindows() {
 		
@@ -126,7 +144,13 @@ public struct MenuWidget {
 			if paddingSize < 0 {
 				paddingSize = 0
 			}
+		#if swift(>=3)
+			
+			let choiceStringPadding = String(repeating: Character(" "), count: paddingSize)
+		#else
+			
 			let choiceStringPadding = String(count: Int(paddingSize), repeatedValue: Character(" "))
+		#endif
 			let choiceString: String
 			if(currentChoiceIdx == idx) {
 				choiceString = " \u{2192} \(choices[idx].choiceName)\(choiceStringPadding)\n"
@@ -193,10 +217,13 @@ public struct MenuWidget {
 			self.choiceSelected()
 			break
 		case KEY_UP:
-			/* ## Swift 3
+		#if swift(>=3)
+			
 			self.updateSelectedChoice(isUp: true)
-			*/
+		#elseif swift(>=2.2) && os(OSX)
+			
 			self.updateSelectedChoice(true)
+		#endif
 			break
 		case KEY_DOWN:
 			self.updateSelectedChoice()
