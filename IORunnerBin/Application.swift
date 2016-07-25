@@ -456,6 +456,16 @@ internal final class Application {
 					#else
 						buildString += "Other"
 					#endif
+					
+					buildString += "\n\tSwift Version\t: "
+					#if swift(>=2.2)
+						buildString += ">= 2.2"
+					#elseif swift(>=2.0)
+						buildString += ">= 2.0"
+					#else
+						buildString += "Unkown"
+					#endif
+						
 				
 					let popup = PopupWidget(popuptype: PopupWidget.GUIPopupTypes.CONFIRM, popupContent: "\tBuild:\n\t\(buildString)", popupButtons: ["OK"], hasShadow: false, popupDelegate: { (selectedChoiceIdx) in
 						

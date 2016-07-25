@@ -1,0 +1,11 @@
+*.
+.build
+*.playground
+.DS_Store
+DerivedData
+Build
+*.o
+*.so
+*.swiftdoc
+*.swiftmodule
+IORunnerBin.bin
