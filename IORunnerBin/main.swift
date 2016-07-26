@@ -11,27 +11,33 @@ import IOIni
 
 if let appArguments = ArgumentParser().parseArguments() {
 	
-	/* ## Swift 3
 	if(appArguments.helpMode) {
 		print(Arguments.getUsage())
+	#if swift(>=3)
+		
 		AppExit.Exit(parent: true, status: AppExit.EXIT_STATUS.SUCCESS)
+	#elseif swift(>=2.2) && os(OSX)
+		
+		AppExit.Exit(true, status: AppExit.EXIT_STATUS.SUCCESS)
+	#endif
 	}else if(appArguments.versionMode) {
 		print(Arguments.getVersion())
+	#if swift(>=3)
+		
 		AppExit.Exit(parent: true, status: AppExit.EXIT_STATUS.SUCCESS)
+	#elseif swift(>=2.2) && os(OSX)
+		
+		AppExit.Exit(true, status: AppExit.EXIT_STATUS.SUCCESS)
+	#endif
 	}else if(appArguments.buildinfoMode) {
 		print(Arguments.getBuildInfo())
+	#if swift(>=3)
+		
 		AppExit.Exit(parent: true, status: AppExit.EXIT_STATUS.SUCCESS)
-	}
-	*/
-	if(appArguments.helpMode) {
-		print(Arguments.getUsage())
+	#elseif swift(>=2.2) && os(OSX)
+		
 		AppExit.Exit(true, status: AppExit.EXIT_STATUS.SUCCESS)
-	}else if(appArguments.versionMode) {
-		print(Arguments.getVersion())
-		AppExit.Exit(true, status: AppExit.EXIT_STATUS.SUCCESS)
-	}else if(appArguments.buildinfoMode) {
-		print(Arguments.getBuildInfo())
-		AppExit.Exit(true, status: AppExit.EXIT_STATUS.SUCCESS)
+	#endif
 	}
 	
 	let currentConfigFile: String
@@ -41,9 +47,35 @@ if let appArguments = ArgumentParser().parseArguments() {
 		currentConfigFile = "./../etc/Config.ini"
 	}
 	
-	/* ## Swift 3
-	if(FileManager.default().fileExists(atPath: currentConfigFile)) {
-	*/
+#if swift(>=3)
+
+		if(FileManager.default().fileExists(atPath: currentConfigFile)) {
+			
+			do {
+				
+				let config = try parseINI(withFile: currentConfigFile)
+				let configData = try config.getConfigData()
+				if(appArguments.configDumpMode) {
+					
+					print("\nAll Configurations\n\n")
+					dump(configData)
+					
+					AppExit.Exit(parent: true, status: AppExit.EXIT_STATUS.SUCCESS)
+				}else{
+					
+					let _ = Application(appConfig: configData, appArguments: appArguments)
+				}
+			} catch (let e) {
+				print("\nError:\n\n")
+				print(e)
+				AppExit.Exit(parent: true, status: AppExit.EXIT_STATUS.FAILURE)
+			}
+		}else{
+			print("\nError: Config file could not found.")
+			AppExit.Exit(parent: true, status: AppExit.EXIT_STATUS.FAILURE)
+		}
+#elseif swift(>=2.2) && os(OSX)
+	
 	if(NSFileManager.defaultManager().fileExistsAtPath(currentConfigFile)) {
 		
 		do {
@@ -51,14 +83,10 @@ if let appArguments = ArgumentParser().parseArguments() {
 			let config = try parseINI(withFile: currentConfigFile)
 			let configData = try config.getConfigData()
 			if(appArguments.configDumpMode) {
-			
+	
 				print("\nAll Configurations\n\n")
-				//print(configData)
 				dump(configData)
-				
-				/* ## Swift 3
-				AppExit.Exit(parent: true, status: AppExit.EXIT_STATUS.SUCCESS)
-				*/
+
 				AppExit.Exit(true, status: AppExit.EXIT_STATUS.SUCCESS)
 			}else{
 				
@@ -67,24 +95,22 @@ if let appArguments = ArgumentParser().parseArguments() {
 		} catch (let e) {
 			print("\nError:\n\n")
 			print(e)
-			/* ## Swift 3
-			AppExit.Exit(parent: true, status: AppExit.EXIT_STATUS.FAILURE)
-			*/
 			AppExit.Exit(true, status: AppExit.EXIT_STATUS.FAILURE)
 		}
 	}else{
 		print("\nError: Config file could not found.")
-		/* ## Swift 3
-		AppExit.Exit(parent: true, status: AppExit.EXIT_STATUS.FAILURE)
-		*/
 		AppExit.Exit(true, status: AppExit.EXIT_STATUS.FAILURE)
 	}
+#endif
 	
 	
 }else{
 	print(Arguments.getUsage())
-	/* ## Swift 3
+#if swift(>=3)
+	
 	AppExit.Exit(parent: true, status: AppExit.EXIT_STATUS.FAILURE)
-	*/
+#elseif swift(>=2.2) && os(OSX)
+	
 	AppExit.Exit(true, status: AppExit.EXIT_STATUS.FAILURE)
+#endif
 }

@@ -49,10 +49,13 @@ internal struct Arguments {
 			self.config = value
 			break
 		case "signalname":
-			/* ## Swift 3
+		#if swift(>=3)
+			
 			self.signalName = value.lowercased()
-			*/
+		#elseif swift(>=2.2) && os(OSX)
+				
 			self.signalName = value.lowercaseString
+		#endif
 		default:
 			break
 		}

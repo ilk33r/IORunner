@@ -26,20 +26,23 @@ internal final class SignalHandler {
 	}
 
 	class func registerSignals() {
-		/* ## Swift 3
+	#if swift(>=3)
+		
 		signal(SIGTERM) { _ in sharedHandler?.handle(signal: .Terminate) }
 		signal(SIGINT) { _ in sharedHandler?.handle(signal: .Interrupt) }
 		signal(SIGQUIT) { _ in sharedHandler?.handle(signal: .Quit) }
 		signal(SIGTTIN) { _ in sharedHandler?.handle(signal: .TTIN) }
 		signal(SIGTTOU) { _ in sharedHandler?.handle(signal: .TTOU) }
 		signal(SIGCHLD) { _ in sharedHandler?.handle(signal: .Child) }
-		*/
+	#elseif swift(>=2.2) && os(OSX)
+		
 		signal(SIGTERM) { _ in sharedHandler?.handle(.Terminate) }
 		signal(SIGINT) { _ in sharedHandler?.handle(.Interrupt) }
 		signal(SIGQUIT) { _ in sharedHandler?.handle(.Quit) }
 		signal(SIGTTIN) { _ in sharedHandler?.handle(.TTIN) }
 		signal(SIGTTOU) { _ in sharedHandler?.handle(.TTOU) }
 		signal(SIGCHLD) { _ in sharedHandler?.handle(.Child) }
+	#endif
 	}
 
 	class func reset() {

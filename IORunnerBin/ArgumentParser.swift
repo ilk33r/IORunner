@@ -31,10 +31,13 @@ internal class ArgumentParser {
 					nextArgIsValue = false
 					switch nextArgType {
 					case "String":
-						/* ## Swift 3
+					#if swift(>=3)
+						
 						self.argumentScheme?.setStringValue(key: nextArgName, value: Process.arguments[i])
-						*/
+					#elseif swift(>=2.2) && os(OSX)
+						
 						self.argumentScheme?.setStringValue(nextArgName, value: Process.arguments[i])
+					#endif
 						break
 					default:
 						break
@@ -45,10 +48,14 @@ internal class ArgumentParser {
 				
 				}else{
 				
-					/* ## Swift 3
+				#if swift(>=3)
+					
 					let argIdx = findArgument(currentArgument: Process.arguments[i])
-					*/
+				#else
+					
 					let argIdx = findArgument(Process.arguments[i])
+				#endif
+					
 					if argIdx == -1 {
 						parseError = true
 					}else{
@@ -60,10 +67,13 @@ internal class ArgumentParser {
 							nextArgName = currentArgData[2]
 						}else if(currentArgData[3] == "Bool") {
 							
-							/* ## Swift 3
+						#if swift(>=3)
+							
 							self.argumentScheme?.setBooleanValue(key: currentArgData[2], value: true)
-							*/
+						#elseif swift(>=2.2) && os(OSX)
+							
 							self.argumentScheme?.setBooleanValue(currentArgData[2], value: true)
+						#endif
 						}
 					}
 				}
