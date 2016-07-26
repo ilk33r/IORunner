@@ -1,8 +1,10 @@
 # Makefile for IORunnerExtension
 
 $(MODULE_2_NAME)_SWIFTC_FLAGS = $(DEBUG) $($(OS)_EXTRA_FLAGS) \
-	-module-cache-path $(MODULE_CACHE_PATH)/$(MODULE_2_NAME) -module-name $(MODULE_2_NAME) $($(OS)_SWIFTC_FLAGS) -enable-objc-interop \
+	-module-cache-path $(MODULE_CACHE_PATH)/$(MODULE_2_NAME) -module-name $(MODULE_2_NAME) $($(OS)_SWIFTC_FLAGS) \
 	-I $(BUILD_ROOT_DIR)/lib -I $(BUILD_ROOT_DIR)/frameworks -F $(BUILD_ROOT_DIR)/frameworks
+	
+# -enable-objc-interop
 
 $(MODULE_2_NAME)_Src = $(MODULE_2_NAME)/Logger.swift $(MODULE_2_NAME)/AppHandlers.swift
 $(MODULE_2_NAME)_Obj = $(addsuffix .o, $(basename $($(MODULE_2_NAME)_Src)))
@@ -10,7 +12,8 @@ $(MODULE_2_NAME)_Modules = $(addprefix $(MODULE_CACHE_PATH)/, $(addsuffix .swift
 
 $(MODULE_2_NAME)_Darwin_SHLIB_PATH = -target x86_64-apple-macosx10.10 -I$(BUILD_ROOT_DIR)/lib -I$(BUILD_ROOT_DIR)/frameworks \
 	-F$(BUILD_ROOT_DIR)/frameworks -L$(BUILD_ROOT_DIR)/frameworks -L$(BUILD_ROOT_DIR)/lib
-$(MODULE_2_NAME)_Linux_SHLIB_PATH = -L$(shell dirname $(shell dirname $(shell which swiftc)))/lib/swift/linux
+$(MODULE_2_NAME)_Linux_SHLIB_PATH = -L$(shell dirname $(shell dirname $(shell which swiftc)))/lib/swift/linux \
+	-L$(BUILD_ROOT_DIR)/lib
 $(MODULE_2_NAME)_SHLIB_PATH = $($(MODULE_2_NAME)_$(OS)_SHLIB_PATH)
 
 $(MODULE_2_NAME)_Darwin_LFLAGS = $($(MODULE_2_NAME)_SHLIB_PATH) -arch x86_64 -dynamiclib \
@@ -22,14 +25,18 @@ $(MODULE_2_NAME)_Darwin_LFLAGS = $($(MODULE_2_NAME)_SHLIB_PATH) -arch x86_64 -dy
 	-Xlinker -add_ast_path -Xlinker $(SOURCE_ROOT_DIR)/$(MODULE_2_NAME)/$(MODULE_2_NAME).swiftmodule -single_module \
 	-compatibility_version 1 -current_version 1 \
 	-framework $(MODULE_1_NAME) -framework Foundation
-$(MODULE_2_NAME)_Linux_LFLAGS = $($(MODULE_2_NAME)_SHLIB_PATH) -lswiftCore -lswiftGlibc -ldl -lm -shared
+$(MODULE_2_NAME)_Linux_LFLAGS = $($(MODULE_2_NAME)_SHLIB_PATH) -lswiftCore -lswiftGlibc -ldl -lm -lFoundation -l$(MODULE_1_NAME) \
+	-Xlinker -rpath \
+	-Xlinker -no_deduplicate \
+	-stdlib=libc++ -flto -fuse-ld=gold \
+	-shared
 $(MODULE_2_NAME)_LFLAGS = $($(MODULE_2_NAME)_$(OS)_LFLAGS)
 
 $(MODULE_2_NAME)-install:
-	@cp $(SOURCE_ROOT_DIR)/$(MODULE_2_NAME)/$(MODULE_2_NAME).so $(BUILD_ROOT_DIR)/lib/
+	@cp $(SOURCE_ROOT_DIR)/$(MODULE_2_NAME)/$(MODULE_2_NAME).so $(BUILD_ROOT_DIR)/lib/lib$(MODULE_2_NAME).so
 	@cp $(SOURCE_ROOT_DIR)/$(MODULE_2_NAME)/$(MODULE_2_NAME).swiftmodule $(BUILD_ROOT_DIR)/lib/x86_64
 	@cp $(SOURCE_ROOT_DIR)/$(MODULE_2_NAME)/$(MODULE_2_NAME).swiftdoc $(BUILD_ROOT_DIR)/lib/x86_64
-	@chmod +x $(BUILD_ROOT_DIR)/lib/$(MODULE_2_NAME).so
+	@chmod +x $(BUILD_ROOT_DIR)/lib/lib$(MODULE_2_NAME).so
 	@cp $(SOURCE_ROOT_DIR)/$(MODULE_2_NAME)/$(MODULE_2_NAME).so $(BUILD_ROOT_DIR)/frameworks/$(MODULE_2_NAME).framework/Versions/A/$(MODULE_2_NAME)
 	@cp $(SOURCE_ROOT_DIR)/$(MODULE_2_NAME)/$(MODULE_2_NAME).swiftdoc $(BUILD_ROOT_DIR)/frameworks/$(MODULE_2_NAME).framework/Versions/A/Modules/$(MODULE_2_NAME).swiftmodule/x86_64.swiftdoc
 	@cp $(SOURCE_ROOT_DIR)/$(MODULE_2_NAME)/$(MODULE_2_NAME).swiftmodule $(BUILD_ROOT_DIR)/frameworks/$(MODULE_2_NAME).framework/Versions/A/Modules/$(MODULE_2_NAME).swiftmodule/x86_64.swiftmodule
@@ -63,7 +70,7 @@ $(MODULE_2_NAME)-clean:
 	@rm -rf $(SOURCE_ROOT_DIR)/$(MODULE_2_NAME)/*.o $(SOURCE_ROOT_DIR)/$(MODULE_2_NAME)/*.so \
 	$(SOURCE_ROOT_DIR)/$(MODULE_2_NAME)/*.swiftmodule $(SOURCE_ROOT_DIR)/$(MODULE_2_NAME)/*.swiftdoc \
 	$(SOURCE_ROOT_DIR)/$(MODULE_2_NAME)/*.d $(MODULE_CACHE_PATH)/$(MODULE_2_NAME) \
-	$(BUILD_ROOT_DIR)/lib/$(MODULE_2_NAME)* $(BUILD_ROOT_DIR)/lib/x86_64/$(MODULE_2_NAME)* \
+	$(BUILD_ROOT_DIR)/lib/$(MODULE_2_NAME)* $(BUILD_ROOT_DIR)/lib/lib$(MODULE_2_NAME)* $(BUILD_ROOT_DIR)/lib/x86_64/$(MODULE_2_NAME)* \
 	$(BUILD_ROOT_DIR)/frameworks/$(MODULE_2_NAME)*
 	
 $(MODULE_2_NAME)/%.o : $(MODULE_2_NAME)/%.swift

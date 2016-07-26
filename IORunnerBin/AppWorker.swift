@@ -15,9 +15,6 @@
 import Foundation
 import IORunnerExtension
 
-/* ## Swift 3
-typealias maybeCChar = UnsafeMutablePointer<CChar>?
-*/
 typealias maybeCChar = UnsafeMutablePointer<CChar>
 
 internal final class AppWorker {
@@ -29,21 +26,24 @@ internal final class AppWorker {
 	private var logger: Logger
 	private var appArguments: Arguments
 	private var childProcessPid: Int32 = -1
+
+#if swift(>=3)
 	
-	/* ## Swift 3
 	enum AppWorkerError: ErrorProtocol {
 		case StdRedirectFailed
 		case DaemonizeFailed
 		case PidFileIsNotWritable
 		case PidFileExists
 	}
-	*/
+#elseif swift(>=2.2) && os(OSX)
+	
 	enum AppWorkerError: ErrorType {
 		case StdRedirectFailed
 		case DaemonizeFailed
 		case PidFileIsNotWritable
 		case PidFileExists
 	}
+#endif
 	
 	init(handlers: [AppHandlers], pidFile: String, logger: Logger, appArguments: Arguments) {
 		
@@ -53,28 +53,34 @@ internal final class AppWorker {
 		self.appArguments = appArguments
 		childProcessPid = self.checkPid()
 		
-		/* ## Swift 3
+	#if swift(>=3)
+		
 		logger.writeLog(level: Logger.LogLevels.WARNINGS, message: "Worker will start with \(currentHandlers.count) handlers!")
-		*/
+	#elseif swift(>=2.2) && os(OSX)
+		
 		logger.writeLog(Logger.LogLevels.WARNINGS, message: "Worker will start with \(currentHandlers.count) handlers!")
+	#endif
 	}
 	
 	func registerSignals() {
 		signalHandler = SignalHandler()
-		/* ## Swift 3
+	#if swift(>=3)
+		
 		signalHandler.register(signal: .Interrupt, handleINT)
 		signalHandler.register(signal: .Quit, handleQUIT)
 		signalHandler.register(signal: .Terminate, handleTerminate)
 		SignalHandler.registerSignals()
 		
 		logger.writeLog(level: Logger.LogLevels.WARNINGS, message: "Signals registered")
-		*/
+	#elseif swift(>=2.2) && os(OSX)
+		
 		signalHandler.register(.Interrupt, handleINT)
 		signalHandler.register(.Quit, handleQUIT)
 		signalHandler.register(.Terminate, handleTerminate)
 		SignalHandler.registerSignals()
 		
 		logger.writeLog(Logger.LogLevels.WARNINGS, message: "Signals registered")
+	#endif
 	}
 
 	func run(daemonize: Bool, isChildProcess: Bool) throws {
@@ -92,56 +98,57 @@ internal final class AppWorker {
 				
 				var procPid = pid_t()
 				let argumets = Process.arguments
-			
-				/* ## Swift 3
-				let cArgs = UnsafeMutablePointer<maybeCChar>(allocatingCapacity: 7)
-				*/
-				let cArgs = UnsafeMutablePointer<maybeCChar>.alloc(7)
-				/* ## Swift 3
+			#if swift(>=3)
+					
+				let cArgs = UnsafeMutablePointer<maybeCChar?>(allocatingCapacity: 7)
 				defer {
 					cArgs.deinitialize(count: 7)
 					cArgs.deallocateCapacity(7)
 				}
-				*/
+			#else
+				
+				let cArgs = UnsafeMutablePointer<maybeCChar>.alloc(7)
 				defer {
-					/* ## Swift 3
-					cArgs.deinitialize(count: 7)
-					cArgs.deallocateCapacity(7)
-					*/
 					cArgs.dealloc(7)
 					cArgs.destroy(7)
 				}
+			#endif
 			
 				cArgs[0] = strdup(Process.arguments[0])
 				cArgs[1] = strdup("--config")
-				/* ## Swift 3
-				cArgs[2] = strdup(appArguments.config)
-				*/
 				cArgs[2] = strdup(appArguments.config!)
 				cArgs[3] = strdup("--onlyusearguments")
 				cArgs[4] = strdup("--signal")
 				cArgs[5] = strdup("environ")
-				cArgs[6] = UnsafeMutablePointer<CChar>(nil)
-			
-				/* ## Swift 3
+			#if swift(>=3)
+				
+				cArgs[6] = UnsafeMutablePointer<CChar>(nil)!
+				
 				var environments = ProcessInfo().environment
-				*/
-				var environments = NSProcessInfo().environment
 				environments["IO_RUNNER_SN"] = "child-start"
-			
-				/* ## Swift 3
-				let cEnv = UnsafeMutablePointer<maybeCChar>(allocatingCapacity: environments.count + 1)
-				*/
-				let cEnv = UnsafeMutablePointer<maybeCChar>.alloc(environments.count + 1)
+				let cEnv = UnsafeMutablePointer<maybeCChar?>(allocatingCapacity: environments.count + 1)
+				
 				defer {
-					/* ## Swift 3
 					cEnv.deinitialize(count: environments.count + 1)
 					cEnv.deallocateCapacity(environments.count + 1)
-					*/
+				}
+				cEnv[environments.count] = UnsafeMutablePointer<CChar>(nil)!
+			#else
+				
+				cArgs[6] = UnsafeMutablePointer<CChar>(nil)
+				
+				var environments = NSProcessInfo().environment
+				environments["IO_RUNNER_SN"] = "child-start"
+				let cEnv = UnsafeMutablePointer<maybeCChar>.alloc(environments.count + 1)
+				
+				defer {
 					cEnv.dealloc( environments.count + 1)
 					cEnv.destroy(environments.count + 1)
 				}
 				cEnv[environments.count] = UnsafeMutablePointer<CChar>(nil)
+			#endif
+
+			
 				var idx = 0
 				for environmentData in environments {
 				
@@ -174,77 +181,107 @@ internal final class AppWorker {
 				posix_spawn_file_actions_addclose(&fileActions, fSTDIN[1]);
 				posix_spawn_file_actions_addclose(&fileActions, fSTDERR[1]);
 			
-				/* ## Swift 3
-				let spawnRes = posix_spawnp(&procPid, argumets[0], &fileActions, nil, cArgs, cEnv)
-				*/
 				let spawnRes = posix_spawnp(&procPid, argumets[0], &fileActions, nil, cArgs, cEnv)
 			
 				switch spawnRes {
 				case EINVAL:
-					/* ## Swift 3
+				#if swift(>=3)
+					
 					logger.writeLog(level: Logger.LogLevels.ERROR, message: "The value specified by file_actions or attrp is invalid.")
-					*/
+				#elseif swift(>=2.2) && os(OSX)
+					
 					logger.writeLog(Logger.LogLevels.ERROR, message: "The value specified by file_actions or attrp is invalid.")
+				#endif
 					break
 				case E2BIG:
-					/* ## Swift 3
+				#if swift(>=3)
+					
 					logger.writeLog(level: Logger.LogLevels.ERROR, message: "The number of bytes in the new process's argument list is larger than the system-imposed limit.")
-					*/
+				#elseif swift(>=2.2) && os(OSX)
+					
 					logger.writeLog(Logger.LogLevels.ERROR, message: "The number of bytes in the new process's argument list is larger than the system-imposed limit.")
+				#endif
 					break
 				case EACCES:
-					/* ## Swift 3
+				#if swift(>=3)
+					
 					logger.writeLog(level: Logger.LogLevels.ERROR, message: "The new process file mode denies execute permission.")
-					*/
+				#elseif swift(>=2.2) && os(OSX)
+					
 					logger.writeLog(Logger.LogLevels.ERROR, message: "The new process file mode denies execute permission.")
+				#endif
 					break
 				case EFAULT:
-					/* ## Swift 3
+				#if swift(>=3)
+					
 					logger.writeLog(level: Logger.LogLevels.ERROR, message: "Path, argv, or envp point to an illegal address.")
-					*/
+				#elseif swift(>=2.2) && os(OSX)
+					
 					logger.writeLog(Logger.LogLevels.ERROR, message: "Path, argv, or envp point to an illegal address.")
+				#endif
 					break
 				case EIO:
-					/* ## Swift 3
+				#if swift(>=3)
+					
 					logger.writeLog(level: Logger.LogLevels.ERROR, message: " An I/O error occurred while reading from the file system.")
-					*/
+				#elseif swift(>=2.2) && os(OSX)
+					
 					logger.writeLog(Logger.LogLevels.ERROR, message: " An I/O error occurred while reading from the file system.")
+				#endif
 					break
 				case ELOOP:
-					/* ## Swift 3
+				#if swift(>=3)
+					
 					logger.writeLog(level: Logger.LogLevels.ERROR, message: "Too many symbolic links were encountered in translating the pathname.  This is taken to be indicative of a looping symbolic link.")
-					*/
+				#elseif swift(>=2.2) && os(OSX)
+					
 					logger.writeLog(Logger.LogLevels.ERROR, message: "Too many symbolic links were encountered in translating the pathname.  This is taken to be indicative of a looping symbolic link.")
+				#endif
 					break
 				case ENAMETOOLONG:
-					/* ## Swift 3
+				#if swift(>=3)
+					
 					logger.writeLog(level: Logger.LogLevels.ERROR, message: "A component of a pathname exceeded {NAME_MAX} characters, or an entire path name exceeded {PATH_MAX} characters.")
-					*/
+				#elseif swift(>=2.2) && os(OSX)
+					
 					logger.writeLog(Logger.LogLevels.ERROR, message: "A component of a pathname exceeded {NAME_MAX} characters, or an entire path name exceeded {PATH_MAX} characters.")
+				#endif
 					break
 				case ENOEXEC, ENOENT:
-					/* ## Swift 3
+				#if swift(>=3)
+					
 					logger.writeLog(level: Logger.LogLevels.ERROR, message: "The new process file does not exist.")
-					*/
+				#elseif swift(>=2.2) && os(OSX)
+					
 					logger.writeLog(Logger.LogLevels.ERROR, message: "The new process file does not exist.")
+				#endif
 					break
 				case ENOMEM:
-					/* ## Swift 3
+				#if swift(>=3)
+					
 					logger.writeLog(level: Logger.LogLevels.ERROR, message: "The new process requires more virtual memory than is allowed by the imposed maximum")
-					*/
+				#elseif swift(>=2.2) && os(OSX)
+					
 					logger.writeLog(Logger.LogLevels.ERROR, message: "The new process requires more virtual memory than is allowed by the imposed maximum")
+				#endif
 					break
 				case ENOTDIR:
-					/* ## Swift 3
+				#if swift(>=3)
+					
 					logger.writeLog(level: Logger.LogLevels.ERROR, message: "A component of the path prefix is not a directory.")
-					*/
+				#elseif swift(>=2.2) && os(OSX)
+					
 					logger.writeLog(Logger.LogLevels.ERROR, message: "A component of the path prefix is not a directory.")
+				#endif
 					break
 				case ETXTBSY:
-					/* ## Swift 3
+				#if swift(>=3)
+					
 					logger.writeLog(level: Logger.LogLevels.ERROR, message: "The new process file is a pure procedure (shared text) file that is currently open for writing or reading by some process.")
-					*/
+				#elseif swift(>=2.2) && os(OSX)
+					
 					logger.writeLog(Logger.LogLevels.ERROR, message: "The new process file is a pure procedure (shared text) file that is currently open for writing or reading by some process.")
+				#endif
 					break
 				default:
 					break
@@ -272,20 +309,25 @@ internal final class AppWorker {
 					}
 				#endif
 				
-				/* ## Swift 3
+			#if swift(>=3)
+				
 				logger.writeLog(level: Logger.LogLevels.WARNINGS, message: "Application running with daemonize.")
 				try setChildProcessPid(pid: procPid)
-				*/
+			#elseif swift(>=2.2) && os(OSX)
+				
 				logger.writeLog(Logger.LogLevels.WARNINGS, message: "Application running with daemonize.")
 				try setChildProcessPid(procPid)
+			#endif
 				
 			}else{
 
-				/* ## Swift 3
+			#if swift(>=3)
+				
 				logger.writeLog(level: Logger.LogLevels.WARNINGS, message: "Application running without daemonize.")
-				*/
+			#elseif swift(>=2.2) && os(OSX)
+				
 				logger.writeLog(Logger.LogLevels.WARNINGS, message: "Application running without daemonize.")
-				//waitpid(procPid, nil, 0)
+			#endif
 				
 				registerSignals()
 				running = true
@@ -297,53 +339,64 @@ internal final class AppWorker {
 	
 	func stop(graceful: Bool = true) {
 		
-		/* ## Swift 3
+	#if swift(>=3)
+			
 		logger.writeLog(level: Logger.LogLevels.WARNINGS, message: "Stop called! graceful: \(graceful)")
-		*/
-		logger.writeLog(Logger.LogLevels.WARNINGS, message: "Stop called! graceful: \(graceful)")
 		currentHandlers.forEach { $0.forStop() }
 		
-		/* ## Swift 3
 		if graceful {
 			killWorkers(signal: SIGTERM)
 		} else {
 			killWorkers(signal: SIGQUIT)
 		}
-		*/
+	#elseif swift(>=2.2) && os(OSX)
+		
+		logger.writeLog(Logger.LogLevels.WARNINGS, message: "Stop called! graceful: \(graceful)")
+		currentHandlers.forEach { $0.forStop() }
 		if graceful {
 			killWorkers(SIGTERM)
 		} else {
 			killWorkers(SIGQUIT)
 		}
+	#endif
 	}
-	
+
 	// MARK: Handle Signals
 	
 	func handleINT() {
-		/* ## Swift 3
+	#if swift(>=3)
+		
 		logger.writeLog(level: Logger.LogLevels.WARNINGS, message: "Signal INT received")
 		stop(graceful: false)
-		*/
+	#elseif swift(>=2.2) && os(OSX)
+		
 		logger.writeLog(Logger.LogLevels.WARNINGS, message: "Signal INT received")
 		stop(false)
+	#endif
 		running = false
 	}
 	
 	func handleQUIT() {
-		/* ## Swift 3
+	#if swift(>=3)
+		
 		logger.writeLog(level: Logger.LogLevels.WARNINGS, message: "Signal QUIT received")
 		stop(graceful: false)
-		*/
+	#elseif swift(>=2.2) && os(OSX)
+		
 		logger.writeLog(Logger.LogLevels.WARNINGS, message: "Signal QUIT received")
 		stop(false)
+	#endif
 		running = false
 	}
 	
 	func handleTerminate() {
-		/* ## Swift 3
+	#if swift(>=3)
+		
 		logger.writeLog(level: Logger.LogLevels.WARNINGS, message: "Signal TERMINATE received")
-		*/
+	#elseif swift(>=2.2) && os(OSX)
+		
 		logger.writeLog(Logger.LogLevels.WARNINGS, message: "Signal TERMINATE received")
+	#endif
 		currentHandlers.forEach { $0.forStop() }
 		running = false
 	}
@@ -366,10 +419,13 @@ internal final class AppWorker {
 	// Kill all workers with given signal
 	func killWorkers(signal: Int32) {
 		
-		/* ## Swift 3
+	#if swift(>=3)
+		
 		logger.writeLog(level: Logger.LogLevels.WARNINGS, message: "Killing workers with signal: \(signal)")
-		*/
+	#elseif swift(>=2.2) && os(OSX)
+		
 		logger.writeLog(Logger.LogLevels.WARNINGS, message: "Killing workers with signal: \(signal)")
+	#endif
 		if(childProcessPid == -1) {
 			deletePid()
 			running = false
@@ -380,10 +436,13 @@ internal final class AppWorker {
 			childProcessPid = -1
 			deletePid()
 		}else{
-			/* ## Swift 3
+		#if swift(>=3)
+			
 			logger.writeLog(level: Logger.LogLevels.MINIMAL, message: "Process already dead! Removing pid file")
-			*/
+		#elseif swift(>=2.2) && os(OSX)
+			
 			logger.writeLog(Logger.LogLevels.MINIMAL, message: "Process already dead! Removing pid file")
+		#endif
 			deletePid()
 		}
 	}
@@ -391,27 +450,45 @@ internal final class AppWorker {
 	// MARK: Pid
 	func checkPid() -> Int32 {
 		
-		/* ## Swift 3
+	#if swift(>=3)
+		
 		if(FileManager.default().fileExists(atPath: pidFile)) {
-		*/
+			
+			let pidFileDescriptor = FileHandle(forReadingAtPath: pidFile)
+			if(pidFileDescriptor == nil) {
+				
+				return -1
+			}else{
+				pidFileDescriptor?.seek(toFileOffset: 0)
+				
+				if let pidData = pidFileDescriptor?.readDataToEndOfFile() {
+					
+					let pidStr = String(data: pidData, encoding: String.Encoding.utf8)
+					pidFileDescriptor?.closeFile()
+					
+					if let pidVal = Int32(pidStr!) {
+						return pidVal
+					}else{
+						return -1
+					}
+				}else{
+					return -1
+				}
+			}
+		}else{
+			return -1
+		}
+	#elseif swift(>=2.2) && os(OSX)
+		
 		if(NSFileManager.defaultManager().fileExistsAtPath(pidFile)) {
 			
-			/* ## Swift 3
-			let pidFileDescriptor = FileHandle(forReadingAtPath: pidFile)
-			*/
 			let pidFileDescriptor = NSFileHandle(forReadingAtPath: pidFile)
 			if(pidFileDescriptor == nil) {
 				return -1
 			}else{
-				/* ## Swift 3
-				pidFileDescriptor?.seek(toFileOffset: 0)
-				*/
 				pidFileDescriptor?.seekToFileOffset(0)
 				if let pidData = pidFileDescriptor?.readDataToEndOfFile() {
 					
-					/* ## Swift 3
-					let pidStr = String(data: pidData, encoding: String.Encoding.utf8)
-					*/
 					let pidStr = String(data: pidData, encoding: NSUTF8StringEncoding)
 					pidFileDescriptor?.closeFile()
 					
@@ -427,102 +504,142 @@ internal final class AppWorker {
 		}else{
 			return -1
 		}
+	#endif
 	}
 	
 	private func setChildProcessPid(pid: Int32) throws {
 		
-		/* ## Swift 3
+	#if swift(>=3)
+		
+		
 		if(FileManager.default().fileExists(atPath: pidFile)) {
-		*/
+			
+			kill(pid, SIGINT)
+			throw AppWorkerError.PidFileExists
+		}else{
+			
+			
+			let createStatus = FileManager.default().createFile(atPath: pidFile, contents: nil, attributes: nil)
+			if(!createStatus) {
+				
+				kill(pid, SIGINT)
+				throw AppWorkerError.PidFileIsNotWritable
+			}
+			
+			
+			let pidFileDescriptor = FileHandle(forWritingAtPath: pidFile)
+			if(pidFileDescriptor == nil) {
+				kill(pid, SIGINT)
+				throw AppWorkerError.PidFileIsNotWritable
+			}else{
+				
+				logger.writeLog(level: Logger.LogLevels.ERROR, message: "Pid file created")
+				let pidStr = "\(pid)"
+				
+				pidFileDescriptor?.write(pidStr.data(using: String.Encoding.utf8)!)
+				pidFileDescriptor?.closeFile()
+				childProcessPid = pid
+			}
+		}
+	#elseif swift(>=2.2) && os(OSX)
+		
 		if(NSFileManager.defaultManager().fileExistsAtPath(pidFile)) {
 			kill(pid, SIGINT)
 			throw AppWorkerError.PidFileExists
 		}else{
 			
-			/* ## Swift 3
-			let createStatus = FileManager.default().createFile(atPath: pidFile, contents: nil, attributes: nil)
-			*/
 			let createStatus = NSFileManager.defaultManager().createFileAtPath(pidFile, contents: nil, attributes: nil)
 			if(!createStatus) {
 				kill(pid, SIGINT)
 				throw AppWorkerError.PidFileIsNotWritable
 			}
 			
-			/* ## Swift 3
-			let pidFileDescriptor = FileHandle(forWritingAtPath: pidFile)
-			*/
 			let pidFileDescriptor = NSFileHandle(forWritingAtPath: pidFile)
 			if(pidFileDescriptor == nil) {
 				kill(pid, SIGINT)
 				throw AppWorkerError.PidFileIsNotWritable
 			}else{
-				/* ## Swift 3
-				logger.writeLog(level: Logger.LogLevels.ERROR, message: "Pid file created")
-				*/
 				logger.writeLog(Logger.LogLevels.ERROR, message: "Pid file created")
 				let pidStr = "\(pid)"
-				/* ## Swift 3
-				pidFileDescriptor?.write(pidStr.data(using: String.Encoding.utf8)!)
-				*/
+				
 				pidFileDescriptor?.writeData(pidStr.dataUsingEncoding(NSUTF8StringEncoding)!)
 				pidFileDescriptor?.closeFile()
 				childProcessPid = pid
 			}
 		}
+	#endif
 	}
 	
 	// MARK: Loop
 	private func startLoop() {
 		
-		/* ## Swift 3
+	#if swift(>=3)
+		
+		
 		logger.writeLog(level: Logger.LogLevels.WARNINGS, message: "Child process will be start \(running)")
-		*/
-		logger.writeLog(Logger.LogLevels.WARNINGS, message: "Child process will be start \(running)")
-		/* ## Swift 3
+		
 		let runLoop = RunLoop.current()
-		*/
+		repeat {
+			let _ = signalHandler.process()
+			currentHandlers.forEach { $0.inLoop() }
+			usleep(Constants.CpuSleepSec)
+			
+			
+		} while (running && runLoop.run(mode: RunLoopMode.defaultRunLoopMode, before: Date().addingTimeInterval(-1 * Constants.CpuSleepMsec)))
+		
+		
+		logger.writeLog(level: Logger.LogLevels.WARNINGS, message: "Child process will be stop \(running)")
+	#else
+			
+		
+		logger.writeLog(Logger.LogLevels.WARNINGS, message: "Child process will be start \(running)")
+		
 		let runLoop = NSRunLoop.currentRunLoop()
 		repeat {
 			let _ = signalHandler.process()
 			currentHandlers.forEach { $0.inLoop() }
 			usleep(Constants.CpuSleepSec)
 		
-		/* ## Swift 3
-		} while (running && runLoop.run(mode: RunLoopMode.defaultRunLoopMode, before: Date().addingTimeInterval(-1 * Constants.CpuSleepMsec)))
-		*/
 		} while (running && runLoop.runMode(NSDefaultRunLoopMode, beforeDate: NSDate().dateByAddingTimeInterval(-1 * Constants.CpuSleepMsec)))
 
-		/* ## Swift 3
-		logger.writeLog(level: Logger.LogLevels.WARNINGS, message: "Child process will be stop \(running)")
-		*/
 		logger.writeLog(Logger.LogLevels.WARNINGS, message: "Child process will be stop \(running)")
+	#endif
 	}
 	
 	private func deletePid() {
 		
-		/* ## Swift 3
+	#if swift(>=3)
+		
 		if(FileManager.default().fileExists(atPath: pidFile)) {
-		*/
-		if(NSFileManager.defaultManager().fileExistsAtPath(pidFile)) {
 			
 			do {
-				/* ## Swift 3
+		
 				try FileManager.default().removeItem(atPath: pidFile)
-				*/
-				try NSFileManager.defaultManager().removeItemAtPath(pidFile)
 			} catch _ {
 				
-				/* ## Swift 3
+				
 				logger.writeLog(level: Logger.LogLevels.ERROR, message: "Could not delete pid file!")
-				*/
-				logger.writeLog(Logger.LogLevels.ERROR, message: "Could not delete pid file!")
 			}
 		}else{
 			
-			/* ## Swift 3
+			
 			logger.writeLog(level: Logger.LogLevels.WARNINGS, message: "Pid file does not exists!")
-			*/
+		}
+	#elseif swift(>=2.2) && os(OSX)
+
+		if(NSFileManager.defaultManager().fileExistsAtPath(pidFile)) {
+			
+			do {
+
+				try NSFileManager.defaultManager().removeItemAtPath(pidFile)
+			} catch _ {
+				
+				logger.writeLog(Logger.LogLevels.ERROR, message: "Could not delete pid file!")
+			}
+		}else{
+		
 			logger.writeLog(Logger.LogLevels.WARNINGS, message: "Pid file does not exists!")
 		}
+	#endif
 	}
 }

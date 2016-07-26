@@ -61,41 +61,56 @@ internal final class Application {
 			
 		} catch Logger.LoggerError.FileIsNotWritable {
 			print("Error: Log file is not writable at \(currentLogFilePath).\n")
-			/* ## Swift 3
+		#if swift(>=3)
+			
 			AppExit.Exit(parent: true, status: AppExit.EXIT_STATUS.FAILURE)
-			*/
+		#elseif swift(>=2.2) && os(OSX)
+			
 			AppExit.Exit(true, status: AppExit.EXIT_STATUS.FAILURE)
+		#endif
 			return
 		} catch Logger.LoggerError.FileSizeTooSmall {
 			print("Error: Max log file size \(maxLogFileSize) is too small.\n")
-			/* ## Swift 3
+		#if swift(>=3)
+			
 			AppExit.Exit(parent: true, status: AppExit.EXIT_STATUS.FAILURE)
-			*/
+		#elseif swift(>=2.2) && os(OSX)
+			
 			AppExit.Exit(true, status: AppExit.EXIT_STATUS.FAILURE)
+		#endif
 			return
 		} catch {
 			print("Error: An error occured for opening log file.\n")
-			/* ## Swift 3
+		#if swift(>=3)
+			
 			AppExit.Exit(parent: true, status: AppExit.EXIT_STATUS.FAILURE)
-			*/
+		#elseif swift(>=2.2) && os(OSX)
+			
 			AppExit.Exit(true, status: AppExit.EXIT_STATUS.FAILURE)
+		#endif
 			return
 		}
 		
-		/* ## Swift 3
+	#if swift(>=3)
+		
 		logger.writeLog(level: Logger.LogLevels.WARNINGS, message: "The main process started.")
-		*/
+	#elseif swift(>=2.2) && os(OSX)
+		
 		logger.writeLog(Logger.LogLevels.WARNINGS, message: "The main process started.")
+	#endif
 		
 		let currentExtensionDir: String
 		if let extensionsDir = appConfig["Extensions"]?["ExtensionsDir"] {
 			currentExtensionDir = extensionsDir
 		}else{
 			print("Could not find ExtensionsDir value in config file.")
-			/* ## Swift 3
+		#if swift(>=3)
+			
 			AppExit.Exit(parent: false, status: AppExit.EXIT_STATUS.FAILURE)
-			*/
+		#elseif swift(>=2.2) && os(OSX)
+				
 			AppExit.Exit(false, status: AppExit.EXIT_STATUS.FAILURE)
+		#endif
 			return
 		}
 		
@@ -113,100 +128,137 @@ internal final class Application {
 		
 			if(appArguments.signalName == nil) {
 				print("Error: invalid signal!")
-				/* ## Swift 3
+			#if swift(>=3)
+				
 				AppExit.Exit(parent: false, status: AppExit.EXIT_STATUS.FAILURE)
-				*/
+			#elseif swift(>=2.2) && os(OSX)
+				
 				AppExit.Exit(false, status: AppExit.EXIT_STATUS.FAILURE)
+			#endif
 			}
 			
 			switch appArguments.signalName! {
 			case "start":
 				print("Starting application.")
-				/* ## Swift 3
+			#if swift(>=3)
+				
 				startHandlers(isChildProcess: false)
-				*/
+			#elseif swift(>=2.2) && os(OSX)
+				
 				startHandlers(false)
+			#endif
 				print("OK!")
 				break
 			case "stop":
 				print("Stopping application.")
-				/* ## Swift 3
+			#if swift(>=3)
+				
 				stopHandlers(forceStop: false)
-				*/
+			#elseif swift(>=2.2) && os(OSX)
+				
 				stopHandlers(false)
+			#endif
 				print("OK!")
 				break
 			case "restart":
 				print("Restarting ....")
-				/* ## Swift 3
+			#if swift(>=3)
+				
 				stopHandlers(forceStop: false)
-				*/
+			#elseif swift(>=2.2) && os(OSX)
+				
 				stopHandlers(false)
+			#endif
 				print("Stopped!")
 				print("Starting ...")
-				/* ## Swift 3
+			#if swift(>=3)
+				
 				startHandlers(isChildProcess: false)
-				*/
+			#elseif swift(>=2.2) && os(OSX)
+				
 				startHandlers(false)
+			#endif
 				print("OK!")
 				break
 			case "force-stop":
 				print("Force stopping application.")
-				/* ## Swift 3
+			#if swift(>=3)
+				
 				stopHandlers(forceStop: true)
-				*/
+			#elseif swift(>=2.2) && os(OSX)
+				
 				stopHandlers(true)
+			#endif
 				print("OK!")
 				break
 			case "environ":
-				/* ## Swift 3
+			#if swift(>=3)
+				
 				let environments = ProcessInfo().environment
-				*/
-				let environments = NSProcessInfo().environment
 				if let envSignal = environments["IO_RUNNER_SN"] {
 					
 					if(envSignal == "child-start") {
-						/* ## Swift 3
+						
 						startHandlers(isChildProcess: true)
-						*/
+					}
+				}else{
+				
+					logger.writeLog(level: Logger.LogLevels.MINIMAL, message: "Application enviroments could not readed!")
+				}
+			#else
+				
+				let environments = NSProcessInfo().environment
+				if let envSignal = environments["IO_RUNNER_SN"] {
+			
+					if(envSignal == "child-start") {
 						startHandlers(true)
 					}
 				}else{
-					/* ## Swift 3
-					logger.writeLog(level: Logger.LogLevels.MINIMAL, message: "Application enviroments could not readed!")
-					*/
 					logger.writeLog(Logger.LogLevels.MINIMAL, message: "Application enviroments could not readed!")
 				}
+			#endif
 				break
 			default:
 				print("Error: invalid signal \(appArguments.signalName)!")
-				/* ## Swift 3
+			#if swift(>=3)
+				
 				AppExit.Exit(parent: false, status: AppExit.EXIT_STATUS.FAILURE)
-				*/
+			#elseif swift(>=2.2) && os(OSX)
+				
 				AppExit.Exit(false, status: AppExit.EXIT_STATUS.FAILURE)
+			#endif
 			}
 			
-			/* ## Swift 3
+		#if swift(>=3)
+			
 			AppExit.Exit(parent: true, status: AppExit.EXIT_STATUS.SUCCESS)
-			*/
+		#elseif swift(>=2.2) && os(OSX)
+			
 			AppExit.Exit(true, status: AppExit.EXIT_STATUS.SUCCESS)
+		#endif
 		}else{
 			
 			self.mainGUI = GUIWidgets() { (action) in
 				
-					/* ## Swift 3
+				#if swift(>=3)
+					
 					self.setGuiAction(action: action)
-					*/
+				#elseif swift(>=2.2) && os(OSX)
+					
 					self.setGuiAction(action)
+				#endif
 				}
 			inGuiLoop = true
 			onGUI()
 		}
 		
-		/* ## Swift 3
+	#if swift(>=3)
+		
 		logger.writeLog(level: Logger.LogLevels.WARNINGS, message: "The main process stopped.")
-		*/
+	#elseif swift(>=2.2) && os(OSX)
+			
 		logger.writeLog(Logger.LogLevels.WARNINGS, message: "The main process stopped.")
+	#endif
 		logger.closeLogFile()
 	}
 	
@@ -225,74 +277,104 @@ internal final class Application {
 		}
 		
 		do {
-			/* ## Swift 3
+		#if swift(>=3)
+			
 			try worker.run(daemonize: damonizeMode, isChildProcess: isChildProcess)
-			*/
+		#elseif swift(>=2.2) && os(OSX)
+			
 			try worker.run(damonizeMode, isChildProcess: isChildProcess)
+		#endif
 		} catch AppWorker.AppWorkerError.DaemonizeFailed {
 			
 			if(appArguments.textMode || appArguments.debug) {
 				print("Daemonize failed!")
-				/* ## Swift 3
+			#if swift(>=3)
+				
 				AppExit.Exit(parent: false, status: AppExit.EXIT_STATUS.FAILURE)
-				*/
+			#elseif swift(>=2.2) && os(OSX)
+				
 				AppExit.Exit(false, status: AppExit.EXIT_STATUS.FAILURE)
+			#endif
 			}
-			/* ## Swift 3
+			
+		#if swift(>=3)
+			
 			logger.writeLog(level: Logger.LogLevels.ERROR, message: "Daemonize failed!")
-			*/
+		#elseif swift(>=2.2) && os(OSX)
+			
 			logger.writeLog(Logger.LogLevels.ERROR, message: "Daemonize failed!")
+		#endif
 		} catch AppWorker.AppWorkerError.PidFileExists {
 			
 			if(appArguments.textMode || appArguments.debug) {
 				print("Pid file exists!")
-				/* ## Swift 3
+			#if swift(>=3)
+				
 				AppExit.Exit(parent: false, status: AppExit.EXIT_STATUS.FAILURE)
-				*/
+			#elseif swift(>=2.2) && os(OSX)
+				
 				AppExit.Exit(false, status: AppExit.EXIT_STATUS.FAILURE)
+			#endif
 			}
 			
-			/* ## Swift 3
+		#if swift(>=3)
+			
 			logger.writeLog(level: Logger.LogLevels.ERROR, message: "Pid file exists!")
-			*/
+		#elseif swift(>=2.2) && os(OSX)
+			
 			logger.writeLog(Logger.LogLevels.ERROR, message: "Pid file exists!")
+		#endif
 		} catch AppWorker.AppWorkerError.PidFileIsNotWritable {
 			
 			if(appArguments.textMode || appArguments.debug) {
 				print("Pid file is not writable!")
-				/* ## Swift 3
+			#if swift(>=3)
+				
 				AppExit.Exit(parent: false, status: AppExit.EXIT_STATUS.FAILURE)
-				*/
+			#elseif swift(>=2.2) && os(OSX)
+				
 				AppExit.Exit(false, status: AppExit.EXIT_STATUS.FAILURE)
+			#endif
 			}
-			/* ## Swift 3
+		#if swift(>=3)
+			
 			logger.writeLog(level: Logger.LogLevels.ERROR, message: "Pid file is not writable!")
-			*/
+		#elseif swift(>=2.2) && os(OSX)
+			
 			logger.writeLog(Logger.LogLevels.ERROR, message: "Pid file is not writable!")
+		#endif
 		} catch _ {
 			
 			if(appArguments.textMode || appArguments.debug) {
 				print("An error occured for running application")
-				/* ## Swift 3
+			#if swift(>=3)
+				
 				AppExit.Exit(parent: false, status: AppExit.EXIT_STATUS.FAILURE)
-				*/
+			#elseif swift(>=2.2) && os(OSX)
+					
 				AppExit.Exit(false, status: AppExit.EXIT_STATUS.FAILURE)
+			#endif
 			}
-			/* ## Swift 3
+		#if swift(>=3)
+			
 			logger.writeLog(level: Logger.LogLevels.ERROR, message: "An error occured for running application")
-			*/
+		#elseif swift(>=2.2) && os(OSX)
+			
 			logger.writeLog(Logger.LogLevels.ERROR, message: "An error occured for running application")
+		#endif
 		}
 	}
 	
 	private func stopHandlers(forceStop: Bool) {
 		
 		if(forceStop) {
+		#if swift(>=3)
 			
-			/* ## Swift 3
 			worker.stop(graceful: false)
-			*/
+		#elseif swift(>=2.2) && os(OSX)
+			
 			worker.stop(false)
+		#endif
 		}else{
 			worker.stop()
 		}
@@ -301,20 +383,23 @@ internal final class Application {
 	private func registerGuiSignals() {
 		
 		signalHandler = SignalHandler()
-		/* ## Swift 3
+	#if swift(>=3)
+		
 		signalHandler.register(signal: .Interrupt, handleGUIQuit)
 		signalHandler.register(signal: .Quit, handleGUIQuit)
 		signalHandler.register(signal: .Terminate, handleGUIQuit)
-		*/
+		SignalHandler.registerSignals()
+		
+		logger.writeLog(level: Logger.LogLevels.WARNINGS, message: "Signals registered")
+	#elseif swift(>=2.2) && os(OSX)
+		
 		signalHandler.register(.Interrupt, handleGUIQuit)
 		signalHandler.register(.Quit, handleGUIQuit)
 		signalHandler.register(.Terminate, handleGUIQuit)
 		SignalHandler.registerSignals()
-
-		/* ## Swift 3
-		logger.writeLog(level: Logger.LogLevels.WARNINGS, message: "Signals registered")
-		*/
+		
 		logger.writeLog(Logger.LogLevels.WARNINGS, message: "Signals registered")
+	#endif
 	}
 	
 	private func getWorkerStatus() -> UInt {
@@ -405,10 +490,13 @@ internal final class Application {
 			
 			startRow = 2
 			widgetSize += (self.mainGUI.titleAndFooter?.widgetRows)!
-			/* ## Swift 3
+		#if swift(>=3)
+			
 			self.mainGUI.titleAndFooter?.updateKeyboardInfo(keyControls: (GUIConstants.MenuButtons, GUIConstants.ArrowsUpDown))
-			*/
+		#elseif swift(>=2.2) && os(OSX)
+			
 			self.mainGUI.titleAndFooter?.updateKeyboardInfo((GUIConstants.MenuButtons, GUIConstants.ArrowsUpDown))
+		#endif
 		}
 		
 		if(self.mainGUI.hasAppInfoWidget()) {
@@ -472,10 +560,13 @@ internal final class Application {
 							self.mainGUI.deinitPopupWidget()
 						}, mainWindow: self.mainGUI.mainWindow)
 					
-					/* ## Swift 3
+				#if swift(>=3)
+					
 					self.mainGUI.initPopupWidget(widget: popup)
-					*/
+				#elseif swift(>=2.2) && os(OSX)
+					
 					self.mainGUI.initPopupWidget(popup)
+				#endif
 					break
 				case 7:
 					let popup = PopupWidget(popuptype: PopupWidget.GUIPopupTypes.CONFIRM, popupContent: "\tVersion:\n\t\(Constants.APP_NAME) \(Constants.APP_VERSION)\n\t\(Constants.APP_CREDITS)", popupButtons: ["OK"], hasShadow: false, popupDelegate: { (selectedChoiceIdx) in
@@ -483,10 +574,13 @@ internal final class Application {
 							self.mainGUI.deinitPopupWidget()
 						}, mainWindow: self.mainGUI.mainWindow)
 					
-					/* ## Swift 3
+				#if swift(>=3)
+					
 					self.mainGUI.initPopupWidget(widget: popup)
-					*/
+				#elseif swift(>=2.2) && os(OSX)
+						
 					self.mainGUI.initPopupWidget(popup)
+				#endif
 					break
 				case 8:
 					self.handleGUIQuit()
@@ -497,11 +591,14 @@ internal final class Application {
 
 			
 			}, mainWindow: self.mainGUI.mainWindow)
+
+	#if swift(>=3)
 		
-		/* ## Swift 3
 		self.mainGUI.initMenuWidget(widget: menuWidget)
-		*/
+	#elseif swift(>=2.2) && os(OSX)
+		
 		self.mainGUI.initMenuWidget(menuWidget)
+	#endif
 	}
 	
 	private func onGUI() {
@@ -510,10 +607,13 @@ internal final class Application {
 		
 		let copyrightText = "\(Constants.APP_CREDITS)\t\t\t\tVersion: \(Constants.APP_VERSION)"
 		let titleWidget = TitleAndFooterWidget(title: Constants.APP_NAME, copyright: copyrightText, keyControls: (GUIConstants.MenuButtons, GUIConstants.ArrowsUpDown), mainWindow: self.mainGUI.mainWindow)
-		/* ## Swift 3
+	#if swift(>=3)
+		
 		self.mainGUI.initTitleWidget(widget: titleWidget)
-		*/
+	#elseif swift(>=2.2) && os(OSX)
+		
 		self.mainGUI.initTitleWidget(titleWidget)
+	#endif
 		
 		var startRow = 0
 		let appInfoData = generateAppInfoData()
@@ -524,57 +624,70 @@ internal final class Application {
 		
 		startRow += appInfoData.count
 		let appInfoWidget = AppInfoWidget(appInfo: appInfoData, startRow: Int32(startRow), mainWindow: self.mainGUI.mainWindow)
-		/* ## Swift 3
+	#if swift(>=3)
+		
 		self.mainGUI.initAppInfoWidget(widget: appInfoWidget)
-		*/
+	#elseif swift(>=2.2) && os(OSX)
+		
 		self.mainGUI.initAppInfoWidget(appInfoWidget)
+	#endif
 		
 		guiMainMenu()
 		
-		/* ## Swift 3
+	#if swift(>=3)
+		
 		var loopStartDate: UInt = UInt(Date().timeIntervalSince1970)
 		let runLoop = RunLoop.current()
-		*/
+		repeat {
+			let _ = signalHandler.process()
+			self.mainGUI.onGUI()
+			
+			let curDate: UInt = UInt(Date().timeIntervalSince1970)
+			let dateDif = curDate - loopStartDate
+			if(dateDif > 30) {
+				logger.writeLog(level: Logger.LogLevels.WARNINGS, message: "Updating info data")
+				loopStartDate = curDate
+				
+				if(self.mainGUI.hasAppInfoWidget()) {
+					
+					self.mainGUI.appInfo?.updateAppInfo(appInfo: generateAppInfoData())
+				}
+			}
+			
+			usleep(Constants.GuiRefreshRate)
+			
+		} while (inGuiLoop && runLoop.run(mode: RunLoopMode.defaultRunLoopMode, before: Date().addingTimeInterval(-1 * Constants.CpuSleepMsec)))
+		
+		self.mainGUI.exitGui(status: 0)
+		
+	#else
+		
 		var loopStartDate: UInt = UInt(NSDate().timeIntervalSince1970)
 		let runLoop = NSRunLoop.currentRunLoop()
 		repeat {
 			let _ = signalHandler.process()
 			self.mainGUI.onGUI()
-			
-			/* ## Swift 3
-			let curDate: UInt = UInt(Date().timeIntervalSince1970)
-			*/
+		
 			let curDate: UInt = UInt(NSDate().timeIntervalSince1970)
 			let dateDif = curDate - loopStartDate
 			if(dateDif > 30) {
-				/* ## Swift 3
-				logger.writeLog(level: Logger.LogLevels.WARNINGS, message: "Updating info data")
-				*/
 				logger.writeLog(Logger.LogLevels.WARNINGS, message: "Updating info data")
 				loopStartDate = curDate
 				
 				if(self.mainGUI.hasAppInfoWidget()) {
-					
-					/* ## Swift 3
-					self.mainGUI.appInfo?.updateAppInfo(appInfo: generateAppInfoData())
-					*/
+		
 					self.mainGUI.appInfo?.updateAppInfo(generateAppInfoData())
 				}
 			}
 			
 			usleep(Constants.GuiRefreshRate)
 		
-		/* ## Swift 3
-		} while (inGuiLoop && runLoop.run(mode: RunLoopMode.defaultRunLoopMode, before: Date().addingTimeInterval(-1 * Constants.CpuSleepMsec)))
-		*/
 		} while (inGuiLoop && runLoop.runMode(NSDefaultRunLoopMode, beforeDate: NSDate().dateByAddingTimeInterval(-1 * Constants.CpuSleepMsec)))
 		
-		/* ## Swift 3
-		self.mainGUI.exitGui(status: 0)
-		*/
 		self.mainGUI.exitGui(0)
+	#endif
 	}
-	
+
 	private func startApplicationOnGUI() {
 		
 		let appStatus = self.getWorkerStatus()
@@ -586,10 +699,13 @@ internal final class Application {
 					self.mainGUI.deinitPopupWidget()
 				}, mainWindow: self.mainGUI.mainWindow)
 			
-			/* ## Swift 3
+		#if swift(>=3)
+			
 			self.mainGUI.initPopupWidget(widget: popup)
-			*/
+		#elseif swift(>=2.2) && os(OSX)
+			
 			self.mainGUI.initPopupWidget(popup)
+		#endif
 		}else if(appStatus == 1) {
 			
 			let popup = PopupWidget(popuptype: PopupWidget.GUIPopupTypes.CONFIRM, popupContent: "Are you sure want to START application ?", popupButtons: ["No", "Yes"], hasShadow: false, popupDelegate: { (selectedChoiceIdx) in
@@ -598,49 +714,62 @@ internal final class Application {
 				if(selectedChoiceIdx == 1) {
 					
 					self.mainGUI.deinitPopupWidget()
-					/* ## Swift 3
+				#if swift(>=3)
+					
 					self.startHandlers(isChildProcess: false)
-					*/
+				#elseif swift(>=2.2) && os(OSX)
+					
 					self.startHandlers(false)
+				#endif
 					
 					let waitPopup = PopupWidget(popuptype: PopupWidget.GUIPopupTypes.SYNC_WAIT, popupContent: "Please wait ...", popupButtons: [], hasShadow: false, popupDelegate: { (selectedChoiceIdx) in
 						
 						}, mainWindow: self.mainGUI.mainWindow)
+				#if swift(>=3)
 					
-					/* ## Swift 3
 					self.mainGUI.initPopupWidget(widget: waitPopup)
 					self.mainGUI.waitPopup(waitForSecond: 5)
-					*/
+				#elseif swift(>=2.2) && os(OSX)
+					
 					self.mainGUI.initPopupWidget(waitPopup)
 					self.mainGUI.waitPopup(5)
+				#endif
 					
 					let endPopup = PopupWidget(popuptype: PopupWidget.GUIPopupTypes.CONFIRM, popupContent: "Application started!", popupButtons: ["OK"], hasShadow: false, popupDelegate: { (selectedChoiceIdx) in
 						
 							self.mainGUI.deinitPopupWidget()
 							if(self.mainGUI.hasAppInfoWidget()) {
-							
-								/* ## Swift 3
+							#if swift(>=3)
+								
 								self.mainGUI.appInfo?.updateAppInfo(appInfo: self.generateAppInfoData())
-								*/
+							#elseif swift(>=2.2) && os(OSX)
+								
 								self.mainGUI.appInfo?.updateAppInfo(self.generateAppInfoData())
+							#endif
 							}
 						
 						}, mainWindow: self.mainGUI.mainWindow)
 					
-					/* ## Swift 3
+				#if swift(>=3)
+					
 					self.mainGUI.initPopupWidget(widget: endPopup)
-					*/
+				#elseif swift(>=2.2) && os(OSX)
+					
 					self.mainGUI.initPopupWidget(endPopup)
+				#endif
 				}else{
 					self.mainGUI.deinitPopupWidget()
 				}
 				
 				}, mainWindow: self.mainGUI.mainWindow)
 			
-			/* ## Swift 3
+		#if swift(>=3)
+			
 			self.mainGUI.initPopupWidget(widget: popup)
-			*/
+		#elseif swift(>=2.2) && os(OSX)
+			
 			self.mainGUI.initPopupWidget(popup)
+		#endif
 			
 		}else{
 			
@@ -649,10 +778,13 @@ internal final class Application {
 				self.mainGUI.deinitPopupWidget()
 				}, mainWindow: self.mainGUI.mainWindow)
 			
-			/* ## Swift 3
+		#if swift(>=3)
+			
 			self.mainGUI.initPopupWidget(widget: popup)
-			*/
+		#elseif swift(>=2.2) && os(OSX)
+			
 			self.mainGUI.initPopupWidget(popup)
+		#endif
 		}
 	}
 	
@@ -667,47 +799,62 @@ internal final class Application {
 				if(selectedChoiceIdx == 1) {
 					
 					self.mainGUI.deinitPopupWidget()
-					/* ## Swift 3
+				#if swift(>=3)
+					
 					self.stopHandlers(forceStop: false)
-					*/
+				#elseif swift(>=2.2) && os(OSX)
+					
 					self.stopHandlers(false)
+				#endif
 					let waitPopup = PopupWidget(popuptype: PopupWidget.GUIPopupTypes.SYNC_WAIT, popupContent: "Please wait ...", popupButtons: [], hasShadow: false, popupDelegate: { (selectedChoiceIdx) in
 						
 						}, mainWindow: self.mainGUI.mainWindow)
-					/* ## Swift 3
+				#if swift(>=3)
+					
 					self.mainGUI.initPopupWidget(widget: waitPopup)
 					self.mainGUI.waitPopup(waitForSecond: 5)
-					*/
+				#elseif swift(>=2.2) && os(OSX)
+					
 					self.mainGUI.initPopupWidget(waitPopup)
 					self.mainGUI.waitPopup(5)
+				#endif
 					
 					let resultPopup = PopupWidget(popuptype: PopupWidget.GUIPopupTypes.CONFIRM, popupContent: "Application stopped!", popupButtons: ["OK"], hasShadow: false, popupDelegate: { (selectedChoiceIdx) in
 						
 						self.mainGUI.deinitPopupWidget()
 						if(self.mainGUI.hasAppInfoWidget()) {
 							
-							/* ## Swift 3
+						#if swift(>=3)
+							
 							self.mainGUI.appInfo?.updateAppInfo(appInfo: self.generateAppInfoData())
-							*/
+						#elseif swift(>=2.2) && os(OSX)
+							
 							self.mainGUI.appInfo?.updateAppInfo(self.generateAppInfoData())
+						#endif
 						}
 						
 						}, mainWindow: self.mainGUI.mainWindow)
 					
-					/* ## Swift 3
+				#if swift(>=3)
+					
 					self.mainGUI.initPopupWidget(widget: resultPopup)
-					*/
+				#elseif swift(>=2.2) && os(OSX)
+					
 					self.mainGUI.initPopupWidget(resultPopup)
+				#endif
 				}else{
 					self.mainGUI.deinitPopupWidget()
 				}
 				
 				}, mainWindow: self.mainGUI.mainWindow)
 			
-			/* ## Swift 3
+		#if swift(>=3)
+			
 			self.mainGUI.initPopupWidget(widget: popup)
-			*/
+		#elseif swift(>=2.2) && os(OSX)
+			
 			self.mainGUI.initPopupWidget(popup)
+		#endif
 			
 		}else if(appStatus == 1) {
 			
@@ -716,11 +863,13 @@ internal final class Application {
 				self.mainGUI.deinitPopupWidget()
 				
 				}, mainWindow: self.mainGUI.mainWindow)
+		#if swift(>=3)
 			
-			/* ## Swift 3
 			self.mainGUI.initPopupWidget(widget: popup)
-			*/
+		#elseif swift(>=2.2) && os(OSX)
+			
 			self.mainGUI.initPopupWidget(popup)
+		#endif
 		}else{
 			
 			let popup = PopupWidget(popuptype: PopupWidget.GUIPopupTypes.CONFIRM, popupContent: "Warning!\n   Application is not running but pid file exists.\nUse force stop option.", popupButtons: ["OK"], hasShadow: false, popupDelegate: { (selectedChoiceIdx) in
@@ -729,10 +878,13 @@ internal final class Application {
 				
 				}, mainWindow: self.mainGUI.mainWindow)
 			
-			/* ## Swift 3
+		#if swift(>=3)
+			
 			self.mainGUI.initPopupWidget(widget: popup)
-			*/
+		#elseif swift(>=2.2) && os(OSX)
+			
 			self.mainGUI.initPopupWidget(popup)
+		#endif
 		}
 	}
 	
@@ -747,27 +899,33 @@ internal final class Application {
 				if(selectedChoiceIdx == 1) {
 					
 					self.mainGUI.deinitPopupWidget()
-					/* ## Swift 3
+				#if swift(>=3)
+					
 					self.stopHandlers(forceStop: false)
-					*/
+				#elseif swift(>=2.2) && os(OSX)
+					
 					self.stopHandlers(false)
+				#endif
 					
 					let waitPopup = PopupWidget(popuptype: PopupWidget.GUIPopupTypes.SYNC_WAIT, popupContent: "Please wait ...", popupButtons: [], hasShadow: false, popupDelegate: { (selectedChoiceIdx) in
 						}, mainWindow: self.mainGUI.mainWindow)
-					/* ## Swift 3
+				#if swift(>=3)
+					
 					self.mainGUI.initPopupWidget(widget: waitPopup)
 					
 					self.mainGUI.waitPopup(waitForSecond: 5)
 					self.startHandlers(isChildProcess: false)
 					self.mainGUI.initPopupWidget(widget: waitPopup)
 					self.mainGUI.waitPopup(waitForSecond: 5)
-					*/
+				#elseif swift(>=2.2) && os(OSX)
+						
 					self.mainGUI.initPopupWidget(waitPopup)
 					
 					self.mainGUI.waitPopup(5)
 					self.startHandlers(false)
 					self.mainGUI.initPopupWidget(waitPopup)
 					self.mainGUI.waitPopup(5)
+				#endif
 			
 					
 					let resultPopup = PopupWidget(popuptype: PopupWidget.GUIPopupTypes.SYNC_WAIT, popupContent: "Application restarted!", popupButtons: ["OK"], hasShadow: false, popupDelegate: { (selectedChoiceIdx) in
@@ -776,18 +934,24 @@ internal final class Application {
 						
 						if(self.mainGUI.hasAppInfoWidget()) {
 							
-							/* ## Swift 3
+						#if swift(>=3)
+							
 							self.mainGUI.appInfo?.updateAppInfo(appInfo: self.generateAppInfoData())
-							*/
+						#elseif swift(>=2.2) && os(OSX)
+							
 							self.mainGUI.appInfo?.updateAppInfo(self.generateAppInfoData())
+						#endif
 						}
 						
 						}, mainWindow: self.mainGUI.mainWindow)
 					
-					/* ## Swift 3
+				#if swift(>=3)
+					
 					self.mainGUI.initPopupWidget(widget: resultPopup)
-					*/
+				#elseif swift(>=2.2) && os(OSX)
+					
 					self.mainGUI.initPopupWidget(resultPopup)
+				#endif
 					
 				}else{
 					self.mainGUI.deinitPopupWidget()
@@ -795,10 +959,13 @@ internal final class Application {
 				
 				}, mainWindow: self.mainGUI.mainWindow)
 			
-			/* ## Swift 3
+		#if swift(>=3)
+			
 			self.mainGUI.initPopupWidget(widget: popup)
-			*/
+		#elseif swift(>=2.2) && os(OSX)
+			
 			self.mainGUI.initPopupWidget(popup)
+		#endif
 		}else if(appStatus == 1) {
 			
 			let popup = PopupWidget(popuptype: PopupWidget.GUIPopupTypes.CONFIRM, popupContent: "Warning!\n   Application is not running.", popupButtons: ["OK"], hasShadow: false, popupDelegate: { (selectedChoiceIdx) in
@@ -807,10 +974,13 @@ internal final class Application {
 				
 				}, mainWindow: self.mainGUI.mainWindow)
 			
-			/* ## Swift 3
+		#if swift(>=3)
+			
 			self.mainGUI.initPopupWidget(widget: popup)
-			*/
+		#elseif swift(>=2.2) && os(OSX)
+			
 			self.mainGUI.initPopupWidget(popup)
+		#endif
 		}else{
 			
 			let popup = PopupWidget(popuptype: PopupWidget.GUIPopupTypes.CONFIRM, popupContent: "Warning!\n   Application is not running but pid file exists.\nUse force stop option.", popupButtons: ["OK"], hasShadow: false, popupDelegate: { (selectedChoiceIdx) in
@@ -818,10 +988,13 @@ internal final class Application {
 				self.mainGUI.deinitPopupWidget()
 				
 				}, mainWindow: self.mainGUI.mainWindow)
-			/* ## Swift 3
+		#if swift(>=3)
+			
 			self.mainGUI.initPopupWidget(widget: popup)
-			*/
+		#elseif swift(>=2.2) && os(OSX)
+			
 			self.mainGUI.initPopupWidget(popup)
+		#endif
 		}
 	}
 	
@@ -832,45 +1005,60 @@ internal final class Application {
 			if(selectedChoiceIdx == 1) {
 				
 				self.mainGUI.deinitPopupWidget()
-				/* ## Swift 3
+			#if swift(>=3)
+				
 				self.stopHandlers(forceStop: true)
-				*/
+			#elseif swift(>=2.2) && os(OSX)
+				
 				self.stopHandlers(true)
+			#endif
 				
 				let waitPopup = PopupWidget(popuptype: PopupWidget.GUIPopupTypes.SYNC_WAIT, popupContent: "Please wait ...", popupButtons: [], hasShadow: false, popupDelegate: { (selectedChoiceIdx) in
 					}, mainWindow: self.mainGUI.mainWindow)
-				/* ## Swift 3
+			#if swift(>=3)
+				
 				self.mainGUI.initPopupWidget(widget: waitPopup)
 				self.mainGUI.waitPopup(waitForSecond: 5)
-				*/
+			#elseif swift(>=2.2) && os(OSX)
+				
 				self.mainGUI.initPopupWidget(waitPopup)
 				self.mainGUI.waitPopup(5)
+			#endif
 				
 				let resultPopup = PopupWidget(popuptype: PopupWidget.GUIPopupTypes.CONFIRM, popupContent: "Application stopped!", popupButtons: ["OK"], hasShadow: false, popupDelegate: { (selectedChoiceIdx) in
 					
 					self.mainGUI.deinitPopupWidget()
 					if(self.mainGUI.hasAppInfoWidget()) {
-						/* ## Swift 3
+					#if swift(>=3)
+						
 						self.mainGUI.appInfo?.updateAppInfo(appInfo: self.generateAppInfoData())
-						*/
+					#elseif swift(>=2.2) && os(OSX)
+						
 						self.mainGUI.appInfo?.updateAppInfo(self.generateAppInfoData())
+					#endif
 					}
 					
 					}, mainWindow: self.mainGUI.mainWindow)
-				/* ## Swift 3
+			#if swift(>=3)
+				
 				self.mainGUI.initPopupWidget(widget: resultPopup)
-				*/
+			#elseif swift(>=2.2) && os(OSX)
+				
 				self.mainGUI.initPopupWidget(resultPopup)
+			#endif
 				
 			}else{
 				self.mainGUI.deinitPopupWidget()
 			}
 			
 			}, mainWindow: self.mainGUI.mainWindow)
-		/* ## Swift 3
+	#if swift(>=3)
+		
 		self.mainGUI.initPopupWidget(widget: popup)
-		*/
+	#elseif swift(>=2.2) && os(OSX)
+		
 		self.mainGUI.initPopupWidget(popup)
+	#endif
 	}
 	
 	private func generateGuiConfigDirectives() {
@@ -908,10 +1096,13 @@ internal final class Application {
 			
 			startRow = 2
 			widgetSize += (self.mainGUI.titleAndFooter?.widgetRows)!
-			/* ## Swift 3
+		#if swift(>=3)
+			
 			self.mainGUI.titleAndFooter?.updateKeyboardInfo(keyControls: (GUIConstants.MenuButtons, GUIConstants.ArrowsUpDown))
-			*/
+		#elseif swift(>=2.2) && os(OSX)
+			
 			self.mainGUI.titleAndFooter?.updateKeyboardInfo((GUIConstants.MenuButtons, GUIConstants.ArrowsUpDown))
+		#endif
 		}
 		
 		if(self.mainGUI.hasAppInfoWidget()) {
@@ -925,10 +1116,13 @@ internal final class Application {
 			self.guiMainMenu()
 			
 			}, mainWindow: self.mainGUI.mainWindow)
-		/* ## Swift 3
+	#if swift(>=3)
+		
 		self.mainGUI.initMenuWidget(widget: menuWidget)
-		*/
+	#elseif swift(>=2.2) && os(OSX)
+		
 		self.mainGUI.initMenuWidget(menuWidget)
+	#endif
 	}
 	
 	private func guiModulesMenu() {
@@ -953,10 +1147,13 @@ internal final class Application {
 			
 			startRow = 2
 			widgetSize += (self.mainGUI.titleAndFooter?.widgetRows)!
-			/* ## Swift 3
+		#if swift(>=3)
+			
 			self.mainGUI.titleAndFooter?.updateKeyboardInfo(keyControls: (GUIConstants.ModuleButtons, GUIConstants.ArrowsAll))
-			*/
+		#elseif swift(>=2.2) && os(OSX)
+			
 			self.mainGUI.titleAndFooter?.updateKeyboardInfo((GUIConstants.ModuleButtons, GUIConstants.ArrowsAll))
+		#endif
 		}
 		
 		if(self.mainGUI.hasAppInfoWidget()) {
@@ -978,17 +1175,44 @@ internal final class Application {
 					self.mainGUI.deinitPopupWidget()
 					if(popupSelectedChoiceIdx == 1) {
 						
-						/* ## Swift 3
+					#if swift(>=3)
+
 						if(self.appExtensions.deactivateModule(moduleIdx: selectedChoiceIdx)) {
-						*/
+							
+							let subPopup = PopupWidget(popuptype: PopupWidget.GUIPopupTypes.CONFIRM, popupContent: "   Module removed!\n   Changes will be save when application restarted.", popupButtons: ["OK"], hasShadow: false, popupDelegate: { (selectedChoiceIdx) in
+								self.mainGUI.deinitPopupWidget()
+								}, mainWindow: self.mainGUI.mainWindow)
+							self.mainGUI.initPopupWidget(widget: subPopup)
+							
+							if(self.mainGUI.hasModuleWidget()) {
+								
+								var choices = [GUIModulesChoices]()
+								let moduleList = self.appExtensions.getModulesList()
+								
+								
+								var choiceIdx = 0
+								for module in moduleList {
+									
+									choices.append(GUIModulesChoices(choiceName: module.0, choiceCode: choiceIdx, isActive: module.1))
+									choiceIdx += 1
+								}
+								
+								self.mainGUI.modules?.updateModuleList(modules: choices)
+							}
+							
+						}else{
+							let subPopup = PopupWidget(popuptype: PopupWidget.GUIPopupTypes.CONFIRM, popupContent: "An error occured for deactivating module.", popupButtons: ["OK"], hasShadow: false, popupDelegate: { (selectedChoiceIdx) in
+								self.mainGUI.deinitPopupWidget()
+								}, mainWindow: self.mainGUI.mainWindow)
+							self.mainGUI.initPopupWidget(widget: subPopup)
+						}
+					#elseif swift(>=2.2) && os(OSX)
+						
 						if(self.appExtensions.deactivateModule(selectedChoiceIdx)) {
 							
 							let subPopup = PopupWidget(popuptype: PopupWidget.GUIPopupTypes.CONFIRM, popupContent: "   Module removed!\n   Changes will be save when application restarted.", popupButtons: ["OK"], hasShadow: false, popupDelegate: { (selectedChoiceIdx) in
 								self.mainGUI.deinitPopupWidget()
 								}, mainWindow: self.mainGUI.mainWindow)
-							/* ## Swift 3
-							self.mainGUI.initPopupWidget(widget: subPopup)
-							*/
 							self.mainGUI.initPopupWidget(subPopup)
 							
 							if(self.mainGUI.hasModuleWidget()) {
@@ -1004,9 +1228,6 @@ internal final class Application {
 									choiceIdx += 1
 								}
 								
-								/* ## Swift 3
-								self.mainGUI.modules?.updateModuleList(modules: choices)
-								*/
 								self.mainGUI.modules?.updateModuleList(choices)
 							}
 							
@@ -1014,18 +1235,19 @@ internal final class Application {
 							let subPopup = PopupWidget(popuptype: PopupWidget.GUIPopupTypes.CONFIRM, popupContent: "An error occured for deactivating module.", popupButtons: ["OK"], hasShadow: false, popupDelegate: { (selectedChoiceIdx) in
 								self.mainGUI.deinitPopupWidget()
 								}, mainWindow: self.mainGUI.mainWindow)
-							/* ## Swift 3
-							self.mainGUI.initPopupWidget(widget: subPopup)
-							*/
 							self.mainGUI.initPopupWidget(subPopup)
 						}
+					#endif
 					}
 					
 					}, mainWindow: self.mainGUI.mainWindow)
-				/* ## Swift 3
+			#if swift(>=3)
+				
 				self.mainGUI.initPopupWidget(widget: popup)
-				*/
+			#elseif swift(>=2.2) && os(OSX)
+					
 				self.mainGUI.initPopupWidget(popup)
+			#endif
 			}else{
 
 				let popup = PopupWidget(popuptype: PopupWidget.GUIPopupTypes.CONFIRM, popupContent: "Are you sure want to INSTALL this module ?", popupButtons: ["No", "Yes"], hasShadow: false, popupDelegate: { (popupSelectedChoiceIdx) in
@@ -1033,17 +1255,47 @@ internal final class Application {
 					self.mainGUI.deinitPopupWidget()
 					if(popupSelectedChoiceIdx == 1) {
 						
-						/* ## Swift 3
+					#if swift(>=3)
+						
 						if(self.appExtensions.activateModule(moduleIdx: selectedChoiceIdx)) {
-						*/
+							
+							let subPopup = PopupWidget(popuptype: PopupWidget.GUIPopupTypes.CONFIRM, popupContent: "   Module installed!\n   Changes will be save when application restarted.", popupButtons: ["OK"], hasShadow: false, popupDelegate: { (selectedChoiceIdx) in
+								self.mainGUI.deinitPopupWidget()
+								}, mainWindow: self.mainGUI.mainWindow)
+						
+							self.mainGUI.initPopupWidget(widget: subPopup)
+							
+							if(self.mainGUI.hasModuleWidget()) {
+								
+								var choices = [GUIModulesChoices]()
+								let moduleList = self.appExtensions.getModulesList()
+								
+								
+								var choiceIdx = 0
+								for module in moduleList {
+									
+									choices.append(GUIModulesChoices(choiceName: module.0, choiceCode: choiceIdx, isActive: module.1))
+									choiceIdx += 1
+								}
+								
+								self.mainGUI.modules?.updateModuleList(modules: choices)
+							}
+							
+						}else{
+							let subPopup = PopupWidget(popuptype: PopupWidget.GUIPopupTypes.CONFIRM, popupContent: "An error occured for activating module.", popupButtons: ["OK"], hasShadow: false, popupDelegate: { (selectedChoiceIdx) in
+								self.mainGUI.deinitPopupWidget()
+								}, mainWindow: self.mainGUI.mainWindow)
+							
+								self.mainGUI.initPopupWidget(widget: subPopup)
+						}
+					#elseif swift(>=2.2) && os(OSX)
+						
 						if(self.appExtensions.activateModule(selectedChoiceIdx)) {
 							
 							let subPopup = PopupWidget(popuptype: PopupWidget.GUIPopupTypes.CONFIRM, popupContent: "   Module installed!\n   Changes will be save when application restarted.", popupButtons: ["OK"], hasShadow: false, popupDelegate: { (selectedChoiceIdx) in
 								self.mainGUI.deinitPopupWidget()
 								}, mainWindow: self.mainGUI.mainWindow)
-							/* ## Swift 3
-							self.mainGUI.initPopupWidget(widget: subPopup)
-							*/
+
 							self.mainGUI.initPopupWidget(subPopup)
 							
 							if(self.mainGUI.hasModuleWidget()) {
@@ -1059,9 +1311,6 @@ internal final class Application {
 									choiceIdx += 1
 								}
 								
-								/* ## Swift 3
-								self.mainGUI.modules?.updateModuleList(modules: choices)
-								*/
 								self.mainGUI.modules?.updateModuleList(choices)
 							}
 							
@@ -1069,25 +1318,30 @@ internal final class Application {
 							let subPopup = PopupWidget(popuptype: PopupWidget.GUIPopupTypes.CONFIRM, popupContent: "An error occured for activating module.", popupButtons: ["OK"], hasShadow: false, popupDelegate: { (selectedChoiceIdx) in
 								self.mainGUI.deinitPopupWidget()
 								}, mainWindow: self.mainGUI.mainWindow)
+						
 							
-							/* ## Swift 3
-							self.mainGUI.initPopupWidget(widget: subPopup)
-							*/
 							self.mainGUI.initPopupWidget(subPopup)
 						}
+					#endif
 					}
 					
 					}, mainWindow: self.mainGUI.mainWindow)
-				/* ## Swift 3
+			#if swift(>=3)
+				
 				self.mainGUI.initPopupWidget(widget: popup)
-				*/
+			#elseif swift(>=2.2) && os(OSX)
+				
 				self.mainGUI.initPopupWidget(popup)
+			#endif
 			}
 			
 			}, mainWindow: self.mainGUI.mainWindow)
-		/* ## Swift 3
+	#if swift(>=3)
+		
 		self.mainGUI.initModuleWidget(widget: modulesWidget)
-		*/
+	#elseif swift(>=2.2) && os(OSX)
+		
 		self.mainGUI.initModuleWidget(modulesWidget)
+	#endif
 	}
 }

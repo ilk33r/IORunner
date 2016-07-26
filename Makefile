@@ -17,7 +17,7 @@ SDK=$(XCODE)/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.11.sdk
 LSB_OS = $(shell lsb_release -si)
 LSB_VER = $(shell lsb_release -sr)
 
-Darwin_SWIFTC_FLAGS = -sdk $(SDK)
+Darwin_SWIFTC_FLAGS = -sdk $(SDK) -D $(OS)_$(subst .,_,$(shell uname -r))
 Linux_SWIFTC_FLAGS = -I linked/LinuxBridge
 Linux_EXTRA_FLAGS = -D $(LSB_OS)_$(subst .,_,$(LSB_VER))
 
@@ -79,6 +79,7 @@ source-dist: dist-clean
 	@cp $(SOURCE_ROOT_DIR)/LICENSE $(BUILD_ROOT_DIR)/$(MODULE_NAME)
 	@cp -r $(SOURCE_ROOT_DIR)/$(MODULE_NAME).xcodeproj $(BUILD_ROOT_DIR)/$(MODULE_NAME)
 	@mv $(BUILD_ROOT_DIR)/$(MODULE_NAME) $(SOURCE_ROOT_DIR)/$(MODULE_NAME)-Src
+	@find $(SOURCE_ROOT_DIR)/$(MODULE_NAME)-Src -name ".*" -exec rm -rf {} \;
 	@tar -cvzf $(BUILD_ROOT_DIR)/$(MODULE_NAME)-Source.tar.gz $(MODULE_NAME)-Src
 	@rm -rf $(SOURCE_ROOT_DIR)/$(MODULE_NAME)-Src
 	
