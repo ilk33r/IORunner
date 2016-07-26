@@ -24,8 +24,13 @@ public struct TitleAndFooterWidget {
 	
 	private var mainWindow: OpaquePointer
 	
+#if os(Linux)
+	private var titleWindow: UnsafeMutablePointer<WINDOW>!
+	private var footerWindow: UnsafeMutablePointer<WINDOW>!
+#else
 	private var titleWindow: OpaquePointer!
 	private var footerWindow: OpaquePointer!
+#endif
 #elseif swift(>=2.2) && os(OSX)
 	
 	private var mainWindow: COpaquePointer
@@ -65,15 +70,28 @@ public struct TitleAndFooterWidget {
 #endif
 
 	mutating func initWindows() {
+	
+	#if os(Linux)
+		
+		wmove(UnsafeMutablePointer<WINDOW>(mainWindow), 0, 0)
+		self.titleWindow = subwin(UnsafeMutablePointer<WINDOW>(mainWindow), 1, COLS, 0, 0)
+		wbkgd(titleWindow, UInt(COLOR_PAIR(WidgetUIColor.Title.rawValue)))
+		keypad(titleWindow, true)
+		
+		self.footerWindow = subwin(UnsafeMutablePointer<WINDOW>(mainWindow), 3, COLS, LINES - 3, 0)
+		wbkgd(footerWindow, UInt(COLOR_PAIR(WidgetUIColor.Background.rawValue)))
+		keypad(footerWindow, true)
+	#else
 		
 		wmove(mainWindow, 0, 0)
 		self.titleWindow = subwin(mainWindow, 1, COLS, 0, 0)
-		wbkgd(titleWindow,UInt32(COLOR_PAIR(WidgetUIColor.Title.rawValue)))
+		wbkgd(titleWindow, UInt32(COLOR_PAIR(WidgetUIColor.Title.rawValue)))
 		keypad(titleWindow, true)
 		
 		self.footerWindow = subwin(mainWindow, 3, COLS, LINES - 3, 0)
-		wbkgd(footerWindow,UInt32(COLOR_PAIR(WidgetUIColor.Background.rawValue)))
+		wbkgd(footerWindow, UInt32(COLOR_PAIR(WidgetUIColor.Background.rawValue)))
 		keypad(footerWindow, true)
+	#endif
 	}
 	
 	func draw() {
@@ -171,8 +189,12 @@ public struct TitleAndFooterWidget {
 			delwin(footerWindow)
 			self.footerWindow = nil
 		}
-		
+	
+	#if os(Linux)
+		wrefresh(UnsafeMutablePointer<WINDOW>(mainWindow))
+	#else
 		wrefresh(mainWindow)
+	#endif
 	}
 	
 	func keyEvent(keyCode: Int32) {

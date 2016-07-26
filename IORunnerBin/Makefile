@@ -2,8 +2,10 @@
 
 MODULE_4_REAL_NAME=IORunner
 $(MODULE_4_NAME)_SWIFTC_FLAGS = $(DEBUG) $($(OS)_EXTRA_FLAGS) \
-	-module-cache-path $(MODULE_CACHE_PATH)/$(MODULE_4_NAME) -module-name $(MODULE_4_REAL_NAME) $($(OS)_SWIFTC_FLAGS) -enable-objc-interop \
+	-module-cache-path $(MODULE_CACHE_PATH)/$(MODULE_4_NAME) -module-name $(MODULE_4_REAL_NAME) $($(OS)_SWIFTC_FLAGS) \
 	-I $(BUILD_ROOT_DIR)/lib -I $(BUILD_ROOT_DIR)/frameworks -F $(BUILD_ROOT_DIR)/frameworks
+	
+# -enable-objc-interop
 
 $(MODULE_4_NAME)_Src = $(MODULE_4_NAME)/Constants.swift $(MODULE_4_NAME)/AppExit.swift $(MODULE_4_NAME)/Arguments.swift $(MODULE_4_NAME)/ArgumentParser.swift \
 	$(MODULE_4_NAME)/SignalHandler.swift $(MODULE_4_NAME)/DynamicLoader.swift $(MODULE_4_NAME)/AppWorker.swift $(MODULE_4_NAME)/Application.swift \
@@ -14,7 +16,8 @@ $(MODULE_4_NAME)_Modules = $(addprefix $(MODULE_CACHE_PATH)/, $(addsuffix .swift
 $(MODULE_4_NAME)_Darwin_SHLIB_PATH = -target x86_64-apple-macosx10.10 -I$(BUILD_ROOT_DIR)/lib -I$(BUILD_ROOT_DIR)/frameworks \
 	-F$(BUILD_ROOT_DIR)/frameworks -L$(BUILD_ROOT_DIR)/frameworks -L$(BUILD_ROOT_DIR)/lib \
 	-I/usr/include
-$(MODULE_4_NAME)_Linux_SHLIB_PATH = -L$(shell dirname $(shell dirname $(shell which swiftc)))/lib/swift/linux -I/usr/include
+$(MODULE_4_NAME)_Linux_SHLIB_PATH = -L$(shell dirname $(shell dirname $(shell which swiftc)))/lib/swift/linux -I/usr/include \
+	-L$(BUILD_ROOT_DIR)/lib
 $(MODULE_4_NAME)_SHLIB_PATH = $($(MODULE_4_NAME)_$(OS)_SHLIB_PATH)
 
 $(MODULE_4_NAME)_Darwin_LFLAGS = $($(MODULE_4_NAME)_SHLIB_PATH) -arch x86_64 \
@@ -25,7 +28,12 @@ $(MODULE_4_NAME)_Darwin_LFLAGS = $($(MODULE_4_NAME)_SHLIB_PATH) -arch x86_64 \
 	-L$(XCODE)/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx \
 	-Xlinker -add_ast_path -Xlinker $(SOURCE_ROOT_DIR)/$(MODULE_4_NAME)/$(MODULE_4_NAME).swiftmodule \
 	-framework Foundation -framework $(MODULE_1_NAME) -framework $(MODULE_3_NAME) -framework $(MODULE_2_NAME)
-$(MODULE_4_NAME)_Linux_LFLAGS = $($(MODULE_4_NAME)_SHLIB_PATH) -lswiftCore -lswiftGlibc -ldl -lm -shared
+$(MODULE_4_NAME)_Linux_LFLAGS = $($(MODULE_4_NAME)_SHLIB_PATH) -lswiftCore -lswiftGlibc -ldl -lm \
+	-lFoundation -l$(MODULE_1_NAME) -l$(MODULE_3_NAME) -l$(MODULE_2_NAME) \
+	-Xlinker -rpath \
+	-Xlinker -no_deduplicate \
+	-stdlib=libc++ -flto -fuse-ld=gold \
+	-shared
 $(MODULE_4_NAME)_LFLAGS = $($(MODULE_4_NAME)_$(OS)_LFLAGS)
 
 $(MODULE_4_NAME)-install:
@@ -53,7 +61,8 @@ $(MODULE_4_NAME)-clean:
 	$(SOURCE_ROOT_DIR)/$(MODULE_4_NAME)/*.swiftmodule $(SOURCE_ROOT_DIR)/$(MODULE_4_NAME)/*.swiftdoc \
 	$(SOURCE_ROOT_DIR)/$(MODULE_4_NAME)/*.d $(MODULE_CACHE_PATH)/$(MODULE_4_NAME) \
 	$(BUILD_ROOT_DIR)/lib/$(MODULE_4_NAME)* $(BUILD_ROOT_DIR)/lib/x86_64/$(MODULE_4_NAME)* \
-	$(BUILD_ROOT_DIR)/bin/$(MODULE_4_NAME)* $(BUILD_ROOT_DIR)/bin/$(MODULE_4_REAL_NAME)*
+	$(BUILD_ROOT_DIR)/bin/$(MODULE_4_NAME)* $(BUILD_ROOT_DIR)/bin/$(MODULE_4_REAL_NAME)* \
+	$(SOURCE_ROOT_DIR)/$(MODULE_4_NAME)/$(MODULE_4_NAME).bin
 	
 $(MODULE_4_NAME)/%.o : $(MODULE_4_NAME)/%.swift
 	$(SWIFTC) -frontend -c $(subst $<,,$($(MODULE_4_NAME)_Src)) -primary-file $< \

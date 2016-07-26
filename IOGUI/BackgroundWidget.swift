@@ -20,7 +20,11 @@ public struct BackgroundWidget {
 	
 	private var mainWindow: OpaquePointer
 	
+#if os(Linux)
+	private var mainBgWindow: UnsafeMutablePointer<WINDOW>!
+#else
 	private var mainBgWindow: OpaquePointer!
+#endif
 	
 	public init(mainWindow: OpaquePointer) {
 		
@@ -42,10 +46,19 @@ public struct BackgroundWidget {
 	
 	mutating func initWindows() {
 		
+	#if os(Linux)
+		wmove(UnsafeMutablePointer<WINDOW>(mainWindow), 0, 0)
+		self.mainBgWindow = subwin(UnsafeMutablePointer<WINDOW>(mainWindow), LINES, COLS, 0, 0)
+	#else
 		wmove(mainWindow, 0, 0)
-		
 		self.mainBgWindow = subwin(mainWindow, LINES, COLS, 0, 0)
+	#endif
+		
+	#if os(Linux)
+		wbkgd(self.mainBgWindow, UInt(COLOR_PAIR(WidgetUIColor.CyanBackground.rawValue)))
+	#else
 		wbkgd(self.mainBgWindow, UInt32(COLOR_PAIR(WidgetUIColor.CyanBackground.rawValue)))
+	#endif
 		keypad(self.mainBgWindow, true)
 	}
 	
@@ -78,6 +91,10 @@ public struct BackgroundWidget {
 			self.mainBgWindow = nil
 		}
 		
+	#if os(Linux)
+		wrefresh(UnsafeMutablePointer<WINDOW>(mainWindow))
+	#else
 		wrefresh(mainWindow)
+	#endif
 	}
 }

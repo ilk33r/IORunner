@@ -89,7 +89,11 @@ internal struct Arguments {
 	
 	static func getUsage() -> String {
 		
+	#if os(Linux)
+		var currentUsageString = String(format: Arguments.appNameHeader, arguments: [Constants.APP_NAME as! CVarArg]) + String(format: Arguments.usageString, arguments: [Constants.APP_PACKAGE_NAME as! CVarArg])
+	#else
 		var currentUsageString = String(format: Arguments.appNameHeader, Constants.APP_NAME) + String(format: Arguments.usageString, Constants.APP_PACKAGE_NAME)
+	#endif
 		for i in 0..<Arguments.ArgumentNames.count {
 			
 			let currentArgData = Arguments.ArgumentNames[i]
@@ -120,13 +124,21 @@ internal struct Arguments {
 	
 	static func getVersion() -> String {
 		
+	#if os(Linux)
+		let currentUsageString = String(format: Arguments.appNameHeader, arguments: [Constants.APP_NAME as! CVarArg]) + "\n" + Constants.APP_VERSION + "\n" + Constants.APP_CREDITS
+	#else
 		let currentUsageString = String(format: Arguments.appNameHeader, Constants.APP_NAME) + "\n" + Constants.APP_VERSION + "\n" + Constants.APP_CREDITS
+	#endif
 		return currentUsageString
 	}
 	
 	static func getBuildInfo() -> String {
 		
+	#if os(Linux)
+		var currentUsageString = String(format: Arguments.appNameHeader, arguments: [Constants.APP_NAME as! CVarArg]) + "\nOS\t\t\t: "
+	#else
 		var currentUsageString = String(format: Arguments.appNameHeader, Constants.APP_NAME) + "\nOS\t\t\t: "
+	#endif
 		#if os(OSX)
 		currentUsageString += "Mac OS X"
 		#elseif os(Linux)

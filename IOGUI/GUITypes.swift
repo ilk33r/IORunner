@@ -52,8 +52,11 @@ public struct GUIWidgets {
 	
 	private var delegate: MainGuiDelegate
 #if swift(>=3)
-	
+#if os(Linux)
+	public var mainWindow: UnsafeMutablePointer<WINDOW>
+#else
 	public var mainWindow: OpaquePointer
+#endif
 #else
 	
 	public var mainWindow: COpaquePointer
@@ -108,7 +111,11 @@ public struct GUIWidgets {
 			          Int16(COLOR_GREEN))
 			init_pair(Int16(WidgetUIColor.ProgressText.rawValue), Int16(COLOR_WHITE),
 			          Int16(COLOR_GREEN))
+		#if os(Linux)
+			bkgd(UInt(COLOR_PAIR(WidgetUIColor.Background.rawValue)))
+		#else
 			bkgd(UInt32(COLOR_PAIR(WidgetUIColor.Background.rawValue)))
+		#endif
 		}
 		
 		nonl()
@@ -431,7 +438,35 @@ public struct GUIWidgets {
 	public mutating func onGUI() {
 		
 		let currentKey = getch()
-		
+	#if os(Linux)
+		if(currentKey == KEY_RESIZE) {
+			
+			self.resizeAll()
+		}else if(currentKey == 113 || currentKey == 27 || currentKey == 81) {
+			
+			if(self.hasInputPopupWidget()) {
+				
+				self.sendKeyEventToWidget(keycode: currentKey)
+			}else{
+				
+				self.delegate(action: MainGuiActions.EXIT)
+			}
+			
+		}else if(currentKey == 98 || currentKey == 66) {
+			
+			if(self.hasInputPopupWidget()) {
+				
+				self.sendKeyEventToWidget(keycode: currentKey)
+			}else{
+				
+				self.delegate(action: MainGuiActions.BACK)
+			}
+			
+		}else{
+			
+			self.sendKeyEventToWidget(keycode: currentKey)
+		}
+	#else
 		if(currentKey == KEY_RESIZE) {
 			
 			self.resizeAll()
@@ -475,6 +510,7 @@ public struct GUIWidgets {
 			self.sendKeyEventToWidget(currentKey)
 		#endif
 		}
+	#endif
 	}
 	
 	public mutating func exitGui(status: Int32) {
@@ -487,8 +523,11 @@ public struct GUIWidgets {
 	public mutating func waitPopup(waitForSecond: UInt) {
 		
 	#if swift(>=3)
-		
+	#if os(Linux)
+		let loopStartDate: UInt = UInt(NSDate().timeIntervalSince1970)
+	#else
 		let loopStartDate: UInt = UInt(Date().timeIntervalSince1970)
+	#endif
 	#else
 		
 		let loopStartDate: UInt = UInt(NSDate().timeIntervalSince1970)
@@ -496,8 +535,11 @@ public struct GUIWidgets {
 		repeat {
 		
 		#if swift(>=3)
-			
+		#if os(Linux)
+			let currentDate: UInt = UInt(NSDate().timeIntervalSince1970)
+		#else
 			let currentDate: UInt = UInt(Date().timeIntervalSince1970)
+		#endif
 		#else
 			
 			let currentDate: UInt = UInt(NSDate().timeIntervalSince1970)

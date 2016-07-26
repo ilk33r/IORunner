@@ -1,9 +1,11 @@
 # Makefile for IOGUI
 
 $(MODULE_3_NAME)_SWIFTC_FLAGS = $(DEBUG) $($(OS)_EXTRA_FLAGS) \
-	-module-cache-path $(MODULE_CACHE_PATH)/$(MODULE_3_NAME) -module-name $(MODULE_3_NAME) $($(OS)_SWIFTC_FLAGS) -enable-objc-interop \
+	-module-cache-path $(MODULE_CACHE_PATH)/$(MODULE_3_NAME) -module-name $(MODULE_3_NAME) $($(OS)_SWIFTC_FLAGS) \
 	-I $(BUILD_ROOT_DIR)/lib -I $(BUILD_ROOT_DIR)/frameworks -F $(BUILD_ROOT_DIR)/frameworks \
 	-import-objc-header $(SOURCE_ROOT_DIR)/$(MODULE_3_NAME)/$(MODULE_3_NAME)-Bridging-Header.h
+	
+# -enable-objc-interop
 
 $(MODULE_3_NAME)_Src = $(MODULE_3_NAME)/TitleAndFooterWidget.swift $(MODULE_3_NAME)/AppInfoWidget.swift $(MODULE_3_NAME)/MenuWidget.swift \
 	$(MODULE_3_NAME)/ModulesWidget.swift $(MODULE_3_NAME)/PopupWidget.swift \
@@ -14,7 +16,8 @@ $(MODULE_3_NAME)_Modules = $(addprefix $(MODULE_CACHE_PATH)/, $(addsuffix .swift
 $(MODULE_3_NAME)_Darwin_SHLIB_PATH = -target x86_64-apple-macosx10.10 -I$(BUILD_ROOT_DIR)/lib -I$(BUILD_ROOT_DIR)/frameworks \
 	-F$(BUILD_ROOT_DIR)/frameworks -L$(BUILD_ROOT_DIR)/frameworks -L$(BUILD_ROOT_DIR)/lib \
 	-I/usr/include
-$(MODULE_3_NAME)_Linux_SHLIB_PATH = -L$(shell dirname $(shell dirname $(shell which swiftc)))/lib/swift/linux -I/usr/include
+$(MODULE_3_NAME)_Linux_SHLIB_PATH = -L$(shell dirname $(shell dirname $(shell which swiftc)))/lib/swift/linux -I/usr/include \
+	-L$(BUILD_ROOT_DIR)/lib
 $(MODULE_3_NAME)_SHLIB_PATH = $($(MODULE_3_NAME)_$(OS)_SHLIB_PATH)
 
 $(MODULE_3_NAME)_Darwin_LFLAGS = $($(MODULE_3_NAME)_SHLIB_PATH) -arch x86_64 -dynamiclib \
@@ -26,14 +29,18 @@ $(MODULE_3_NAME)_Darwin_LFLAGS = $($(MODULE_3_NAME)_SHLIB_PATH) -arch x86_64 -dy
 	-Xlinker -add_ast_path -Xlinker $(SOURCE_ROOT_DIR)/$(MODULE_3_NAME)/$(MODULE_3_NAME).swiftmodule -single_module \
 	-compatibility_version 1 -current_version 1 \
 	-framework Foundation
-$(MODULE_3_NAME)_Linux_LFLAGS = $($(MODULE_3_NAME)_SHLIB_PATH) -lncurses -lswiftCore -lswiftGlibc -ldl -lm -shared
+$(MODULE_3_NAME)_Linux_LFLAGS = $($(MODULE_3_NAME)_SHLIB_PATH) -lncurses -lswiftCore -lswiftGlibc -ldl -lm -lFoundation \
+	-Xlinker -rpath \
+	-Xlinker -no_deduplicate \
+	-stdlib=libc++ -flto -fuse-ld=gold \
+	-shared
 $(MODULE_3_NAME)_LFLAGS = $($(MODULE_3_NAME)_$(OS)_LFLAGS)
 
 $(MODULE_3_NAME)-install:
-	@cp $(SOURCE_ROOT_DIR)/$(MODULE_3_NAME)/$(MODULE_3_NAME).so $(BUILD_ROOT_DIR)/lib/
+	@cp $(SOURCE_ROOT_DIR)/$(MODULE_3_NAME)/$(MODULE_3_NAME).so $(BUILD_ROOT_DIR)/lib/lib$(MODULE_3_NAME).so
 	@cp $(SOURCE_ROOT_DIR)/$(MODULE_3_NAME)/$(MODULE_3_NAME).swiftmodule $(BUILD_ROOT_DIR)/lib/x86_64
 	@cp $(SOURCE_ROOT_DIR)/$(MODULE_3_NAME)/$(MODULE_3_NAME).swiftdoc $(BUILD_ROOT_DIR)/lib/x86_64
-	@chmod +x $(BUILD_ROOT_DIR)/lib/$(MODULE_3_NAME).so
+	@chmod +x $(BUILD_ROOT_DIR)/lib/lib$(MODULE_3_NAME).so
 	@cp $(SOURCE_ROOT_DIR)/$(MODULE_3_NAME)/$(MODULE_3_NAME).so $(BUILD_ROOT_DIR)/frameworks/$(MODULE_3_NAME).framework/Versions/A/$(MODULE_3_NAME)
 	@cp $(SOURCE_ROOT_DIR)/$(MODULE_3_NAME)/$(MODULE_3_NAME).swiftdoc $(BUILD_ROOT_DIR)/frameworks/$(MODULE_3_NAME).framework/Versions/A/Modules/$(MODULE_3_NAME).swiftmodule/x86_64.swiftdoc
 	@cp $(SOURCE_ROOT_DIR)/$(MODULE_3_NAME)/$(MODULE_3_NAME).swiftmodule $(BUILD_ROOT_DIR)/frameworks/$(MODULE_3_NAME).framework/Versions/A/Modules/$(MODULE_3_NAME).swiftmodule/x86_64.swiftmodule
@@ -67,7 +74,7 @@ $(MODULE_3_NAME)-clean:
 	@rm -rf $(SOURCE_ROOT_DIR)/$(MODULE_3_NAME)/*.o $(SOURCE_ROOT_DIR)/$(MODULE_3_NAME)/*.so \
 	$(SOURCE_ROOT_DIR)/$(MODULE_3_NAME)/*.swiftmodule $(SOURCE_ROOT_DIR)/$(MODULE_3_NAME)/*.swiftdoc \
 	$(SOURCE_ROOT_DIR)/$(MODULE_3_NAME)/*.d $(MODULE_CACHE_PATH)/$(MODULE_3_NAME) \
-	$(BUILD_ROOT_DIR)/lib/$(MODULE_3_NAME)* $(BUILD_ROOT_DIR)/lib/x86_64/$(MODULE_3_NAME)* \
+	$(BUILD_ROOT_DIR)/lib/$(MODULE_3_NAME)* $(BUILD_ROOT_DIR)/lib/lib$(MODULE_3_NAME)* $(BUILD_ROOT_DIR)/lib/x86_64/$(MODULE_3_NAME)* \
 	$(BUILD_ROOT_DIR)/frameworks/$(MODULE_3_NAME)*
 	
 $(MODULE_3_NAME)/%.o : $(MODULE_3_NAME)/%.swift

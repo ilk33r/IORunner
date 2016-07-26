@@ -43,8 +43,11 @@ public struct MenuWidget {
 	private var selectionDelegate: MenuChoicesSelectionDelegate
 	private var menuAreaWidth: Int32
 #if swift(>=3)
-	
+#if os(Linux)
+	private var menuWindow: UnsafeMutablePointer<WINDOW>!
+#else
 	private var menuWindow: OpaquePointer!
+#endif
 #elseif swift(>=2.2) && os(OSX)
 	
 	private var menuWindow: COpaquePointer!
@@ -82,9 +85,15 @@ public struct MenuWidget {
 	
 	mutating func initWindows() {
 		
+	#if os(Linux)
+		wmove(UnsafeMutablePointer<WINDOW>(mainWindow), 0, 0)
+		self.menuWindow = subwin(UnsafeMutablePointer<WINDOW>(self.mainWindow), LINES - Int32(self.widgetRows), COLS - menuAreaWidth, Int32(startRow), 1)
+		wbkgd(self.menuWindow,UInt(COLOR_PAIR(WidgetUIColor.Background.rawValue)))
+	#else
 		wmove(mainWindow, 0, 0)
 		self.menuWindow = subwin(self.mainWindow, LINES - Int32(self.widgetRows), COLS - menuAreaWidth, Int32(startRow), 1)
 		wbkgd(self.menuWindow,UInt32(COLOR_PAIR(WidgetUIColor.Background.rawValue)))
+	#endif
 		keypad(self.menuWindow, true)
 	}
 	
@@ -113,7 +122,11 @@ public struct MenuWidget {
 			self.menuWindow = nil
 		}
 		
+	#if os(Linux)
+		wrefresh(UnsafeMutablePointer<WINDOW>(mainWindow))
+	#else
 		wrefresh(mainWindow)
+	#endif
 	}
 	
 	private mutating func drawMenuArea() {
