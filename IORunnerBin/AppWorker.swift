@@ -124,7 +124,11 @@ internal final class AppWorker {
 				
 				cArgs[6] = UnsafeMutablePointer<CChar>(nil)!
 				
+			#if os(Linux)
+				var environments = NSProcessInfo().environment
+			#else
 				var environments = ProcessInfo().environment
+			#endif
 				environments["IO_RUNNER_SN"] = "child-start"
 				let cEnv = UnsafeMutablePointer<maybeCChar?>(allocatingCapacity: environments.count + 1)
 				
@@ -452,18 +456,36 @@ internal final class AppWorker {
 		
 	#if swift(>=3)
 		
-		if(FileManager.default().fileExists(atPath: pidFile)) {
+	#if os (Linux)
+		let pidFileExists = NSFileManager.defaultManager().fileExists(atPath: pidFile)
+	#else
+		let pidFileExists = FileManager.default().fileExists(atPath: pidFile)
+	#endif
+		if(pidFileExists) {
 			
+		#if os (Linux)
+			let pidFileDescriptor = NSFileHandle(forReadingAtPath: pidFile)
+		#else
 			let pidFileDescriptor = FileHandle(forReadingAtPath: pidFile)
+		#endif
 			if(pidFileDescriptor == nil) {
 				
 				return -1
 			}else{
+				
+			#if os (Linux)
+				pidFileDescriptor?.seekToFileOffset(0)
+			#else
 				pidFileDescriptor?.seek(toFileOffset: 0)
+			#endif
 				
 				if let pidData = pidFileDescriptor?.readDataToEndOfFile() {
 					
+				#if os (Linux)
+					let pidStr = String(data: pidData, encoding: NSUTF8StringEncoding)
+				#else
 					let pidStr = String(data: pidData, encoding: String.Encoding.utf8)
+				#endif
 					pidFileDescriptor?.closeFile()
 					
 					if let pidVal = Int32(pidStr!) {
@@ -511,23 +533,33 @@ internal final class AppWorker {
 		
 	#if swift(>=3)
 		
-		
-		if(FileManager.default().fileExists(atPath: pidFile)) {
+	#if os (Linux)
+		let pidFileExists = NSFileManager.defaultManager().fileExists(atPath: pidFile)
+	#else
+		let pidFileExists = FileManager.default().fileExists(atPath: pidFile)
+	#endif
+		if(pidFileExists) {
 			
 			kill(pid, SIGINT)
 			throw AppWorkerError.PidFileExists
 		}else{
-			
-			
+		
+		#if os (Linux)
+			let createStatus = NSFileManager.defaultManager().createFile(atPath: pidFile, contents: nil, attributes: nil)
+		#else
 			let createStatus = FileManager.default().createFile(atPath: pidFile, contents: nil, attributes: nil)
+		#endif
 			if(!createStatus) {
 				
 				kill(pid, SIGINT)
 				throw AppWorkerError.PidFileIsNotWritable
 			}
 			
-			
+		#if os (Linux)
+			let pidFileDescriptor = NSFileHandle(forWritingAtPath: pidFile)
+		#else
 			let pidFileDescriptor = FileHandle(forWritingAtPath: pidFile)
+		#endif
 			if(pidFileDescriptor == nil) {
 				kill(pid, SIGINT)
 				throw AppWorkerError.PidFileIsNotWritable
@@ -536,7 +568,11 @@ internal final class AppWorker {
 				logger.writeLog(level: Logger.LogLevels.ERROR, message: "Pid file created")
 				let pidStr = "\(pid)"
 				
+			#if os (Linux)
+				pidFileDescriptor?.writeData(pidStr.data(using: NSUTF8StringEncoding)!)
+			#else
 				pidFileDescriptor?.write(pidStr.data(using: String.Encoding.utf8)!)
+			#endif
 				pidFileDescriptor?.closeFile()
 				childProcessPid = pid
 			}
@@ -575,8 +611,19 @@ internal final class AppWorker {
 		
 	#if swift(>=3)
 		
-		
 		logger.writeLog(level: Logger.LogLevels.WARNINGS, message: "Child process will be start \(running)")
+		
+	#if os(Linux)
+		
+		let runLoop = NSRunLoop.currentRunLoop()
+		repeat {
+			let _ = signalHandler.process()
+			currentHandlers.forEach { $0.inLoop() }
+			usleep(Constants.CpuSleepSec)
+			
+			
+		} while (running && runLoop.runMode(NSDefaultRunLoopMode, beforeDate: NSDate().addingTimeInterval(-1 * Constants.CpuSleepMsec)))
+	#else
 		
 		let runLoop = RunLoop.current()
 		repeat {
@@ -586,7 +633,7 @@ internal final class AppWorker {
 			
 			
 		} while (running && runLoop.run(mode: RunLoopMode.defaultRunLoopMode, before: Date().addingTimeInterval(-1 * Constants.CpuSleepMsec)))
-		
+	#endif
 		
 		logger.writeLog(level: Logger.LogLevels.WARNINGS, message: "Child process will be stop \(running)")
 	#else
@@ -609,26 +656,39 @@ internal final class AppWorker {
 	private func deletePid() {
 		
 	#if swift(>=3)
-		
-		if(FileManager.default().fileExists(atPath: pidFile)) {
+	#if os(Linux)
+		if(NSFileManager.defaultManager().fileExists(atPath: pidFile)) {
 			
 			do {
-		
-				try FileManager.default().removeItem(atPath: pidFile)
-			} catch _ {
 				
+				try NSFileManager.defaultManager().removeItem(atPath: pidFile)
+			} catch _ {
 				
 				logger.writeLog(level: Logger.LogLevels.ERROR, message: "Could not delete pid file!")
 			}
 		}else{
 			
+			logger.writeLog(level: Logger.LogLevels.WARNINGS, message: "Pid file does not exists!")
+		}
+	#else
+		if(FileManager.default().fileExists(atPath: pidFile)) {
+			
+			do {
+			
+				try FileManager.default().removeItem(atPath: pidFile)
+			} catch _ {
+				
+				logger.writeLog(level: Logger.LogLevels.ERROR, message: "Could not delete pid file!")
+			}
+		}else{
 			
 			logger.writeLog(level: Logger.LogLevels.WARNINGS, message: "Pid file does not exists!")
 		}
+	#endif
 	#elseif swift(>=2.2) && os(OSX)
 
 		if(NSFileManager.defaultManager().fileExistsAtPath(pidFile)) {
-			
+		
 			do {
 
 				try NSFileManager.defaultManager().removeItemAtPath(pidFile)
