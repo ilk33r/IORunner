@@ -32,31 +32,28 @@ $(TEST_MODULE_1)_Linux_LFLAGS = $($(TEST_MODULE_1)_SHLIB_PATH) -lswiftCore -lswi
 $(TEST_MODULE_1)_LFLAGS = $($(TEST_MODULE_1)_$(OS)_LFLAGS)
 
 $(TEST_MODULE_1)-install:
-	@cp $(SOURCE_ROOT_DIR)/$(MODULE_4_NAME)/$(MODULE_4_NAME).bin $(BUILD_ROOT_DIR)/bin/$(MODULE_4_REAL_NAME)
-	@cp $(SOURCE_ROOT_DIR)/$(MODULE_4_NAME)/$(MODULE_4_NAME).swiftmodule $(BUILD_ROOT_DIR)/lib/x86_64
-	@cp $(SOURCE_ROOT_DIR)/$(MODULE_4_NAME)/$(MODULE_4_NAME).swiftdoc $(BUILD_ROOT_DIR)/lib/x86_64
-	@chmod +x $(BUILD_ROOT_DIR)/bin/$(MODULE_4_REAL_NAME)
+	@cp $(SOURCE_ROOT_DIR)/$(TEST_MODULE_1)/$(TEST_MODULE_1).bin $(BUILD_ROOT_DIR)/tests/$(TEST_MODULE_1)
 
 $(TEST_MODULE_1)-modulecache:
-	@mkdir -p $(MODULE_CACHE_PATH)/$(MODULE_4_NAME)
+	@mkdir -p $(MODULE_CACHE_PATH)/$(TEST_MODULE_1)
 
-$(TEST_MODULE_1): $(MODULE_4_NAME)-modulecache $(MODULE_4_NAME).bin $(MODULE_4_NAME)-install
+$(TEST_MODULE_1): $(TEST_MODULE_1)-modulecache $(TEST_MODULE_1).bin $(TEST_MODULE_1)-install
 
-$(TEST_MODULE_1).bin: $($(MODULE_4_NAME)_Obj) $(MODULE_4_NAME).swiftmodule
-	clang $($(MODULE_4_NAME)_Obj) $($(MODULE_4_NAME)_LFLAGS) -o $(SOURCE_ROOT_DIR)/$(MODULE_4_NAME)/$(MODULE_4_NAME).bin
+$(TEST_MODULE_1).bin: $($(TEST_MODULE_1)_Obj) $(TEST_MODULE_1).swiftmodule
+	clang $($(TEST_MODULE_1)_Obj) $($(TEST_MODULE_1)_LFLAGS) -o $(SOURCE_ROOT_DIR)/$(TEST_MODULE_1)/$(TEST_MODULE_1).bin
 
 $(TEST_MODULE_1).swiftmodule:
-	$(SWIFTC) -frontend $($(MODULE_4_NAME)_SWIFTC_FLAGS) -emit-module $($(MODULE_4_NAME)_Modules) \
+	$(SWIFTC) -frontend $($(TEST_MODULE_1)_SWIFTC_FLAGS) -emit-module $($(TEST_MODULE_1)_Modules) \
 	-parse-as-library \
-	-emit-module-doc-path $(SOURCE_ROOT_DIR)/$(MODULE_4_NAME)/$(MODULE_4_NAME).swiftdoc \
-	-o $(SOURCE_ROOT_DIR)/$(MODULE_4_NAME)/$(MODULE_4_NAME).swiftmodule
+	-emit-module-doc-path $(SOURCE_ROOT_DIR)/$(TEST_MODULE_1)/$(TEST_MODULE_1).swiftdoc \
+	-o $(SOURCE_ROOT_DIR)/$(TEST_MODULE_1)/$(TEST_MODULE_1).swiftmodule
 
 $(TEST_MODULE_1)-clean:
 	@rm -rf $(SOURCE_ROOT_DIR)/$(TEST_MODULE_1)/*.o $(SOURCE_ROOT_DIR)/$(TEST_MODULE_1)/*.so \
 	$(SOURCE_ROOT_DIR)/$(TEST_MODULE_1)/*.swiftmodule $(SOURCE_ROOT_DIR)/$(TEST_MODULE_1)/*.swiftdoc \
 	$(SOURCE_ROOT_DIR)/$(TEST_MODULE_1)/*.d $(MODULE_CACHE_PATH)/$(TEST_MODULE_1) \
 	$(BUILD_ROOT_DIR)/tests/$(TEST_MODULE_1)* \
-	$(SOURCE_ROOT_DIR)/$(TEST_MODULE_1)/$(MODULE_4_NAME).bin
+	$(SOURCE_ROOT_DIR)/$(TEST_MODULE_1)/$(TEST_MODULE_1).bin
 	
 $(TEST_MODULE_1)/%.o : $(TEST_MODULE_1)/%.swift
 	$(SWIFTC) -frontend -c $(subst $<,,$($(TEST_MODULE_1)_Src)) -primary-file $< \

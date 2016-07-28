@@ -26,14 +26,14 @@ CPPFLAGS = -fPIC
 
 TEST_MODULE_1=iniTest
 
-all: $(IORunnerTest)
+all: $(MODULE_NAME)
 
 modulecache:
 	@mkdir -p $(BUILD_ROOT_DIR)/tests
 	
 include $(SOURCE_ROOT_DIR)/$(TEST_MODULE_1)/Makefile
 	
-$(IORunnerTest): modulecache $(TEST_MODULE_1)
+$(MODULE_NAME): modulecache $(TEST_MODULE_1)
 	
 $(MODULE_NAME)-clean:
 	@rm -rf $(BUILD_ROOT_DIR)/tests

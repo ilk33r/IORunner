@@ -6,9 +6,10 @@ BUILD_ROOT_DIR=$(SOURCE_ROOT_DIR)/Build
 MODULE_CACHE_PATH=$(BUILD_ROOT_DIR)/ModuleCache
 
 OS = $(shell uname)
-SWIFTC = swift
-CC = clang
-CXX = clang
+SWIFT = swift
+Darwin_CLANG = clang++
+Linux_CLANG = clang++ $(shell dirname $(shell dirname $(shell which swiftc)))/lib/swift/linux/x86_64/swift_begin.o
+CLANG = $($(OS)_CLANG)
 MODULE_NAME = IORunner
 DEBUG.release = -gnone -O -whole-module-optimization
 DEBUG.debug = -g -Onone
@@ -25,11 +26,8 @@ Darwin_SWIFTC_FLAGS.debug= -sdk $(SDK) -D $(OS)_$(subst .,_,$(shell uname -r)) -
 Darwin_SWIFTC_FLAGS := $(Darwin_SWIFTC_FLAGS.$(BUILD))
 Linux_SWIFTC_FLAGS = -I linked/LinuxBridge
 Linux_EXTRA_FLAGS.release = -D $(LSB_OS)_$(subst .,_,$(LSB_VER))
-Linux_EXTRA_FLAGS.debug = -D $(LSB_OS)_$(subst .,_,$(LSB_VER)) -DDEBUG
+Linux_EXTRA_FLAGS.debug = -D $(LSB_OS)_$(subst .,_,$(LSB_VER)) -D DEBUG
 Linux_EXTRA_FLAGS := $(Linux_EXTRA_FLAGS.$(BUILD))
-
-CFLAGS = -fPIC
-CPPFLAGS = -fPIC
 
 MODULE_1_NAME=IOIni
 MODULE_2_NAME=IORunnerExtension
