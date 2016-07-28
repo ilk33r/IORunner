@@ -193,8 +193,11 @@ internal final class Application {
 				break
 			case "environ":
 			#if swift(>=3)
-				
+			#if os(Linux)
+				let environments = NSProcessInfo.processInfo().environment
+			#else
 				let environments = ProcessInfo().environment
+			#endif
 				if let envSignal = environments["IO_RUNNER_SN"] {
 					
 					if(envSignal == "child-start") {
@@ -635,7 +638,29 @@ internal final class Application {
 		guiMainMenu()
 		
 	#if swift(>=3)
-		
+	#if os(Linux)
+		var loopStartDate: UInt = UInt(NSDate().timeIntervalSince1970)
+		let runLoop = NSRunLoop.currentRunLoop()
+		repeat {
+			let _ = signalHandler.process()
+			self.mainGUI.onGUI()
+			
+			let curDate: UInt = UInt(NSDate().timeIntervalSince1970)
+			let dateDif = curDate - loopStartDate
+			if(dateDif > 30) {
+				logger.writeLog(level: Logger.LogLevels.WARNINGS, message: "Updating info data")
+				loopStartDate = curDate
+				
+				if(self.mainGUI.hasAppInfoWidget()) {
+					
+					self.mainGUI.appInfo?.updateAppInfo(appInfo: generateAppInfoData())
+				}
+			}
+			
+			usleep(Constants.GuiRefreshRate)
+			
+		} while (inGuiLoop && runLoop.runMode(NSDefaultRunLoopMode, beforeDate: NSDate().addingTimeInterval(-1 * Constants.CpuSleepMsec)))
+	#else
 		var loopStartDate: UInt = UInt(Date().timeIntervalSince1970)
 		let runLoop = RunLoop.current()
 		repeat {
@@ -657,6 +682,7 @@ internal final class Application {
 			usleep(Constants.GuiRefreshRate)
 			
 		} while (inGuiLoop && runLoop.run(mode: RunLoopMode.defaultRunLoopMode, before: Date().addingTimeInterval(-1 * Constants.CpuSleepMsec)))
+	#endif
 		
 		self.mainGUI.exitGui(status: 0)
 		

@@ -34,12 +34,16 @@ public struct MenuWidget {
 	private var startRow: Int
 #if swift(>=3)
 	
+#if os(Linux)
+	private var mainWindow: UnsafeMutablePointer<WINDOW>
+#else
 	private var mainWindow: OpaquePointer
+#endif
 #elseif swift(>=2.2) && os(OSX)
 	
 	private var mainWindow: COpaquePointer
 #endif
-	private var choices: [GUIMenuChoices]
+		private var choices: [GUIMenuChoices]
 	private var selectionDelegate: MenuChoicesSelectionDelegate
 	private var menuAreaWidth: Int32
 #if swift(>=3)
@@ -59,6 +63,18 @@ public struct MenuWidget {
 	
 #if swift(>=3)
 
+#if os(Linux)
+	public init(startRow: Int, widgetSize: Int, choices: [GUIMenuChoices], delegate: MenuChoicesSelectionDelegate, mainWindow: UnsafeMutablePointer<WINDOW>) {
+	
+		self.startRow = startRow
+		self.widgetRows = widgetSize
+		self.choices = choices
+		self.selectionDelegate = delegate
+		self.mainWindow = mainWindow
+		self.menuAreaWidth = 2
+		initWindows()
+	}
+#else
 	public init(startRow: Int, widgetSize: Int, choices: [GUIMenuChoices], delegate: MenuChoicesSelectionDelegate, mainWindow: OpaquePointer) {
 		
 		self.startRow = startRow
@@ -69,6 +85,7 @@ public struct MenuWidget {
 		self.menuAreaWidth = 2
 		initWindows()
 	}
+#endif
 #elseif swift(>=2.2) && os(OSX)
 	
 	public init(startRow: Int, widgetSize: Int, choices: [GUIMenuChoices], delegate: MenuChoicesSelectionDelegate, mainWindow: COpaquePointer) {
@@ -85,13 +102,11 @@ public struct MenuWidget {
 	
 	mutating func initWindows() {
 		
-	#if os(Linux)
-		wmove(UnsafeMutablePointer<WINDOW>(mainWindow), 0, 0)
-		self.menuWindow = subwin(UnsafeMutablePointer<WINDOW>(self.mainWindow), LINES - Int32(self.widgetRows), COLS - menuAreaWidth, Int32(startRow), 1)
-		wbkgd(self.menuWindow,UInt(COLOR_PAIR(WidgetUIColor.Background.rawValue)))
-	#else
 		wmove(mainWindow, 0, 0)
 		self.menuWindow = subwin(self.mainWindow, LINES - Int32(self.widgetRows), COLS - menuAreaWidth, Int32(startRow), 1)
+	#if os(Linux)
+		wbkgd(self.menuWindow,UInt(COLOR_PAIR(WidgetUIColor.Background.rawValue)))
+	#else
 		wbkgd(self.menuWindow,UInt32(COLOR_PAIR(WidgetUIColor.Background.rawValue)))
 	#endif
 		keypad(self.menuWindow, true)
@@ -122,11 +137,7 @@ public struct MenuWidget {
 			self.menuWindow = nil
 		}
 		
-	#if os(Linux)
-		wrefresh(UnsafeMutablePointer<WINDOW>(mainWindow))
-	#else
 		wrefresh(mainWindow)
-	#endif
 	}
 	
 	private mutating func drawMenuArea() {

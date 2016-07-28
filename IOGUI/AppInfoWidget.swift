@@ -40,21 +40,33 @@ public struct AppInfoWidget {
 	private var startRow: Int32
 #if swift(>=3)
 	
-	private var mainWindow: OpaquePointer
 #if os(Linux)
-	private var appInfoWindow: UnsafeMutablePointer<WINDOW>!
-#else
-	private var appInfoWindow: OpaquePointer!
-#endif
+	private var mainWindow: UnsafeMutablePointer<WINDOW>
 	
-	public init(appInfo: [GUIAppInfo], startRow: Int32, mainWindow: OpaquePointer) {
-		
+	private var appInfoWindow: UnsafeMutablePointer<WINDOW>!
+	
+	public init(appInfo: [GUIAppInfo], startRow: Int32, mainWindow: UnsafeMutablePointer<WINDOW>) {
+	
 		self.widgetRows = appInfo.count + 1
 		self.appInfo = appInfo
 		self.startRow = startRow
 		self.mainWindow = mainWindow
 		self.initWindows()
 	}
+#else
+	private var mainWindow: OpaquePointer
+	
+	private var appInfoWindow: OpaquePointer!
+	
+	public init(appInfo: [GUIAppInfo], startRow: Int32, mainWindow: OpaquePointer) {
+	
+		self.widgetRows = appInfo.count + 1
+		self.appInfo = appInfo
+		self.startRow = startRow
+		self.mainWindow = mainWindow
+		self.initWindows()
+	}
+#endif
 #elseif swift(>=2.2) && os(OSX)
 	
 	private var mainWindow: COpaquePointer
@@ -72,13 +84,11 @@ public struct AppInfoWidget {
 	
 	mutating func initWindows() {
 		
-	#if os(Linux)
-		wmove(UnsafeMutablePointer<WINDOW>(mainWindow), 0, 0)
-		self.appInfoWindow = subwin(UnsafeMutablePointer<WINDOW>(mainWindow), Int32(widgetRows), COLS, LINES - self.startRow, 0)
-		wbkgd(self.appInfoWindow, UInt(COLOR_PAIR(WidgetUIColor.Background.rawValue)))
-	#else
 		wmove(mainWindow, 0, 0)
 		self.appInfoWindow = subwin(mainWindow, Int32(widgetRows), COLS, LINES - self.startRow, 0)
+	#if os(Linux)
+		wbkgd(self.appInfoWindow, UInt(COLOR_PAIR(WidgetUIColor.Background.rawValue)))
+	#else
 		wbkgd(self.appInfoWindow, UInt32(COLOR_PAIR(WidgetUIColor.Background.rawValue)))
 	#endif
 		keypad(self.appInfoWindow, true)
@@ -117,11 +127,7 @@ public struct AppInfoWidget {
 		}
 		
 		wattrset(self.appInfoWindow, 0)
-	#if os(Linux)
-		wrefresh(UnsafeMutablePointer<WINDOW>(appInfoWindow))
-	#else
 		wrefresh(appInfoWindow)
-	#endif
 	}
 	
 	mutating func resize() {
@@ -147,11 +153,7 @@ public struct AppInfoWidget {
 			self.appInfoWindow = nil
 		}
 		
-	#if os(Linux)
-		wrefresh(UnsafeMutablePointer<WINDOW>(appInfoWindow))
-	#else
 		wrefresh(appInfoWindow)
-	#endif
 	}
 	
 	func keyEvent(keyCode: Int32) {

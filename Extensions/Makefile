@@ -5,16 +5,16 @@ include $(SOURCE_ROOT_DIR)/Extensions/TestHandler/Makefile
 $(ExtensionName)-install:
 	@cp $(SOURCE_ROOT_DIR)/Extensions/$(ExtensionName)/$(ExtensionName).so $(BUILD_ROOT_DIR)/extensions/lib$(ExtensionName).dylib
 
-$(ExtensionName)-Modulecache:
+$(ExtensionName)-modulecache:
 	@mkdir -p $(MODULE_CACHE_PATH)/Extensions/$(ExtensionName)
 	
-ExtensionMake: $(ExtensionName)-Modulecache $(ExtensionName).so $(ExtensionName)-install
+ExtensionMake: $(ExtensionName)-modulecache $(ExtensionName).so $(ExtensionName)-install
 	
-$(ExtensionName).so: $($(ExtensionName)-Obj) $(ExtensionName).swiftmodule
-	clang $($(ExtensionName)-Obj) $($(ExtensionName)-LFLAGS) -o $(SOURCE_ROOT_DIR)/Extensions/$(ExtensionName)/$(ExtensionName).so
+$(ExtensionName).so: $($(ExtensionName)_Obj) $(ExtensionName).swiftmodule
+	clang $($(ExtensionName)_Obj) $($(ExtensionName)_LFLAGS) -o $(SOURCE_ROOT_DIR)/Extensions/$(ExtensionName)/$(ExtensionName).so
 	
 $(ExtensionName).swiftmodule:
-	$(SWIFTC) -frontend $($(ExtensionName)-SWIFTC_FLAGS) -emit-module $($(ExtensionName)-Modules) \
+	$(SWIFTC) -frontend $($(ExtensionName)_SWIFTC_FLAGS) -emit-module $($(ExtensionName)_Modules) \
 	-parse-as-library \
 	-emit-module-doc-path $(SOURCE_ROOT_DIR)/Extensions/$(ExtensionName)/$(ExtensionName).swiftdoc \
 	-o $(SOURCE_ROOT_DIR)/Extensions/$(ExtensionName)/$(ExtensionName).swiftmodule
@@ -31,12 +31,12 @@ AllExtensions-Clean:
 	@eval make ExtensionClean ExtensionName=TestHandler
 	
 Extensions/$(ExtensionName)/%.o : Extensions/$(ExtensionName)/%.swift
-	$(SWIFTC) -frontend -c $(subst $<,,$($(ExtensionName)-Src)) -primary-file $< \
+	$(SWIFTC) -frontend -c $(subst $<,,$($(ExtensionName)_Src)) -primary-file $< \
 	-emit-module-path $(MODULE_CACHE_PATH)/$(subst .o,.swiftmodule,$@) \
 	-emit-module-doc-path $(MODULE_CACHE_PATH)/$(subst .o,.swiftdoc,$@) \
 	-emit-dependencies-path $(MODULE_CACHE_PATH)/$(subst .swift,.d,$<) \
 	-emit-reference-dependencies-path $(MODULE_CACHE_PATH)/$(subst .swift,.swiftdeps,$<) \
-	$($(ExtensionName)-SWIFTC_FLAGS) \
+	$($(ExtensionName)_SWIFTC_FLAGS) \
 	-o $@
 
 AllExtensions:

@@ -17,20 +17,27 @@ public struct BackgroundWidget {
 	
 	
 #if swift(>=3)
-	
-	private var mainWindow: OpaquePointer
-	
 #if os(Linux)
-	private var mainBgWindow: UnsafeMutablePointer<WINDOW>!
-#else
-	private var mainBgWindow: OpaquePointer!
-#endif
+	private var mainWindow: UnsafeMutablePointer<WINDOW>
 	
-	public init(mainWindow: OpaquePointer) {
-		
+	private var mainBgWindow: UnsafeMutablePointer<WINDOW>!
+	
+	public init(mainWindow: UnsafeMutablePointer<WINDOW>) {
+	
 		self.mainWindow = mainWindow
 		initWindows()
 	}
+#else
+	private var mainWindow: OpaquePointer
+	
+	private var mainBgWindow: OpaquePointer!
+	
+	public init(mainWindow: OpaquePointer) {
+	
+		self.mainWindow = mainWindow
+		initWindows()
+	}
+#endif
 #elseif swift(>=2.2) && os(OSX)
 	
 	private var mainWindow: COpaquePointer
@@ -46,13 +53,8 @@ public struct BackgroundWidget {
 	
 	mutating func initWindows() {
 		
-	#if os(Linux)
-		wmove(UnsafeMutablePointer<WINDOW>(mainWindow), 0, 0)
-		self.mainBgWindow = subwin(UnsafeMutablePointer<WINDOW>(mainWindow), LINES, COLS, 0, 0)
-	#else
 		wmove(mainWindow, 0, 0)
 		self.mainBgWindow = subwin(mainWindow, LINES, COLS, 0, 0)
-	#endif
 		
 	#if os(Linux)
 		wbkgd(self.mainBgWindow, UInt(COLOR_PAIR(WidgetUIColor.CyanBackground.rawValue)))
@@ -91,10 +93,6 @@ public struct BackgroundWidget {
 			self.mainBgWindow = nil
 		}
 		
-	#if os(Linux)
-		wrefresh(UnsafeMutablePointer<WINDOW>(mainWindow))
-	#else
 		wrefresh(mainWindow)
-	#endif
 	}
 }

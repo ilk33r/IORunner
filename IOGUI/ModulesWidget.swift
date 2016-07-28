@@ -35,8 +35,11 @@ public struct ModulesWidget {
 	
 	private var startRow: Int
 #if swift(>=3)
-	
+#if os(Linux)
+	private var mainWindow: UnsafeMutablePointer<WINDOW>
+#else
 	private var mainWindow: OpaquePointer
+#endif
 #elseif swift(>=2.2) && os(OSX)
 	
 	private var mainWindow: COpaquePointer
@@ -76,7 +79,22 @@ public struct ModulesWidget {
 	private var widgetInited = false
 	
 #if swift(>=3)
+#if os(Linux)
+	public init(startRow: Int, widgetSize: Int, leftSideTitle: String, rightSideTitle: String, choices: [GUIModulesChoices], delegate: ModuleChoicesSelectionDelegate, mainWindow: UnsafeMutablePointer<WINDOW>) {
 	
+		self.startRow = startRow
+		self.widgetRows = widgetSize
+		self.leftSideTitle = leftSideTitle
+		self.rightSideTitle = rightSideTitle
+		self.choices = choices
+		self.selectionDelegate = delegate
+		self.mainWindow = mainWindow
+		self.menuAreaWidth = 2
+		currentLeftChoiceIdx = 0
+	
+		initWindows()
+	}
+#else
 	public init(startRow: Int, widgetSize: Int, leftSideTitle: String, rightSideTitle: String, choices: [GUIModulesChoices], delegate: ModuleChoicesSelectionDelegate, mainWindow: OpaquePointer) {
 		
 		self.startRow = startRow
@@ -91,6 +109,7 @@ public struct ModulesWidget {
 		
 		initWindows()
 	}
+#endif
 #elseif swift(>=2.2) && os(OSX)
 	
 	public init(startRow: Int, widgetSize: Int, leftSideTitle: String, rightSideTitle: String, choices: [GUIModulesChoices], delegate: ModuleChoicesSelectionDelegate, mainWindow: COpaquePointer) {
@@ -111,13 +130,11 @@ public struct ModulesWidget {
 	
 	mutating func initWindows() {
 		
-	#if os(Linux)
-		wmove(UnsafeMutablePointer<WINDOW>(mainWindow), 0, 0)
-		self.modulesTitleWindow = subwin(UnsafeMutablePointer<WINDOW>(self.mainWindow), 1, COLS - menuAreaWidth, Int32(startRow), 1)
-		wbkgd(self.modulesTitleWindow, UInt(COLOR_PAIR(WidgetUIColor.Background.rawValue)))
-	#else
 		wmove(mainWindow, 0, 0)
 		self.modulesTitleWindow = subwin(self.mainWindow, 1, COLS - menuAreaWidth, Int32(startRow), 1)
+	#if os(Linux)
+		wbkgd(self.modulesTitleWindow, UInt(COLOR_PAIR(WidgetUIColor.Background.rawValue)))
+	#else
 		wbkgd(self.modulesTitleWindow, UInt32(COLOR_PAIR(WidgetUIColor.Background.rawValue)))
 	#endif
 		
@@ -127,20 +144,18 @@ public struct ModulesWidget {
 		moduleWinColumnSize = (COLS - menuAreaWidth) / 2
 		let windowStartRow = Int32(startRow) + 1
 		
+		self.modulesActiveWindow = subwin(self.mainWindow, rowCount, moduleWinColumnSize, windowStartRow, 1)
 	#if os(Linux)
-		self.modulesActiveWindow = subwin(UnsafeMutablePointer<WINDOW>(self.mainWindow), rowCount, moduleWinColumnSize, windowStartRow, 1)
 		wbkgd(self.modulesActiveWindow, UInt(COLOR_PAIR(WidgetUIColor.Background.rawValue)))
 	#else
-		self.modulesActiveWindow = subwin(self.mainWindow, rowCount, moduleWinColumnSize, windowStartRow, 1)
 		wbkgd(self.modulesActiveWindow, UInt32(COLOR_PAIR(WidgetUIColor.Background.rawValue)))
 	#endif
 		keypad(self.modulesActiveWindow, true)
 		
+		self.modulesPassiveWindow = subwin(self.mainWindow, rowCount, moduleWinColumnSize, windowStartRow, moduleWinColumnSize + 1)
 	#if os(Linux)
-		self.modulesPassiveWindow = subwin(UnsafeMutablePointer<WINDOW>(self.mainWindow), rowCount, moduleWinColumnSize, windowStartRow, moduleWinColumnSize + 1)
 		wbkgd(self.modulesPassiveWindow, UInt(COLOR_PAIR(WidgetUIColor.Background.rawValue)))
 	#else
-		self.modulesPassiveWindow = subwin(self.mainWindow, rowCount, moduleWinColumnSize, windowStartRow, moduleWinColumnSize + 1)
 		wbkgd(self.modulesPassiveWindow, UInt32(COLOR_PAIR(WidgetUIColor.Background.rawValue)))
 	#endif
 		keypad(self.modulesPassiveWindow, true)
@@ -187,11 +202,7 @@ public struct ModulesWidget {
 			self.modulesActiveWindow = nil
 		}
 		
-	#if os(Linux)
-		wrefresh(UnsafeMutablePointer<WINDOW>(mainWindow))
-	#else
 		wrefresh(mainWindow)
-	#endif
 	}
 	
 	private mutating func drawTitleArea() {

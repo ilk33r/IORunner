@@ -47,33 +47,37 @@ if let appArguments = ArgumentParser().parseArguments() {
 		currentConfigFile = "./../etc/Config.ini"
 	}
 	
-#if swift(>=3)
-
-		if(FileManager.default().fileExists(atPath: currentConfigFile)) {
+	#if swift(>=3)
+	#if os(Linux)
+		let configFileExists = NSFileManager.defaultManager().fileExists(atPath: currentConfigFile)
+	#else
+		let configFileExists = FileManager.default().fileExists(atPath: currentConfigFile)
+	#endif
+	if(configFileExists) {
 			
-			do {
+		do {
 				
-				let config = try parseINI(withFile: currentConfigFile)
-				let configData = try config.getConfigData()
-				if(appArguments.configDumpMode) {
+			let config = try parseINI(withFile: currentConfigFile)
+			let configData = try config.getConfigData()
+			if(appArguments.configDumpMode) {
 					
-					print("\nAll Configurations\n\n")
-					dump(configData)
+				print("\nAll Configurations\n\n")
+				dump(configData)
 					
-					AppExit.Exit(parent: true, status: AppExit.EXIT_STATUS.SUCCESS)
-				}else{
+				AppExit.Exit(parent: true, status: AppExit.EXIT_STATUS.SUCCESS)
+			}else{
 					
-					let _ = Application(appConfig: configData, appArguments: appArguments)
-				}
-			} catch (let e) {
-				print("\nError:\n\n")
-				print(e)
-				AppExit.Exit(parent: true, status: AppExit.EXIT_STATUS.FAILURE)
+				let _ = Application(appConfig: configData, appArguments: appArguments)
 			}
-		}else{
-			print("\nError: Config file could not found.")
+		} catch (let e) {
+			print("\nError:\n\n")
+			print(e)
 			AppExit.Exit(parent: true, status: AppExit.EXIT_STATUS.FAILURE)
 		}
+	}else{
+		print("\nError: Config file could not found.")
+		AppExit.Exit(parent: true, status: AppExit.EXIT_STATUS.FAILURE)
+	}
 #elseif swift(>=2.2) && os(OSX)
 	
 	if(NSFileManager.defaultManager().fileExistsAtPath(currentConfigFile)) {

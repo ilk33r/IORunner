@@ -262,8 +262,6 @@ internal struct DynamicLoader {
 			
 			let openRes = dlopen(extensionRealAbsolutePath, RTLD_NOW|RTLD_LOCAL)
 			if openRes == nil {
-				
-				self.logger.writeLog(level: Logger.LogLevels.ERROR, message: "\(String(UTF8String: dlerror())!)   \(extensionRealAbsolutePath)")
 			
 				self.logger.writeLog(Logger.LogLevels.ERROR, message: "\(String(UTF8String: dlerror())!)   \(extensionRealAbsolutePath)")
 				continue

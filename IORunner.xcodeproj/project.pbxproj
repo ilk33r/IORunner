@@ -46,6 +46,8 @@
 		DEC3E5C01D357C2000FB1662 /* IOGUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DEC3E5AC1D3579CA00FB1662 /* IOGUI.framework */; };
 		DEE47AFE1D3A6A1500D55F92 /* TestHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEE47AFC1D3A6A1100D55F92 /* TestHandler.swift */; };
 		DEE47AFF1D3A7D8000D55F92 /* IOIni.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = "_____Product_ini" /* IOIni.framework */; };
+		DEED71221D49D9DB00D33A3A /* IOIni.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = "_____Product_ini" /* IOIni.framework */; };
+		DEED712A1D49DBCE00D33A3A /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEED71291D49DBCE00D33A3A /* main.swift */; };
 		DEF667111D3A4EB700A56CA2 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DE8F5DF21D2A4A9400BE7C35 /* Foundation.framework */; };
 /* End PBXBuildFile section */
 
@@ -78,7 +80,26 @@
 			remoteGlobalIDString = DEC3E5AB1D3579CA00FB1662;
 			remoteInfo = CNCURSES;
 		};
+		DEED71201D49D9D400D33A3A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = __RootObject_ /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = "______Target_ini";
+			remoteInfo = IOIni;
+		};
 /* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		DEED71171D49D9B300D33A3A /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		DE0EBB7E1D3896BC0036B004 /* ModulesWidget.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ModulesWidget.swift; path = IOGUI/ModulesWidget.swift; sourceTree = "<group>"; };
@@ -125,6 +146,8 @@
 		DEC3E5AC1D3579CA00FB1662 /* IOGUI.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = IOGUI.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		DEC3E5CC1D357FA500FB1662 /* GUITypes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = GUITypes.swift; path = IOGUI/GUITypes.swift; sourceTree = "<group>"; };
 		DEE47AFC1D3A6A1100D55F92 /* TestHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TestHandler.swift; path = Extensions/TestHandler/TestHandler.swift; sourceTree = "<group>"; };
+		DEED71191D49D9B300D33A3A /* IORunnerTest */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = IORunnerTest; sourceTree = BUILT_PRODUCTS_DIR; };
+		DEED71291D49DBCE00D33A3A /* main.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = main.swift; path = IORunnerTest/iniTest/main.swift; sourceTree = "<group>"; };
 		"_____Product_BouncyProcessChecker" /* IORunner */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; path = IORunner; sourceTree = BUILT_PRODUCTS_DIR; };
 		"_____Product_ini" /* IOIni.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = IOIni.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -163,6 +186,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				DE1338D61D358581002E109B /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		DEED71161D49D9B300D33A3A /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				DEED71221D49D9DB00D33A3A /* IOIni.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -286,6 +317,22 @@
 			name = TestHandler;
 			sourceTree = "<group>";
 		};
+		DEED71241D49DB4300D33A3A /* IORunnerTest */ = {
+			isa = PBXGroup;
+			children = (
+				DEED71281D49DBB300D33A3A /* iniTest */,
+			);
+			name = IORunnerTest;
+			sourceTree = "<group>";
+		};
+		DEED71281D49DBB300D33A3A /* iniTest */ = {
+			isa = PBXGroup;
+			children = (
+				DEED71291D49DBCE00D33A3A /* main.swift */,
+			);
+			name = iniTest;
+			sourceTree = "<group>";
+		};
 		"___RootGroup_" = {
 			isa = PBXGroup;
 			children = (
@@ -297,6 +344,7 @@
 				DE43E6331D391FA100886A0B /* IOIni */,
 				DEE47AFA1D3A69F700D55F92 /* Extensions */,
 				DE2177121D3D0A4B000C21B1 /* IORunnerInstaller */,
+				DEED71241D49DB4300D33A3A /* IORunnerTest */,
 				"____Products_" /* Products */,
 				DE8F5DF11D2A4A9400BE7C35 /* Frameworks */,
 			);
@@ -311,6 +359,7 @@
 				DE9F8EFC1D353BFB006F9B9D /* IORunnerExtension.framework */,
 				DEC3E5AC1D3579CA00FB1662 /* IOGUI.framework */,
 				DE2177111D3D0A4B000C21B1 /* IORunnerInstaller */,
+				DEED71191D49D9B300D33A3A /* IORunnerTest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -428,6 +477,24 @@
 			productReference = DEC3E5AC1D3579CA00FB1662 /* IOGUI.framework */;
 			productType = "com.apple.product-type.framework";
 		};
+		DEED71181D49D9B300D33A3A /* IORunnerTest */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = DEED711F1D49D9B400D33A3A /* Build configuration list for PBXNativeTarget "IORunnerTest" */;
+			buildPhases = (
+				DEED71151D49D9B300D33A3A /* Sources */,
+				DEED71161D49D9B300D33A3A /* Frameworks */,
+				DEED71171D49D9B300D33A3A /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				DEED71211D49D9D400D33A3A /* PBXTargetDependency */,
+			);
+			name = IORunnerTest;
+			productName = IOIniTest;
+			productReference = DEED71191D49D9B300D33A3A /* IORunnerTest */;
+			productType = "com.apple.product-type.tool";
+		};
 		"______Target_BouncyProcessChecker" /* IORunner */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = "_______Confs_BouncyProcessChecker" /* Build configuration list for PBXNativeTarget "IORunner" */;
@@ -497,6 +564,13 @@
 						LastSwiftMigration = 0800;
 						ProvisioningStyle = Automatic;
 					};
+					DEED71181D49D9B300D33A3A = {
+						CreatedOnToolsVersion = 8.0;
+						DevelopmentTeam = 84AJTB523T;
+						DevelopmentTeamName = "ALTEK BILGI TEKNOLOJILERI DANISMANLIK VE DIS TICARET A S";
+						LastSwiftMigration = 0800;
+						ProvisioningStyle = Automatic;
+					};
 					"______Target_ini" = {
 						LastSwiftMigration = 0800;
 					};
@@ -520,6 +594,7 @@
 				DE9F8EFB1D353BFB006F9B9D /* IORunnerExtension */,
 				DEC3E5AB1D3579CA00FB1662 /* IOGUI */,
 				DE2177101D3D0A4B000C21B1 /* IORunnerInstaller */,
+				DEED71181D49D9B300D33A3A /* IORunnerTest */,
 			);
 		};
 /* End PBXProject section */
@@ -621,6 +696,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		DEED71151D49D9B300D33A3A /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				DEED712A1D49DBCE00D33A3A /* main.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -643,6 +726,11 @@
 			isa = PBXTargetDependency;
 			target = DEC3E5AB1D3579CA00FB1662 /* IOGUI */;
 			targetProxy = DEC3E5C11D357C2400FB1662 /* PBXContainerItemProxy */;
+		};
+		DEED71211D49D9D400D33A3A /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = "______Target_ini" /* IOIni */;
+			targetProxy = DEED71201D49D9D400D33A3A /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -1177,6 +1265,96 @@
 			};
 			name = Debug;
 		};
+		DEED711D1D49D9B400D33A3A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_VERSION = 3.0;
+			};
+			name = Release;
+		};
+		DEED711E1D49D9B400D33A3A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 3.0;
+			};
+			name = Debug;
+		};
 		_ReleaseConf_BouncyProcessChecker /* Release */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = DE5ECB631D423F3600C06781 /* Project.xcconfig */;
@@ -1273,6 +1451,14 @@
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
+		};
+		DEED711F1D49D9B400D33A3A /* Build configuration list for PBXNativeTarget "IORunnerTest" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				DEED711D1D49D9B400D33A3A /* Release */,
+				DEED711E1D49D9B400D33A3A /* Debug */,
+			);
+			defaultConfigurationIsVisible = 0;
 		};
 		"___RootConfs_" /* Build configuration list for PBXProject "IORunner" */ = {
 			isa = XCConfigurationList;

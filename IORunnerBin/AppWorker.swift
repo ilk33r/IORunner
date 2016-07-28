@@ -125,7 +125,7 @@ internal final class AppWorker {
 				cArgs[6] = UnsafeMutablePointer<CChar>(nil)!
 				
 			#if os(Linux)
-				var environments = NSProcessInfo().environment
+				var environments = NSProcessInfo.processInfo().environment
 			#else
 				var environments = ProcessInfo().environment
 			#endif

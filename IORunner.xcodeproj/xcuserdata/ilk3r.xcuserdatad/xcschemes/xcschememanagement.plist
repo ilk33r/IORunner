@@ -27,6 +27,11 @@
 		<key>IORunnerInstaller.xcscheme</key>
 		<dict>
 			<key>orderHint</key>
+			<integer>6</integer>
+		</dict>
+		<key>IORunnerTest.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
 			<integer>7</integer>
 		</dict>
 		<key>IORunner_GUI.xcscheme</key>
@@ -88,6 +93,11 @@
 			<true/>
 		</dict>
 		<key>DEE47B041D3A7EBE00D55F92</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>DEED71181D49D9B300D33A3A</key>
 		<dict>
 			<key>primary</key>
 			<true/>

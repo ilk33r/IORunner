@@ -12,7 +12,11 @@ import IORunnerExtension
 
 public class TestHandler: AppHandlers {
 	
+#if os(Linux)
 	private var currentUnixTime = NSDate().timeIntervalSince1970
+#else
+	private var currentUnixTime = Date().timeIntervalSince1970
+#endif
 	
 	public required init(logger: Logger, moduleConfig: Section?) {
 		
@@ -53,7 +57,11 @@ public class TestHandler: AppHandlers {
 	
 	public override func inLoop() {
 		
+	#if os(Linux)
+		let uTime = NSDate().timeIntervalSince1970
+	#else
 		let uTime = Date().timeIntervalSince1970
+	#endif
 		if(uTime - currentUnixTime >= 60) {
 			currentUnixTime = uTime
 			logger.writeLog(level: Logger.LogLevels.WARNINGS, message: "Test worker in loop current unix time \(uTime)!")

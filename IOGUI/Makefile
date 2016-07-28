@@ -16,7 +16,7 @@ $(MODULE_3_NAME)_Modules = $(addprefix $(MODULE_CACHE_PATH)/, $(addsuffix .swift
 $(MODULE_3_NAME)_Darwin_SHLIB_PATH = -target x86_64-apple-macosx10.10 -I$(BUILD_ROOT_DIR)/lib -I$(BUILD_ROOT_DIR)/frameworks \
 	-F$(BUILD_ROOT_DIR)/frameworks -L$(BUILD_ROOT_DIR)/frameworks -L$(BUILD_ROOT_DIR)/lib \
 	-I/usr/include
-$(MODULE_3_NAME)_Linux_SHLIB_PATH = -L$(shell dirname $(shell dirname $(shell which swiftc)))/lib/swift/linux -I/usr/include \
+$(MODULE_3_NAME)_Linux_SHLIB_PATH = -target x86_64-linux-gnu -L$(shell dirname $(shell dirname $(shell which swiftc)))/lib/swift/linux -I/usr/include \
 	-L$(BUILD_ROOT_DIR)/lib
 $(MODULE_3_NAME)_SHLIB_PATH = $($(MODULE_3_NAME)_$(OS)_SHLIB_PATH)
 
@@ -29,7 +29,7 @@ $(MODULE_3_NAME)_Darwin_LFLAGS = $($(MODULE_3_NAME)_SHLIB_PATH) -arch x86_64 -dy
 	-Xlinker -add_ast_path -Xlinker $(SOURCE_ROOT_DIR)/$(MODULE_3_NAME)/$(MODULE_3_NAME).swiftmodule -single_module \
 	-compatibility_version 1 -current_version 1 \
 	-framework Foundation
-$(MODULE_3_NAME)_Linux_LFLAGS = $($(MODULE_3_NAME)_SHLIB_PATH) -lncurses -lswiftCore -lswiftGlibc -ldl -lm -lFoundation \
+$(MODULE_3_NAME)_Linux_LFLAGS =  -arch x86_64 $($(MODULE_3_NAME)_SHLIB_PATH) -lncurses -lswiftCore -lswiftGlibc -ldl -lm -lFoundation \
 	-Xlinker -rpath \
 	-Xlinker -no_deduplicate \
 	-stdlib=libc++ -flto -fuse-ld=gold \

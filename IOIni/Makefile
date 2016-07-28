@@ -9,7 +9,7 @@ $(MODULE_1_NAME)_Obj = $(addsuffix .o, $(basename $($(MODULE_1_NAME)_Src)))
 $(MODULE_1_NAME)_Modules = $(addprefix $(MODULE_CACHE_PATH)/, $(addsuffix .swiftmodule, $(basename $($(MODULE_1_NAME)_Src))))
 
 $(MODULE_1_NAME)_Darwin_SHLIB_PATH = -target x86_64-apple-macosx10.10
-$(MODULE_1_NAME)_Linux_SHLIB_PATH = -L$(shell dirname $(shell dirname $(shell which swiftc)))/lib/swift/linux
+$(MODULE_1_NAME)_Linux_SHLIB_PATH = -target x86_64-linux-gnu -L$(shell dirname $(shell dirname $(shell which swiftc)))/lib/swift/linux
 $(MODULE_1_NAME)_SHLIB_PATH = $($(MODULE_1_NAME)_$(OS)_SHLIB_PATH)
 
 $(MODULE_1_NAME)_Darwin_LFLAGS = $($(MODULE_1_NAME)_SHLIB_PATH) -arch x86_64 -dynamiclib \
@@ -26,6 +26,7 @@ $(MODULE_1_NAME)_Linux_LFLAGS = $($(MODULE_1_NAME)_SHLIB_PATH) -lswiftCore -lswi
 	-Xlinker -no_deduplicate \
 	-stdlib=libc++ -flto -fuse-ld=gold \
 	-shared
+
 $(MODULE_1_NAME)_LFLAGS = $($(MODULE_1_NAME)_$(OS)_LFLAGS)
 
 $(MODULE_1_NAME)-install:

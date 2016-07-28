@@ -1,5 +1,6 @@
 # Makefile for IORunner
 
+BUILD := release
 SOURCE_ROOT_DIR=$(shell pwd)
 BUILD_ROOT_DIR=$(SOURCE_ROOT_DIR)/Build
 MODULE_CACHE_PATH=$(BUILD_ROOT_DIR)/ModuleCache
@@ -9,17 +10,23 @@ SWIFTC = swift
 CC = clang
 CXX = clang
 MODULE_NAME = IORunner
-DEBUG = -gnone -O -whole-module-optimization
+DEBUG.release = -gnone -O -whole-module-optimization
+DEBUG.debug = -g -Onone
+DEBUG := $(DEBUG.$(BUILD))
 
-XCODE=$(shell xcode-select -p)
-SDK=$(XCODE)/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.11.sdk
+XCODE = $(shell xcode-select -p)
+SDK = $(XCODE)/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.11.sdk
 
 LSB_OS = $(shell lsb_release -si)
 LSB_VER = $(shell lsb_release -sr)
 
-Darwin_SWIFTC_FLAGS = -sdk $(SDK) -D $(OS)_$(subst .,_,$(shell uname -r))
+Darwin_SWIFTC_FLAGS.release = -sdk $(SDK) -D $(OS)_$(subst .,_,$(shell uname -r))
+Darwin_SWIFTC_FLAGS.debug= -sdk $(SDK) -D $(OS)_$(subst .,_,$(shell uname -r)) -D DEBUG
+Darwin_SWIFTC_FLAGS := $(Darwin_SWIFTC_FLAGS.$(BUILD))
 Linux_SWIFTC_FLAGS = -I linked/LinuxBridge
-Linux_EXTRA_FLAGS = -D $(LSB_OS)_$(subst .,_,$(LSB_VER))
+Linux_EXTRA_FLAGS.release = -D $(LSB_OS)_$(subst .,_,$(LSB_VER))
+Linux_EXTRA_FLAGS.debug = -D $(LSB_OS)_$(subst .,_,$(LSB_VER)) -DDEBUG
+Linux_EXTRA_FLAGS := $(Linux_EXTRA_FLAGS.$(BUILD))
 
 CFLAGS = -fPIC
 CPPFLAGS = -fPIC
@@ -30,6 +37,29 @@ MODULE_3_NAME=IOGUI
 MODULE_4_NAME=IORunnerBin
 
 all: $(MODULE_NAME)
+
+prepare-debug: 
+	@rm -f $(SOURCE_ROOT_DIR)/Config.ini*
+	@rm -rf $(BUILD_ROOT_DIR)/lldb-ext*
+	@touch $(SOURCE_ROOT_DIR)/Config.ini
+	@echo "[Daemonize]" >> $(SOURCE_ROOT_DIR)/Config.ini
+	@echo "Daemonize=1" >> $(SOURCE_ROOT_DIR)/Config.ini
+	@echo "Pid=$(BUILD_ROOT_DIR)/lldb.pid" >> $(SOURCE_ROOT_DIR)/Config.ini
+	@echo "[Logging]" >> $(SOURCE_ROOT_DIR)/Config.ini
+	@echo "LogLevel=2" >> $(SOURCE_ROOT_DIR)/Config.ini
+	@echo "LogFile==$(BUILD_ROOT_DIR)/lldb.log" >> $(SOURCE_ROOT_DIR)/Config.ini
+	@echo "MaxLogSize==100000000" >> $(SOURCE_ROOT_DIR)/Config.ini
+	@echo "[Extensions]" >> $(SOURCE_ROOT_DIR)/Config.ini
+	@echo "ExtensionsDir=$(BUILD_ROOT_DIR)/lldb-ext" >> $(SOURCE_ROOT_DIR)/Config.ini
+
+install-debug:
+	@mkdir -p $(BUILD_ROOT_DIR)/lldb-ext
+	@mkdir -p $(BUILD_ROOT_DIR)/lldb-ext/available
+	@mkdir -p $(BUILD_ROOT_DIR)/lldb-ext/enabled
+	@cp -r $(BUILD_ROOT_DIR)/extensions/*.dylib $(BUILD_ROOT_DIR)/lldb-ext/available
+	@lldb $(BUILD_ROOT_DIR)/bin/$(MODULE_NAME) -- -c $(SOURCE_ROOT_DIR)/Config.ini
+
+debug: prepare-debug $(MODULE_NAME) extensions install-debug
 
 modulecache:
 	@mkdir -p $(BUILD_ROOT_DIR)
@@ -57,7 +87,7 @@ $(MODULE_NAME)-clean:
 	@rm -rf $(BUILD_ROOT_DIR)/extensions
 
 clean: $(MODULE_1_NAME)-clean $(MODULE_2_NAME)-clean $(MODULE_3_NAME)-clean $(MODULE_4_NAME)-clean AllExtensions-Clean $(MODULE_NAME)Installer-clean
-	
+
 dist-clean: clean $(MODULE_NAME)-clean
 	
 dist-create-zip:
@@ -82,8 +112,10 @@ source-dist: dist-clean
 	@find $(SOURCE_ROOT_DIR)/$(MODULE_NAME)-Src -name ".*" -exec rm -rf {} \;
 	@tar -cvzf $(BUILD_ROOT_DIR)/$(MODULE_NAME)-Source.tar.gz $(MODULE_NAME)-Src
 	@rm -rf $(SOURCE_ROOT_DIR)/$(MODULE_NAME)-Src
+	@rm $(SOURCE_ROOT_DIR)/Config.ini*
+	@rm -rf $(BUILD_ROOT_DIR)/lldb-ext*
 	
-.PHONY: all extensions clean dist-clean  dist source-dist
+.PHONY: all extensions clean dist-clean dist source-dist debug
 
 
 	

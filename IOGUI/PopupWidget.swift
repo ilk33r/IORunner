@@ -28,15 +28,15 @@ public struct PopupWidget {
 	private var popupButtons: [String]
 	private var popupDelegate: MenuChoicesSelectionDelegate
 #if swift(>=3)
-	
-	private var mainWindow: OpaquePointer
-	
 #if os(Linux)
+	private var mainWindow: UnsafeMutablePointer<WINDOW>
 	
 	private var shadowWindow: UnsafeMutablePointer<WINDOW>?
 	
 	private var popupWindow: UnsafeMutablePointer<WINDOW>!
 #else
+	
+	private var mainWindow: OpaquePointer
 	
 	private var shadowWindow: OpaquePointer?
 	
@@ -62,10 +62,20 @@ public struct PopupWidget {
 	
 #if os(Linux)
 	private var buttonWindows: [UnsafeMutablePointer<WINDOW>]!
+	
+	public init(popuptype: GUIPopupTypes, popupContent: String, popupButtons: [String], hasShadow: Bool, popupDelegate: MenuChoicesSelectionDelegate, mainWindow: UnsafeMutablePointer<WINDOW>) {
+	
+		self.popuptype = popuptype
+		self.popupContent = popupContent
+		self.popupButtons = popupButtons
+		self.popupDelegate = popupDelegate
+		self.mainWindow = mainWindow
+		self.hasShadow = hasShadow
+		self.initWindows()
+	}
 #else
 	private var buttonWindows: [OpaquePointer]!
-#endif
-	
+
 	public init(popuptype: GUIPopupTypes, popupContent: String, popupButtons: [String], hasShadow: Bool, popupDelegate: MenuChoicesSelectionDelegate, mainWindow: OpaquePointer) {
 		
 		self.popuptype = popuptype
@@ -76,6 +86,7 @@ public struct PopupWidget {
 		self.hasShadow = hasShadow
 		self.initWindows()
 	}
+#endif
 #elseif swift(>=2.2) && os(OSX)
 	
 	private var buttonWindows: [COpaquePointer]!
@@ -96,18 +107,10 @@ public struct PopupWidget {
 		
 		if(!hasShadow) {
 			
-		#if os(Linux)
-			wclear(UnsafeMutablePointer<WINDOW>(self.mainWindow))
-		#else
 			wclear(self.mainWindow)
-		#endif
 		}
 		
-	#if os(Linux)
-		wmove(UnsafeMutablePointer<WINDOW>(mainWindow), COLS, LINES)
-	#else
 		wmove(mainWindow, COLS, LINES)
-	#endif
 		popupWidth = (COLS / 4) * 3
 		popupHeight = (LINES / 4) * 2
 		popupLeft = (COLS - popupWidth) / 2
@@ -115,11 +118,10 @@ public struct PopupWidget {
 		
 		if(hasShadow) {
 			
+			self.shadowWindow = subwin(mainWindow, popupHeight, popupWidth, popupTop + 1, popupLeft + 1)
 		#if os(Linux)
-			self.shadowWindow = subwin(UnsafeMutablePointer<WINDOW>(mainWindow), popupHeight, popupWidth, popupTop + 1, popupLeft + 1)
 			wbkgd(self.shadowWindow!, UInt(COLOR_PAIR(WidgetUIColor.Background.rawValue)))
 		#else
-			self.shadowWindow = subwin(mainWindow, popupHeight, popupWidth, popupTop + 1, popupLeft + 1)
 			wbkgd(self.shadowWindow!, UInt32(COLOR_PAIR(WidgetUIColor.Background.rawValue)))
 		#endif
 			keypad(self.shadowWindow!, true)
@@ -127,11 +129,10 @@ public struct PopupWidget {
 			wrefresh(self.shadowWindow!)
 		}
 		
+		self.popupWindow = subwin(mainWindow, popupHeight, popupWidth, Int32(popupTop), Int32(popupLeft))
 	#if os(Linux)
-		self.popupWindow = subwin(UnsafeMutablePointer<WINDOW>(mainWindow), popupHeight, popupWidth, Int32(popupTop), Int32(popupLeft))
 		wbkgd(self.popupWindow, UInt(COLOR_PAIR(WidgetUIColor.FooterBackground.rawValue)))
 	#else
-		self.popupWindow = subwin(mainWindow, popupHeight, popupWidth, Int32(popupTop), Int32(popupLeft))
 		wbkgd(self.popupWindow, UInt32(COLOR_PAIR(WidgetUIColor.FooterBackground.rawValue)))
 	#endif
 		keypad(self.popupWindow, true)
@@ -190,20 +191,18 @@ public struct PopupWidget {
 			
 			for buttonData in popupButtons {
 				
+				let currentButtonShadowWindow = subwin(mainWindow, 2, buttonSizes.0, buttonTop + 1, currentButtonLeft + 1)
 			#if os(Linux)
-				let currentButtonShadowWindow = subwin(UnsafeMutablePointer<WINDOW>(mainWindow), 2, buttonSizes.0, buttonTop + 1, currentButtonLeft + 1)
 				wbkgd(currentButtonShadowWindow, UInt(COLOR_PAIR(WidgetUIColor.Background.rawValue)))
 			#else
-				let currentButtonShadowWindow = subwin(mainWindow, 2, buttonSizes.0, buttonTop + 1, currentButtonLeft + 1)
 				wbkgd(currentButtonShadowWindow, UInt32(COLOR_PAIR(WidgetUIColor.Background.rawValue)))
 			#endif
 				wrefresh(currentButtonShadowWindow)
 				
+				let currentButtonWindow = subwin(mainWindow, 2, buttonSizes.0, buttonTop, currentButtonLeft)
 			#if os(Linux)
-				let currentButtonWindow = subwin(UnsafeMutablePointer<WINDOW>(mainWindow), 2, buttonSizes.0, buttonTop, currentButtonLeft)
 				wbkgd(currentButtonWindow, UInt(COLOR_PAIR(WidgetUIColor.ButtonDanger.rawValue)))
 			#else
-				let currentButtonWindow = subwin(mainWindow, 2, buttonSizes.0, buttonTop, currentButtonLeft)
 				wbkgd(currentButtonWindow, UInt32(COLOR_PAIR(WidgetUIColor.ButtonDanger.rawValue)))
 			#endif
 				
@@ -291,11 +290,10 @@ public struct PopupWidget {
 				
 				let progressTop = popupHeight + popupTop - 4
 				let progressLeft = popupLeft + 1
+				let progressWindow = subwin(mainWindow, 1, progressSize, progressTop, progressLeft)
 			#if os(Linux)
-				let progressWindow = subwin(UnsafeMutablePointer<WINDOW>(mainWindow), 1, progressSize, progressTop, progressLeft)
 				wbkgd(progressWindow, UInt(COLOR_PAIR(WidgetUIColor.Progress.rawValue)))
 			#else
-				let progressWindow = subwin(mainWindow, 1, progressSize, progressTop, progressLeft)
 				wbkgd(progressWindow, UInt32(COLOR_PAIR(WidgetUIColor.Progress.rawValue)))
 			#endif
 				wrefresh(progressWindow)
@@ -417,11 +415,7 @@ public struct PopupWidget {
 			self.buttonWindows = nil
 		}
 		
-	#if os(Linux)
-		wrefresh(UnsafeMutablePointer<WINDOW>(mainWindow))
-	#else
 		wrefresh(mainWindow)
-	#endif
 	}
 	
 	mutating func keyEvent(keyCode: Int32) {
