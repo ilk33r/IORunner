@@ -9,3 +9,5 @@ Build
 *.swiftdoc
 *.swiftmodule
 IORunnerBin.bin
+InstallDataEx.h
+IORunnerInstaller.bin

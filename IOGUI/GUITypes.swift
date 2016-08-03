@@ -551,7 +551,6 @@ public struct GUIWidgets {
 			}
 			
 		} while(true)
-		self.deinitPopupWidget()
 	}
 	
 	public mutating func refreshMainWindow() {

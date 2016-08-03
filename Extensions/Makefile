@@ -11,10 +11,10 @@ $(ExtensionName)-modulecache:
 ExtensionMake: $(ExtensionName)-modulecache $(ExtensionName).so $(ExtensionName)-install
 	
 $(ExtensionName).so: $($(ExtensionName)_Obj) $(ExtensionName).swiftmodule
-	clang $($(ExtensionName)_Obj) $($(ExtensionName)_LFLAGS) -o $(SOURCE_ROOT_DIR)/Extensions/$(ExtensionName)/$(ExtensionName).so
+	$(CLANG) $($(ExtensionName)_Obj) $($(ExtensionName)_LFLAGS) -o $(SOURCE_ROOT_DIR)/Extensions/$(ExtensionName)/$(ExtensionName).so
 	
 $(ExtensionName).swiftmodule:
-	$(SWIFTC) -frontend $($(ExtensionName)_SWIFTC_FLAGS) -emit-module $($(ExtensionName)_Modules) \
+	$(SWIFT) -frontend $($(ExtensionName)_SWIFTC_FLAGS) -emit-module $($(ExtensionName)_Modules) \
 	-parse-as-library \
 	-emit-module-doc-path $(SOURCE_ROOT_DIR)/Extensions/$(ExtensionName)/$(ExtensionName).swiftdoc \
 	-o $(SOURCE_ROOT_DIR)/Extensions/$(ExtensionName)/$(ExtensionName).swiftmodule
@@ -31,7 +31,7 @@ AllExtensions-Clean:
 	@eval make ExtensionClean ExtensionName=TestHandler
 	
 Extensions/$(ExtensionName)/%.o : Extensions/$(ExtensionName)/%.swift
-	$(SWIFTC) -frontend -c $(subst $<,,$($(ExtensionName)_Src)) -primary-file $< \
+	$(SWIFT) -frontend -c $(subst $<,,$($(ExtensionName)_Src)) -primary-file $< \
 	-emit-module-path $(MODULE_CACHE_PATH)/$(subst .o,.swiftmodule,$@) \
 	-emit-module-doc-path $(MODULE_CACHE_PATH)/$(subst .o,.swiftdoc,$@) \
 	-emit-dependencies-path $(MODULE_CACHE_PATH)/$(subst .swift,.d,$<) \

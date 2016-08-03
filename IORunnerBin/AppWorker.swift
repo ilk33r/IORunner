@@ -122,7 +122,7 @@ internal final class AppWorker {
 				cArgs[5] = strdup("environ")
 			#if swift(>=3)
 				
-				cArgs[6] = UnsafeMutablePointer<CChar>(nil)!
+				cArgs[6] = UnsafeMutablePointer<CChar>(nil)
 				
 			#if os(Linux)
 				var environments = NSProcessInfo.processInfo().environment
@@ -136,7 +136,7 @@ internal final class AppWorker {
 					cEnv.deinitialize(count: environments.count + 1)
 					cEnv.deallocateCapacity(environments.count + 1)
 				}
-				cEnv[environments.count] = UnsafeMutablePointer<CChar>(nil)!
+				cEnv[environments.count] = UnsafeMutablePointer<CChar>(nil)
 			#else
 				
 				cArgs[6] = UnsafeMutablePointer<CChar>(nil)

@@ -16,7 +16,7 @@ DEBUG.debug = -g -Onone
 DEBUG := $(DEBUG.$(BUILD))
 
 XCODE = $(shell xcode-select -p)
-SDK = $(XCODE)/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.11.sdk
+SDK = $(XCODE)/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk
 
 LSB_OS = $(shell lsb_release -si)
 LSB_VER = $(shell lsb_release -sr)
@@ -28,6 +28,11 @@ Linux_SWIFTC_FLAGS = -I linked/LinuxBridge
 Linux_EXTRA_FLAGS.release = -D $(LSB_OS)_$(subst .,_,$(LSB_VER))
 Linux_EXTRA_FLAGS.debug = -D $(LSB_OS)_$(subst .,_,$(LSB_VER)) -D DEBUG
 Linux_EXTRA_FLAGS := $(Linux_EXTRA_FLAGS.$(BUILD))
+
+Darwin_Dependencies_Command=otool -L /usr/local/$(MODULE_NAME)/bin/$(MODULE_NAME)
+Linux_Dependencies_Command=readelf -d /usr/local/$(MODULE_NAME)/bin/$(MODULE_NAME)
+# readelf -r app
+Dependencies_Command=$($(OS)_Dependencies_Command)
 
 MODULE_1_NAME=IOIni
 MODULE_2_NAME=IORunnerExtension
@@ -57,6 +62,9 @@ install-debug:
 	@cp -r $(BUILD_ROOT_DIR)/extensions/*.dylib $(BUILD_ROOT_DIR)/lldb-ext/available
 	@lldb $(BUILD_ROOT_DIR)/bin/$(MODULE_NAME) -- -c $(SOURCE_ROOT_DIR)/Config.ini
 
+list-dependencies: 
+	
+
 debug: prepare-debug $(MODULE_NAME) extensions install-debug
 
 modulecache:
@@ -84,9 +92,10 @@ $(MODULE_NAME)-clean:
 	@rm -rf $(BUILD_ROOT_DIR)/ModuleCache
 	@rm -rf $(BUILD_ROOT_DIR)/extensions
 
-clean: $(MODULE_1_NAME)-clean $(MODULE_2_NAME)-clean $(MODULE_3_NAME)-clean $(MODULE_4_NAME)-clean AllExtensions-Clean $(MODULE_NAME)Installer-clean
+clean: $(MODULE_1_NAME)-clean $(MODULE_2_NAME)-clean $(MODULE_3_NAME)-clean $(MODULE_4_NAME)-clean AllExtensions-Clean
 
-dist-clean: clean $(MODULE_NAME)-clean
+dist-clean: clean $(MODULE_NAME)-clean $(MODULE_NAME)Installer-clean
+	@rm -r $(BUILD_ROOT_DIR)
 	
 dist-create-zip:
 	@zip -r -D -y $(BUILD_ROOT_DIR)/$(MODULE_NAME)-$(OS)-x86_64.zip Build/bin/ Build/extensions/ Build/lib/ Build/frameworks/
@@ -113,7 +122,7 @@ source-dist: dist-clean
 	@rm $(SOURCE_ROOT_DIR)/Config.ini*
 	@rm -rf $(BUILD_ROOT_DIR)/lldb-ext*
 	
-.PHONY: all extensions clean dist-clean dist source-dist debug
+.PHONY: all extensions clean dist-clean dist source-dist debug list-dependencies
 
 
 	

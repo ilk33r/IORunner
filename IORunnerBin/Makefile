@@ -21,10 +21,22 @@ $(MODULE_4_NAME)_Linux_SHLIB_PATH = -target x86_64--linux-gnu -L$(shell dirname 
 		-L$(BUILD_ROOT_DIR)/lib -I/usr/include -L../lib
 $(MODULE_4_NAME)_SHLIB_PATH = $($(MODULE_4_NAME)_$(OS)_SHLIB_PATH)
 
+#$(MODULE_4_NAME)_Darwin_LFLAGS = $($(MODULE_4_NAME)_SHLIB_PATH) -arch x86_64 \
+#	-isysroot $(SDK) \
+#	-Xlinker -rpath -Xlinker @loader_path/Frameworks -stdlib=libc++ \
+#	-Xlinker -rpath -Xlinker -map -Xlinker -no_deduplicate \
+#	-Xlinker -rpath -Xlinker $(XCODE)/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx \
+#	-L$(XCODE)/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx \
+#	-Xlinker -add_ast_path -Xlinker $(SOURCE_ROOT_DIR)/$(MODULE_4_NAME)/$(MODULE_4_NAME).swiftmodule -single_module \
+#	-Xlinker -rpath -Xlinker @executable_path/../lib/x86_64/$(MODULE_4_NAME).swiftmodule \
+#	-Xlinker -rpath -Xlinker @executable_path/../lib \
+#	-Xlinker -rpath -Xlinker @executable_path/../frameworks \
+#	-framework Foundation -framework $(MODULE_1_NAME) -framework $(MODULE_3_NAME) -framework $(MODULE_2_NAME)
+
 $(MODULE_4_NAME)_Darwin_LFLAGS = $($(MODULE_4_NAME)_SHLIB_PATH) -arch x86_64 \
 	-isysroot $(SDK) \
 	-Xlinker -rpath -Xlinker @loader_path/Frameworks -stdlib=libc++ \
-	-Xlinker -rpath -Xlinker -map -Xlinker -no_deduplicate \
+	-Xlinker -no_deduplicate \
 	-Xlinker -rpath -Xlinker $(XCODE)/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx \
 	-L$(XCODE)/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx \
 	-Xlinker -add_ast_path -Xlinker $(SOURCE_ROOT_DIR)/$(MODULE_4_NAME)/$(MODULE_4_NAME).swiftmodule -single_module \

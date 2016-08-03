@@ -20,7 +20,7 @@ $(MODULE_2_NAME)_SHLIB_PATH = $($(MODULE_2_NAME)_$(OS)_SHLIB_PATH)
 
 $(MODULE_2_NAME)_Darwin_LFLAGS = $($(MODULE_2_NAME)_SHLIB_PATH) -arch x86_64 -dynamiclib \
 	-isysroot $(SDK) \
-	-install_name $(BUILD_ROOT_DIR)/frameworks/$(MODULE_2_NAME).framework/Versions/A/$(MODULE_2_NAME) -Xlinker -rpath \
+	-install_name @executable_path/../frameworks/$(MODULE_2_NAME).framework/Versions/A/$(MODULE_2_NAME) -Xlinker -rpath \
 	-Xlinker @executable_path/../Frameworks \
 	-Xlinker -rpath -Xlinker @loader_path/Frameworks -stdlib=libc++ \
 	-L$(XCODE)/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx \

@@ -761,6 +761,8 @@ internal final class Application {
 					self.mainGUI.waitPopup(5)
 				#endif
 					
+					self.mainGUI.deinitPopupWidget()
+					
 					let endPopup = PopupWidget(popuptype: PopupWidget.GUIPopupTypes.CONFIRM, popupContent: "Application started!", popupButtons: ["OK"], hasShadow: false, popupDelegate: { (selectedChoiceIdx) in
 						
 							self.mainGUI.deinitPopupWidget()
@@ -844,6 +846,8 @@ internal final class Application {
 					self.mainGUI.initPopupWidget(waitPopup)
 					self.mainGUI.waitPopup(5)
 				#endif
+					
+					self.mainGUI.deinitPopupWidget()
 					
 					let resultPopup = PopupWidget(popuptype: PopupWidget.GUIPopupTypes.CONFIRM, popupContent: "Application stopped!", popupButtons: ["OK"], hasShadow: false, popupDelegate: { (selectedChoiceIdx) in
 						
@@ -941,7 +945,6 @@ internal final class Application {
 					
 					self.mainGUI.waitPopup(waitForSecond: 5)
 					self.startHandlers(isChildProcess: false)
-					self.mainGUI.initPopupWidget(widget: waitPopup)
 					self.mainGUI.waitPopup(waitForSecond: 5)
 				#elseif swift(>=2.2) && os(OSX)
 						
@@ -949,10 +952,11 @@ internal final class Application {
 					
 					self.mainGUI.waitPopup(5)
 					self.startHandlers(false)
-					self.mainGUI.initPopupWidget(waitPopup)
 					self.mainGUI.waitPopup(5)
 				#endif
 			
+					self.mainGUI.deinitPopupWidget()
+					self.mainGUI.waitPopup(waitForSecond: 1)
 					
 					let resultPopup = PopupWidget(popuptype: PopupWidget.GUIPopupTypes.SYNC_WAIT, popupContent: "Application restarted!", popupButtons: ["OK"], hasShadow: false, popupDelegate: { (selectedChoiceIdx) in
 						
@@ -1050,6 +1054,8 @@ internal final class Application {
 				self.mainGUI.initPopupWidget(waitPopup)
 				self.mainGUI.waitPopup(5)
 			#endif
+				
+				self.mainGUI.deinitPopupWidget()
 				
 				let resultPopup = PopupWidget(popuptype: PopupWidget.GUIPopupTypes.CONFIRM, popupContent: "Application stopped!", popupButtons: ["OK"], hasShadow: false, popupDelegate: { (selectedChoiceIdx) in
 					

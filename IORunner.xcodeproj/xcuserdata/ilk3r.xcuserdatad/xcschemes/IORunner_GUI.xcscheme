@@ -67,7 +67,7 @@
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "/Users/ilk3r/Desktop/temp/IOProcessChecker/Config.ini"
+            argument = "/usr/local/IORunner/etc/Config.ini"
             isEnabled = "YES">
          </CommandLineArgument>
       </CommandLineArguments>
