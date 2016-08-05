@@ -444,17 +444,9 @@ public struct InputPopupWidget {
 						
 					if(newPath.characters.count == 0) {
 						
-					#if os(Linux)
-						dirList = try NSFileManager.defaultManager().contentsOfDirectory(atPath: "/")
-					#else
 						dirList = try FileManager.default().contentsOfDirectory(atPath: "/")
-					#endif
 					}else{
-					#if os(Linux)
-						dirList = try NSFileManager.defaultManager().contentsOfDirectory(atPath: newPath)
-					#else
 						dirList = try FileManager.default().contentsOfDirectory(atPath: newPath)
-					#endif
 					}
 				#elseif swift(>=2.2) && os(OSX)
 					

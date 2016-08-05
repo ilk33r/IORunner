@@ -47,12 +47,8 @@ if let appArguments = ArgumentParser().parseArguments() {
 		currentConfigFile = "./../etc/Config.ini"
 	}
 	
-	#if swift(>=3)
-	#if os(Linux)
-		let configFileExists = NSFileManager.defaultManager().fileExists(atPath: currentConfigFile)
-	#else
-		let configFileExists = FileManager.default().fileExists(atPath: currentConfigFile)
-	#endif
+#if swift(>=3)
+	let configFileExists = FileManager.default().fileExists(atPath: currentConfigFile)
 	if(configFileExists) {
 			
 		do {

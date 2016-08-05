@@ -7,13 +7,14 @@ $(MODULE_NAME)Installer_CLANG_FLAGS = -arch x86_64 -fmacro-backtrace-limit=0 -st
 
 $(MODULE_NAME)Installer_Src = $(MODULE_NAME)Installer/IOStringHelper.c $(MODULE_NAME)Installer/IORunnerInstaller.c \
 	$(MODULE_NAME)Installer/IODirectory.c $(MODULE_NAME)Installer/IOProcessHelper.c
-$(MODULE_NAME)Installer_Obj = $(addsuffix .o, $(basename $($(MODULE_NAME)Installer_Src)))
+$(MODULE_NAME)Installer_Darwin_LFLAGS = $(addsuffix .o, $(basename $($(MODULE_NAME)Installer_Src)))
 
 $(MODULE_NAME)Installer_Darwin_LFLAGS = -arch x86_64 \
 	-isysroot $(SDK) -I$(SOURCE_ROOT_DIR)/$(MODULE_NAME)Installer \
 	-Xlinker -no_deduplicate \
 	-Xlinker -rpath -Xlinker @executable_path
-$(MODULE_NAME)Installer_Linux_LFLAGS = -arch x86_64 -Xlinker -no_deduplicate -Xlinker -dependency_info \
+$(MODULE_NAME)Installer_Linux_LFLAGS = -arch x86_64 -lgcc_s -Xlinker -no_deduplicate -Xlinker -dependency_info \
+	-fuse-ld=gold \
 	-I$(SOURCE_ROOT_DIR)/$(MODULE_NAME)Installer \
 	-Xlinker -no_deduplicate \
 	-Xlinker -rpath -Xlinker '$$ORIGIN'

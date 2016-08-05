@@ -92,11 +92,7 @@ internal struct DynamicLoader {
 		do {
 			
 		#if swift(>=3)
-		#if os(Linux)
-			dirFiles = try NSFileManager.defaultManager().contentsOfDirectory(atPath: self.enabledExtensionsDir)
-		#else
 			dirFiles = try FileManager.default().contentsOfDirectory(atPath: self.enabledExtensionsDir)
-		#endif
 		#elseif swift(>=2.2) && os(OSX)
 			
 			dirFiles = try NSFileManager.defaultManager().contentsOfDirectoryAtPath(self.enabledExtensionsDir)
@@ -157,11 +153,7 @@ internal struct DynamicLoader {
 			do {
 				
 			#if swift(>=3)
-			#if os(Linux)
-				extensionRealPath = try NSFileManager.defaultManager().destinationOfSymbolicLink(atPath: extensionPath)
-			#else
 				extensionRealPath = try FileManager.default().destinationOfSymbolicLink(atPath: extensionPath)
-			#endif
 			#elseif swift(>=2.2) && os(OSX)
 					
 				extensionRealPath = try NSFileManager.defaultManager().destinationOfSymbolicLinkAtPath(extensionPath)
@@ -326,11 +318,7 @@ internal struct DynamicLoader {
 		do {
 			
 		#if swift(>=3)
-		#if os(Linux)
-			let enabledExtensionsdirFiles = try NSFileManager.defaultManager().contentsOfDirectory(atPath: self.enabledExtensionsDir)
-		#else
 			let enabledExtensionsdirFiles = try FileManager.default().contentsOfDirectory(atPath: self.enabledExtensionsDir)
-		#endif
 		#else
 			
 			let enabledExtensionsdirFiles = try NSFileManager.defaultManager().contentsOfDirectoryAtPath(self.enabledExtensionsDir)
@@ -366,11 +354,7 @@ internal struct DynamicLoader {
 		do {
 			
 		#if swift(>=3)
-		#if os(Linux)
-			let availabledExtensionsDirFile = try NSFileManager.defaultManager().contentsOfDirectory(atPath: self.extensionsAbsoluteDir + "available")
-		#else
 			let availabledExtensionsDirFile = try FileManager.default().contentsOfDirectory(atPath: self.extensionsAbsoluteDir + "available")
-		#endif
 		#else
 			
 			let availabledExtensionsDirFile = try NSFileManager.defaultManager().contentsOfDirectoryAtPath(self.extensionsAbsoluteDir + "available")
@@ -409,11 +393,7 @@ internal struct DynamicLoader {
 		
 		do {
 		#if swift(>=3)
-		#if os(Linux)
-			let enabledExtensionsdirFiles = try NSFileManager.defaultManager().contentsOfDirectory(atPath: self.enabledExtensionsDir)
-		#else
 			let enabledExtensionsdirFiles = try FileManager.default().contentsOfDirectory(atPath: self.enabledExtensionsDir)
-		#endif
 		#else
 			
 			let enabledExtensionsdirFiles = try NSFileManager.defaultManager().contentsOfDirectoryAtPath(self.enabledExtensionsDir)
@@ -459,11 +439,7 @@ internal struct DynamicLoader {
 		
 		do {
 		#if swift(>=3)
-		#if os(Linux)
-			let availabledExtensionsDirFile = try NSFileManager.defaultManager().contentsOfDirectory(atPath: self.extensionsAbsoluteDir + "available")
-		#else
 			let availabledExtensionsDirFile = try FileManager.default().contentsOfDirectory(atPath: self.extensionsAbsoluteDir + "available")
-		#endif
 		#else
 			
 			let availabledExtensionsDirFile = try NSFileManager.defaultManager().contentsOfDirectoryAtPath(self.extensionsAbsoluteDir + "available")
@@ -528,11 +504,7 @@ internal struct DynamicLoader {
 		var moduleFileName: String!
 		do {
 		#if swift(>=3)
-		#if os(Linux)
-			let enabledExtensionsdirFiles = try NSFileManager.defaultManager().contentsOfDirectory(atPath: self.enabledExtensionsDir)
-		#else
 			let enabledExtensionsdirFiles = try FileManager.default().contentsOfDirectory(atPath: self.enabledExtensionsDir)
-		#endif
 		#else
 			
 			let enabledExtensionsdirFiles = try NSFileManager.defaultManager().contentsOfDirectoryAtPath(self.enabledExtensionsDir)
@@ -571,11 +543,7 @@ internal struct DynamicLoader {
 		
 		do {
 		#if swift(>=3)
-		#if os(Linux)
-			try NSFileManager.defaultManager().removeItem(atPath: enabledExtensionsDir + "/" + moduleFileName)
-		#else
 			try FileManager.default().removeItem(atPath: enabledExtensionsDir + "/" + moduleFileName)
-		#endif
 		#elseif swift(>=2.2) && os(OSX)
 			
 			try NSFileManager.defaultManager().removeItemAtPath(enabledExtensionsDir + "/" + moduleFileName)
@@ -595,11 +563,7 @@ internal struct DynamicLoader {
 		let moduleDestinationFile = extensionsAbsoluteDir + "enabled/lib" + moduleList[moduleIdx].0 + ".dylib"
 		do {
 		#if swift(>=3)
-		#if os(Linux)
-			try NSFileManager.defaultManager().createSymbolicLink(atPath: moduleDestinationFile, withDestinationPath: moduleSourceFile)
-		#else
 			try FileManager.default().createSymbolicLink(atPath: moduleDestinationFile, withDestinationPath: moduleSourceFile)
-		#endif
 		#elseif swift(>=2.2) && os(OSX)
 			
 			try NSFileManager.defaultManager().createSymbolicLinkAtPath(moduleDestinationFile, withDestinationPath: moduleSourceFile)

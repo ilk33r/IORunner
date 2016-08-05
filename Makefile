@@ -95,7 +95,7 @@ $(MODULE_NAME)-clean:
 clean: $(MODULE_1_NAME)-clean $(MODULE_2_NAME)-clean $(MODULE_3_NAME)-clean $(MODULE_4_NAME)-clean AllExtensions-Clean
 
 dist-clean: clean $(MODULE_NAME)-clean $(MODULE_NAME)Installer-clean
-	@rm -r $(BUILD_ROOT_DIR)
+	@rm -rf $(BUILD_ROOT_DIR)
 	
 dist-create-zip:
 	@zip -r -D -y $(BUILD_ROOT_DIR)/$(MODULE_NAME)-$(OS)-x86_64.zip Build/bin/ Build/extensions/ Build/lib/ Build/frameworks/
@@ -105,6 +105,7 @@ dist-create-zip:
 dist: dist-create-zip $(MODULE_NAME)Installer
 	
 source-dist: dist-clean
+	@mkdir -p $(BUILD_ROOT_DIR)
 	@mkdir -p $(BUILD_ROOT_DIR)/$(MODULE_NAME)
 	@cp -r $(SOURCE_ROOT_DIR)/$(MODULE_1_NAME) $(BUILD_ROOT_DIR)/$(MODULE_NAME)
 	@cp -r $(SOURCE_ROOT_DIR)/$(MODULE_2_NAME) $(BUILD_ROOT_DIR)/$(MODULE_NAME)
@@ -119,7 +120,7 @@ source-dist: dist-clean
 	@find $(SOURCE_ROOT_DIR)/$(MODULE_NAME)-Src -name ".*" -exec rm -rf {} \;
 	@tar -cvzf $(BUILD_ROOT_DIR)/$(MODULE_NAME)-Source.tar.gz $(MODULE_NAME)-Src
 	@rm -rf $(SOURCE_ROOT_DIR)/$(MODULE_NAME)-Src
-	@rm $(SOURCE_ROOT_DIR)/Config.ini*
+	@rm -f $(SOURCE_ROOT_DIR)/Config.ini*
 	@rm -rf $(BUILD_ROOT_DIR)/lldb-ext*
 	
 .PHONY: all extensions clean dist-clean dist source-dist debug list-dependencies

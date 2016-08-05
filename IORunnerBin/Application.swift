@@ -194,7 +194,7 @@ internal final class Application {
 			case "environ":
 			#if swift(>=3)
 			#if os(Linux)
-				let environments = NSProcessInfo.processInfo().environment
+				let environments = ProcessInfo.processInfo().environment
 			#else
 				let environments = ProcessInfo().environment
 			#endif
@@ -638,14 +638,17 @@ internal final class Application {
 		guiMainMenu()
 		
 	#if swift(>=3)
+		
+		var loopStartDate: UInt = UInt(Date().timeIntervalSince1970)
+		let runLoop = RunLoop.current()
+		
 	#if os(Linux)
-		var loopStartDate: UInt = UInt(NSDate().timeIntervalSince1970)
-		let runLoop = NSRunLoop.currentRunLoop()
+
 		repeat {
 			let _ = signalHandler.process()
 			self.mainGUI.onGUI()
 			
-			let curDate: UInt = UInt(NSDate().timeIntervalSince1970)
+			let curDate: UInt = UInt(Date().timeIntervalSince1970)
 			let dateDif = curDate - loopStartDate
 			if(dateDif > 30) {
 				logger.writeLog(level: Logger.LogLevels.WARNINGS, message: "Updating info data")
@@ -659,10 +662,9 @@ internal final class Application {
 			
 			usleep(Constants.GuiRefreshRate)
 			
-		} while (inGuiLoop && runLoop.runMode(NSDefaultRunLoopMode, beforeDate: NSDate().addingTimeInterval(-1 * Constants.CpuSleepMsec)))
+		} while (inGuiLoop && runLoop.run(mode: RunLoopMode.defaultRunLoopMode, before: NSDate().addingTimeInterval(-1 * Constants.CpuSleepMsec)))
 	#else
-		var loopStartDate: UInt = UInt(Date().timeIntervalSince1970)
-		let runLoop = RunLoop.current()
+		
 		repeat {
 			let _ = signalHandler.process()
 			self.mainGUI.onGUI()
