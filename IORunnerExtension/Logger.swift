@@ -36,11 +36,17 @@ public final class Logger {
 	}
 
 #if swift(>=3)
-	
+#if os(Linux)
+	public enum LoggerError: Error {
+		case FileSizeTooSmall
+		case FileIsNotWritable
+	}
+#else
 	public enum LoggerError: ErrorProtocol {
 		case FileSizeTooSmall
 		case FileIsNotWritable
 	}
+#endif
 #elseif swift(>=2.2) && os(OSX)
 	
 	public enum LoggerError: ErrorType {

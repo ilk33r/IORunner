@@ -49,4 +49,10 @@ typedef unsigned char Bool;
 #	define IS_DARWIN FALSE
 #endif
 
+#if IS_LINUX == TRUE
+#	ifndef _BSD_SOURCE
+#		define _BSD_SOURCE
+#	endif
+#endif
+
 #endif /* Defines_h */

@@ -96,12 +96,12 @@ static void generateBashScript(IOString *installDir) {
 	if(copyResult == -1) {
 		
 		if(destinationPath != NULL) {
-			printf("\t[FAIL]\n\nAn error occured for creating shortcut file. Please run\ncp %s %s\ncommand as administrator.\nInstall complete with errors!", shortcutFile->value, destinationPath->value);
+			printf("\t[FAIL]\n\nAn error occured for creating shortcut file. Please run\ncp %s %s\ncommand as administrator.\nInstall complete with errors!\n", shortcutFile->value, destinationPath->value);
 		}else{
-			printf("\t[FAIL]\n\nAn error occured for creating shortcut file.\nInstall complete with errors!");
+			printf("\t[FAIL]\n\nAn error occured for creating shortcut file.\nInstall complete with errors!\n");
 		}
 	}else{
-		printf("\t[OK]\n\nInstall complete.");
+		printf("\t[OK]\n\nInstall complete.\n");
 	}
 	
 	if(destinationPath != NULL) {
@@ -110,6 +110,49 @@ static void generateBashScript(IOString *installDir) {
 	
 	shortcutFile->release(shortcutFile);
 	installRealPath->release(installRealPath);
+}
+
+static void updateFilePermissions(IODirectory *dirFiles, const char* mode) {
+	
+	dirFiles->generateContentlist(dirFiles);
+	
+	size_t i = 0;
+	for (i = 0; i < dirFiles->fileCount; i++) {
+		
+		IOString *sourceFileName = dirFiles->contents->get(dirFiles->contents, i);
+		if(sourceFileName->value == NULL) {
+			continue;
+		}
+		
+		if(sourceFileName->isEqualToString(sourceFileName, "..") == TRUE) {
+			continue;
+		}
+		
+		if(sourceFileName->isEqualToString(sourceFileName, ".") == TRUE) {
+			continue;
+		}
+		
+		IOString *sourceFilePath = INIT_STRING(dirFiles->path->value);
+		sourceFilePath->appendByPathComponent(sourceFilePath, sourceFileName->value);
+		
+		if(IS_FILE(dirFiles, i)) {
+			
+			long i = strtol(mode, 0, 8);
+			IO_UNUSED chmod(sourceFilePath->value ,i);
+		}else if(IS_LINK(dirFiles, i)) {
+			
+			long i = strtol(mode, 0, 8);
+			IO_UNUSED chmod(sourceFilePath->value ,i);
+		}else if (IS_DIR(dirFiles, i)) {
+			
+			IODirectory *subdir = INIT_DIRECTORY_WITH_CHAR(sourceFilePath->value);
+			updateFilePermissions(subdir, mode);
+		}
+		
+		sourceFilePath->release(sourceFilePath);
+	}
+	
+	dirFiles->release(dirFiles);
 }
 
 int main(int argc, const char *argv[]) {
@@ -164,7 +207,7 @@ int main(int argc, const char *argv[]) {
 		struct stat st2 = {0};
 		if(stat(buildDirectory->value, &st2) == 0) {
 		
-			printf("Application already installed!");
+			printf("Application already installed!\n");
 			zipFilePath->release(zipFilePath);
 			installPath->release(installPath);
 			buildDirectory->release(buildDirectory);
@@ -175,7 +218,7 @@ int main(int argc, const char *argv[]) {
 		FILE *zipFile = fopen(zipFilePath->value, "w");
 		if(zipFile == NULL) {
 		
-			printf("An error occured for writing files.");
+			printf("An error occured for writing files.\n");
 			zipFilePath->release(zipFilePath);
 			installPath->release(installPath);
 			buildDirectory->release(buildDirectory);
@@ -261,7 +304,7 @@ int main(int argc, const char *argv[]) {
 			IOString *etcDir = INIT_STRING(installPath->value);
 			etcDir->appendByPathComponent(etcDir, "etc");
 			IO_UNUSED mkdir(etcDir->value, 0775);
-		
+			
 			IOString *varDir = INIT_STRING(installPath->value);
 			varDir->appendByPathComponent(varDir, "var");
 			IO_UNUSED mkdir(varDir->value, 0775);
@@ -282,19 +325,36 @@ int main(int argc, const char *argv[]) {
 			printf("\t[OK]\n");
 			printf("Generating shortcut file ...");
 			generateBashScript(installPath);
-		
+			
+			IODirectory *etcIODir = INIT_DIRECTORY(etcDir);
+			updateFilePermissions(etcIODir, "0644");
+			
+			IOString *binPath = INIT_STRING(installPath->value);
+			binPath->appendByPathComponent(binPath, "bin");
+			IODirectory *binIODir = INIT_DIRECTORY(binPath);
+			updateFilePermissions(binIODir, "0755");
+			
+			IOString *libIOPath = INIT_STRING(installPath->value);
+			libIOPath->appendByPathComponent(libIOPath, "lib");
+			IODirectory *libIODir = INIT_DIRECTORY(libIOPath);
+			updateFilePermissions(libIODir, "0644");
+			
+			IOString *enabledExtensionDir = INIT_STRING(extensionDir->value);
+			enabledExtensionDir->appendByPathComponent(enabledExtensionDir, "available");
+			IODirectory *enabledExtensionIODir = INIT_DIRECTORY(enabledExtensionDir);
+			updateFilePermissions(enabledExtensionIODir, "0644");
+			
 			extensionDir->release(extensionDir);
 			varDir->release(varDir);
 			logDir->release(logDir);
 			runDir->release(runDir);
-			etcDir->release(etcDir);
 		
 		}else{
 		
 			zipFilePath->release(zipFilePath);
 			installPath->release(installPath);
 			buildDirectory->release(buildDirectory);
-			printf("An error occured when opening zip file. Are you sure zip/unzip installed ?");
+			printf("An error occured when opening zip file. Are you sure zip/unzip installed ?\n");
 			return 1;
 		}
 	

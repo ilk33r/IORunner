@@ -29,9 +29,12 @@ Linux_EXTRA_FLAGS.release = -D $(LSB_OS)_$(subst .,_,$(LSB_VER))
 Linux_EXTRA_FLAGS.debug = -D $(LSB_OS)_$(subst .,_,$(LSB_VER)) -D DEBUG
 Linux_EXTRA_FLAGS := $(Linux_EXTRA_FLAGS.$(BUILD))
 
+SWIFT_Darwin_libs = $(XCODE)/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx
+SWIFT_Linux_libs = $(shell dirname $(shell dirname $(shell which swiftc)))/lib/swift/linux
+SWIFT_libs = $(SWIFT_$(OS)_libs)
+
 Darwin_Dependencies_Command=otool -L /usr/local/$(MODULE_NAME)/bin/$(MODULE_NAME)
 Linux_Dependencies_Command=readelf -d /usr/local/$(MODULE_NAME)/bin/$(MODULE_NAME)
-# readelf -r app
 Dependencies_Command=$($(OS)_Dependencies_Command)
 
 MODULE_1_NAME=IOIni
@@ -62,9 +65,6 @@ install-debug:
 	@cp -r $(BUILD_ROOT_DIR)/extensions/*.dylib $(BUILD_ROOT_DIR)/lldb-ext/available
 	@lldb $(BUILD_ROOT_DIR)/bin/$(MODULE_NAME) -- -c $(SOURCE_ROOT_DIR)/Config.ini
 
-list-dependencies: 
-	
-
 debug: prepare-debug $(MODULE_NAME) extensions install-debug
 
 modulecache:
@@ -77,11 +77,26 @@ modulecache:
 	@mkdir -p $(MODULE_CACHE_PATH)
 	@mkdir -p $(MODULE_CACHE_PATH)/Extensions
 	
+Copy_Darwin_dependencies:
+	@cp -r $(SWIFT_libs)/libswiftCore.dylib $(BUILD_ROOT_DIR)/lib
+	@cp -r $(SWIFT_libs)/libswiftCoreGraphics.dylib $(BUILD_ROOT_DIR)/lib
+	@cp -r $(SWIFT_libs)/libswiftDarwin.dylib $(BUILD_ROOT_DIR)/lib
+	@cp -r $(SWIFT_libs)/libswiftDispatch.dylib $(BUILD_ROOT_DIR)/lib
+	@cp -r $(SWIFT_libs)/libswiftFoundation.dylib $(BUILD_ROOT_DIR)/lib
+	@cp -r $(SWIFT_libs)/libswiftIOKit.dylib $(BUILD_ROOT_DIR)/lib
+	@cp -r $(SWIFT_libs)/libswiftObjectiveC.dylib $(BUILD_ROOT_DIR)/lib
+	@cp -r $(SWIFT_libs)/libswiftXPC.dylib $(BUILD_ROOT_DIR)/lib
+	
+Copy_Linux_dependencies:
+	@cp -r $(SWIFT_libs)/libswiftCore.so $(BUILD_ROOT_DIR)/lib
+	@cp -r $(SWIFT_libs)/libswiftGlibc.so $(BUILD_ROOT_DIR)/lib
+	@cp -r $(SWIFT_libs)/libFoundation.so $(BUILD_ROOT_DIR)/lib
+	
 include $(SOURCE_ROOT_DIR)/$(MODULE_1_NAME)/Makefile $(SOURCE_ROOT_DIR)/$(MODULE_2_NAME)/Makefile $(SOURCE_ROOT_DIR)/$(MODULE_3_NAME)/Makefile \
 	$(SOURCE_ROOT_DIR)/$(MODULE_4_NAME)/Makefile $(SOURCE_ROOT_DIR)/Extensions/Makefile \
 	$(SOURCE_ROOT_DIR)/$(MODULE_NAME)Installer/Makefile
 	
-$(MODULE_NAME): modulecache $(MODULE_1_NAME) $(MODULE_2_NAME) $(MODULE_3_NAME) $(MODULE_4_NAME)
+$(MODULE_NAME): modulecache Copy_$(OS)_dependencies $(MODULE_1_NAME) $(MODULE_2_NAME) $(MODULE_3_NAME) $(MODULE_4_NAME)
 	
 extensions: AllExtensions
 

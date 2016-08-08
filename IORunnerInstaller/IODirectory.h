@@ -11,10 +11,6 @@
 
 #include "Defines.h"
 
-#if IS_LINUX == TRUE
-#	define _BSD_SOURCE
-#endif
-
 #include <stdio.h>
 #include <dirent.h>
 #include <stdlib.h>

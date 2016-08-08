@@ -8,7 +8,6 @@
 
 #if swift(>=3)
 
-	/*
 	#if os(Linux)
 	enum ParseError: Error {
 		
@@ -16,13 +15,12 @@
 		case UnsupportedToken(err: String)
 	}
 	#else
-	*/
 	enum ParseError: ErrorProtocol {
 			
 		case InvalidSyntax(err: String)
 		case UnsupportedToken(err: String)
 	}
-	//#endif
+	#endif
 #elseif swift(>=2.2) && os(OSX)
 	
 	enum ParseError: ErrorType {
