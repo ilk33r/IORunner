@@ -84,8 +84,12 @@ public class parseINI {
 	}
 	
 	public init (withFile filename: String) throws {
-	
+	#if os(Linux)
+		let configFileLinuxContent = try NSString(contentsOfFile: filename, encoding: String.Encoding.utf8.rawValue)
+		self.iniString = String(configFileLinuxContent)
+	#else
 		self.iniString = try String(contentsOfFile: filename)
+	#endif
 		try self.parseData()
 	}
 	

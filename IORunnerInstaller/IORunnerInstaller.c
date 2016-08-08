@@ -311,11 +311,11 @@ int main(int argc, const char *argv[]) {
 		
 			IOString *logDir = INIT_STRING(installPath->value);
 			logDir->appendByPathComponent(logDir, "var/log");
-			IO_UNUSED mkdir(logDir->value, 0775);
+			IO_UNUSED mkdir(logDir->value, 0777);
 		
 			IOString *runDir = INIT_STRING(installPath->value);
 			runDir->appendByPathComponent(runDir, "var/run");
-			mkdir(runDir->value, 0775);
+			mkdir(runDir->value, 0777);
 		
 			IOString *extensionDir = INIT_STRING(installPath->value);
 			extensionDir->appendByPathComponent(extensionDir, "extensions");
