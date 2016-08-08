@@ -25,7 +25,7 @@ $(MODULE_1_NAME)_Darwin_LFLAGS = $($(MODULE_1_NAME)_SHLIB_PATH) -arch x86_64 -dy
 	-Xlinker -rpath -Xlinker @executable_path/../lib \
 	-Xlinker -rpath -Xlinker @executable_path/../frameworks \
 	-compatibility_version 1 -current_version 1 \
-	-framework Foundation	
+	-framework Foundation
 
 $(MODULE_1_NAME)_Linux_LFLAGS = $($(MODULE_1_NAME)_SHLIB_PATH) -lswiftCore -lswiftGlibc -lm -ldl -lpthread -licui18n -licuuc -lFoundation -lbsd \
 	-shared -fuse-ld=gold \

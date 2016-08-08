@@ -14,37 +14,33 @@ $(MODULE_3_NAME)_Obj = $(addsuffix .o, $(basename $($(MODULE_3_NAME)_Src)))
 $(MODULE_3_NAME)_Modules = $(addprefix $(MODULE_CACHE_PATH)/, $(addsuffix .swiftmodule, $(basename $($(MODULE_3_NAME)_Src))))
 
 $(MODULE_3_NAME)_Darwin_SHLIB_PATH = -target x86_64-apple-macosx10.10 -I$(BUILD_ROOT_DIR)/lib -I$(BUILD_ROOT_DIR)/frameworks \
-	-L ../lib -F ../frameworks \
-	-F$(BUILD_ROOT_DIR)/frameworks -L$(BUILD_ROOT_DIR)/frameworks -L$(BUILD_ROOT_DIR)/lib
-$(MODULE_3_NAME)_Linux_SHLIB_PATH = -target x86_64--linux-gnu -L$(shell dirname $(shell dirname $(shell which swiftc)))/lib/swift/linux \
+	-F$(BUILD_ROOT_DIR)/frameworks -L$(BUILD_ROOT_DIR)/frameworks -L$(BUILD_ROOT_DIR)/lib -L$(SWIFT_libs)
+$(MODULE_3_NAME)_Linux_SHLIB_PATH = -target x86_64--linux-gnu -L$(SWIFT_libs) \
 		-L$(shell dirname $(shell dirname $(shell which swiftc)))/lib/swift_static/linux \
-		-L$(BUILD_ROOT_DIR)/lib -I/usr/include -L../lib
+		-L$(BUILD_ROOT_DIR)/lib -I/usr/include
 $(MODULE_3_NAME)_SHLIB_PATH = $($(MODULE_3_NAME)_$(OS)_SHLIB_PATH)
 
 $(MODULE_3_NAME)_Darwin_LFLAGS = $($(MODULE_3_NAME)_SHLIB_PATH) -arch x86_64 -dynamiclib \
 	-isysroot $(SDK) -lncurses \
-	-install_name @executable_path/../frameworks/$(MODULE_3_NAME).framework/Versions/A/$(MODULE_3_NAME) -Xlinker -rpath \
-	-Xlinker @executable_path/../Frameworks \
-	-Xlinker -rpath -Xlinker @loader_path/Frameworks -stdlib=libc++ \
-	-L$(XCODE)/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx \
-	-Xlinker -add_ast_path -Xlinker $(SOURCE_ROOT_DIR)/$(MODULE_3_NAME)/$(MODULE_3_NAME).swiftmodule -single_module \
-	-Xlinker -rpath -Xlinker @executable_path/../lib/x86_64/$(MODULE_3_NAME).swiftmodule \
+	-install_name @executable_path/../frameworks/$(MODULE_3_NAME).framework/Versions/A/$(MODULE_3_NAME) \
+	-Xlinker -add_ast_path \
+	-stdlib=libc++ \
+	-Xlinker $(SOURCE_ROOT_DIR)/$(MODULE_3_NAME)/$(MODULE_3_NAME).swiftmodule -single_module \
+	-Xlinker -rpath -Xlinker @executable_path/../Frameworks \
+	-Xlinker -rpath -Xlinker @loader_path/Frameworks \
 	-Xlinker -rpath -Xlinker @executable_path/../lib \
 	-Xlinker -rpath -Xlinker @executable_path/../frameworks \
 	-compatibility_version 1 -current_version 1 \
 	-framework Foundation
+
 $(MODULE_3_NAME)_Linux_LFLAGS = $($(MODULE_3_NAME)_SHLIB_PATH) -lswiftCore -lswiftGlibc -lm -ldl -lpthread -licui18n -licuuc -lFoundation -lbsd \
 	-lncurses \
 	-shared -fuse-ld=gold \
-	-Xlinker -rpath \
-	-Xlinker $(shell dirname $(shell dirname $(shell which swiftc)))/lib/swift/linux \
-	-Xlinker -rpath \
-	-Xlinker $(SOURCE_ROOT_DIR)/$(MODULE_3_NAME)/$(MODULE_3_NAME).swiftmodule \
 	-Xlinker -export-dynamic \
 	-Xlinker --exclude-libs -Xlinker ALL \
 	-Xlinker -rpath -Xlinker '$$ORIGIN/../lib/x86_64/$(MODULE_3_NAME).swiftmodule' \
 	-Xlinker -rpath -Xlinker '$$ORIGIN/../lib' \
-	$(shell dirname $(shell dirname $(shell which swiftc)))/lib/swift/linux/x86_64/swift_end.o
+	$(SWIFT_libs)/x86_64/swift_end.o
 
 $(MODULE_3_NAME)_LFLAGS = $($(MODULE_3_NAME)_$(OS)_LFLAGS)
 

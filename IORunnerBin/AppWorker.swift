@@ -28,13 +28,21 @@ internal final class AppWorker {
 	private var childProcessPid: Int32 = -1
 
 #if swift(>=3)
-	
+#if os(Linux)
+	enum AppWorkerError: Error {
+		case StdRedirectFailed
+		case DaemonizeFailed
+		case PidFileIsNotWritable
+		case PidFileExists
+	}
+#else
 	enum AppWorkerError: ErrorProtocol {
 		case StdRedirectFailed
 		case DaemonizeFailed
 		case PidFileIsNotWritable
 		case PidFileExists
 	}
+#endif
 #elseif swift(>=2.2) && os(OSX)
 	
 	enum AppWorkerError: ErrorType {
@@ -99,12 +107,19 @@ internal final class AppWorker {
 				var procPid = pid_t()
 				let argumets = Process.arguments
 			#if swift(>=3)
-					
+			#if os(Linux)
+				let cArgs = UnsafeMutablePointer<maybeCChar?>.allocate(capacity: 7)
+				defer {
+					cArgs.deinitialize(count: 7)
+					cArgs.deallocate(capacity: 7)
+				}
+			#else
 				let cArgs = UnsafeMutablePointer<maybeCChar?>(allocatingCapacity: 7)
 				defer {
 					cArgs.deinitialize(count: 7)
 					cArgs.deallocateCapacity(7)
 				}
+			#endif
 			#else
 				
 				let cArgs = UnsafeMutablePointer<maybeCChar>.alloc(7)
@@ -130,12 +145,21 @@ internal final class AppWorker {
 				var environments = ProcessInfo().environment
 			#endif
 				environments["IO_RUNNER_SN"] = "child-start"
+			#if os(Linux)
+				let cEnv = UnsafeMutablePointer<maybeCChar?>.allocate(capacity: environments.count + 1)
+				
+				defer {
+					cEnv.deinitialize(count: environments.count + 1)
+					cEnv.deallocate(capacity: environments.count + 1)
+				}
+			#else
 				let cEnv = UnsafeMutablePointer<maybeCChar?>(allocatingCapacity: environments.count + 1)
 				
 				defer {
 					cEnv.deinitialize(count: environments.count + 1)
 					cEnv.deallocateCapacity(environments.count + 1)
 				}
+			#endif
 				cEnv[environments.count] = UnsafeMutablePointer<CChar>(nil)
 			#else
 				
