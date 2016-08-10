@@ -121,6 +121,7 @@
 		DEBCAE491D5A160900224026 /* String.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = String.playground; sourceTree = "<group>"; };
 		DEC14BF11D5BC42D00F03DCF /* Makefile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
 		DEC14BF21D5BC42D00F03DCF /* LICENSE */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
+		DEC14BF41D5BC46F00F03DCF /* CreateExtension.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = CreateExtension.sh; sourceTree = "<group>"; };
 		DEC3E5AC1D3579CA00FB1662 /* IOGUI.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = IOGUI.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		DEC3E5CC1D357FA500FB1662 /* GUITypes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = GUITypes.swift; path = IOGUI/GUITypes.swift; sourceTree = "<group>"; };
 		DED677191D5B50D200B6F836 /* CursesHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CursesHelper.swift; path = IOGUI/CursesHelper.swift; sourceTree = "<group>"; };
@@ -305,6 +306,7 @@
 				DE2177121D3D0A4B000C21B1 /* IORunnerInstaller */,
 				"____Products_" /* Products */,
 				DE8F5DF11D2A4A9400BE7C35 /* Frameworks */,
+				DEC14BF41D5BC46F00F03DCF /* CreateExtension.sh */,
 			);
 			sourceTree = "<group>";
 		};

@@ -131,6 +131,7 @@ source-dist: dist-clean
 	@cp $(SOURCE_ROOT_DIR)/Makefile $(BUILD_ROOT_DIR)/$(MODULE_NAME)
 	@cp $(SOURCE_ROOT_DIR)/LICENSE $(BUILD_ROOT_DIR)/$(MODULE_NAME)
 	@cp -r $(SOURCE_ROOT_DIR)/$(MODULE_NAME).xcodeproj $(BUILD_ROOT_DIR)/$(MODULE_NAME)
+	@cp -r $(SOURCE_ROOT_DIR)/CreateExtension.sh $(BUILD_ROOT_DIR)/$(MODULE_NAME)
 	@mv $(BUILD_ROOT_DIR)/$(MODULE_NAME) $(SOURCE_ROOT_DIR)/$(MODULE_NAME)-Src
 	@find $(SOURCE_ROOT_DIR)/$(MODULE_NAME)-Src -name ".*" -exec rm -rf {} \;
 	@tar -cvzf $(BUILD_ROOT_DIR)/$(MODULE_NAME)-Source.tar.gz $(MODULE_NAME)-Src

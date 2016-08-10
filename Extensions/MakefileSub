@@ -1,0 +1,7 @@
+# Makefile for AllExtensions
+
+include $(SOURCE_ROOT_DIR)/Extensions/TestHandler/Makefile
+	
+AllExtensions: ext-TestHandler-make
+	
+AllExtensions-Clean: ext-TestHandler-clean
