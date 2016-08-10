@@ -73,7 +73,29 @@ public struct GUIWidgets {
 	public init(delegate: MainGuiDelegate) {
 		
 		self.delegate = delegate
-		setlocale(LC_ALL, "")
+		
+		setenv("LANG", "C.UTF-8", 1)
+		
+		setenv("LC_COLLATE", "C.UTF-8", 1)
+		setlocale(LC_COLLATE, "C.UTF-8")
+		
+		setenv("LC_MESSAGES", "C.UTF-8", 1)
+		setlocale(LC_MESSAGES, "C.UTF-8")
+		
+		setenv("LC_MONETARY", "C", 1)
+		setlocale(LC_MONETARY, "C")
+		
+		setenv("LC_NUMERIC", "C", 1)
+		setlocale(LC_NUMERIC, "C")
+		
+		setenv("LC_TIME", "C", 1)
+		setlocale(LC_TIME, "C")
+		
+		setenv("LC_CTYPE", "en_US.UTF-8", 1)
+		setlocale(LC_CTYPE, "en_US.UTF-8")
+		setenv("LC_ALL", "en_US.UTF-8", 1)
+		setlocale(LC_ALL, "en_US.UTF-8")
+		
 		mainWindow = initscr()
 		cbreak()
 		noecho()

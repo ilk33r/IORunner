@@ -155,7 +155,8 @@ public struct InputPopupWidget {
 		}
 		
 		wmove(self.popupWindow, 1, 2)
-		waddstr(self.popupWindow, self.popupContent)
+		AddStringToWindow(normalString: self.popupContent, window: self.popupWindow)
+		AddStringToWindow(normalString: "\n", window: self.popupWindow)
 		wborder(self.popupWindow, 0, 0, 0, 0, 0, 0, 0, 0)
 		touchwin(self.popupWindow)
 		wrefresh(self.popupWindow)
@@ -173,7 +174,7 @@ public struct InputPopupWidget {
 		
 		wmove(self.inputWindow!, 0, 2)
 		wattrset(self.inputWindow!, COLOR_PAIR(WidgetUIColor.WarningLevelDanger.rawValue))
-		waddstr(self.inputWindow!, self.currentInputValue)
+		AddStringToWindow(normalString: self.currentInputValue, window: self.inputWindow!)
 		mvwhline(self.inputWindow!, 1, 1, 0, popupWidth - 1)
 		touchwin(self.inputWindow!)
 		wrefresh(self.inputWindow!)
@@ -216,18 +217,13 @@ public struct InputPopupWidget {
 			wbkgd(currentButtonWindow, UInt32(COLOR_PAIR(WidgetUIColor.ButtonDanger.rawValue)))
 		#endif
 
-			
-			let buttonSpace = (buttonSizes.0 - Int32(buttonData.characters.count)) / 2
-		#if swift(>=3)
-			
-			let buttonSpaceString = String(repeating: Character(" "), count: Int(buttonSpace))
-		#else
-			
-			let buttonSpaceString = String(count: Int(buttonSpace), repeatedValue: Character(" "))
-		#endif
-			let buttonText = "\(buttonSpaceString)\(buttonData)\n"
+			let buttonWidth = (Int(buttonSizes.0) - 2) / 2
+			//let buttonSpace = (buttonSizes.0 - Int32(buttonData.characters.count)) / 2
+		#if os(OSX)
 			wborder(currentButtonWindow, 1, 1, 1, 1, 1, 1, 1, 1)
-			waddstr(currentButtonWindow, buttonText)
+		#endif
+			AddStringToWindow(paddingString: buttonData, textWidth: buttonWidth, textStartSpace: buttonWidth, window: currentButtonWindow!)
+			AddStringToWindow(normalString: "\n", window: currentButtonWindow!)
 				
 			if(currentSelectedButtonIdx == btnIdx) {
 				

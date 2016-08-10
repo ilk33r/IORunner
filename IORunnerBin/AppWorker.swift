@@ -612,9 +612,9 @@ internal final class AppWorker {
 			let _ = signalHandler.process()
 			currentHandlers.forEach { $0.inLoop() }
 			usleep(Constants.CpuSleepSec)
+			let _ = runLoop.run(mode: RunLoopMode.defaultRunLoopMode, before: NSDate().addingTimeInterval(-1 * Constants.CpuSleepMsec))
 			
-			
-		} while (running && runLoop.run(mode: RunLoopMode.defaultRunLoopMode, before: NSDate().addingTimeInterval(-1 * Constants.CpuSleepMsec)))
+		} while (running)
 		
 	#else
 		

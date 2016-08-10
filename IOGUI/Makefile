@@ -1,6 +1,10 @@
 # Makefile for IOGUI
 
-$(MODULE_3_NAME)_SWIFTC_FLAGS = $(DEBUG) $($(OS)_EXTRA_FLAGS) \
+$(MODULE_3_NAME)_SWIFT_Darwin_DEFINES = -D DO_NOT_USE_CURSES_ASCII
+$(MODULE_3_NAME)_SWIFT_Linux_DEFINES = -D ONLY_USE_CURSES_ASCII
+$(MODULE_3_NAME)_SWIFT_DEFINES = $($(MODULE_3_NAME)_SWIFT_$(OS)_DEFINES)
+
+$(MODULE_3_NAME)_SWIFTC_FLAGS = $(DEBUG) $($(OS)_EXTRA_FLAGS) $($(MODULE_3_NAME)_SWIFT_DEFINES) \
 	-module-cache-path $(MODULE_CACHE_PATH)/$(MODULE_3_NAME) -module-name $(MODULE_3_NAME) $($(OS)_SWIFTC_FLAGS) \
 	-I $(BUILD_ROOT_DIR)/lib -I $(BUILD_ROOT_DIR)/frameworks -F $(BUILD_ROOT_DIR)/frameworks \
 	-import-objc-header $(SOURCE_ROOT_DIR)/$(MODULE_3_NAME)/$(MODULE_3_NAME)-Bridging-Header.h
@@ -9,7 +13,7 @@ $(MODULE_3_NAME)_SWIFTC_FLAGS = $(DEBUG) $($(OS)_EXTRA_FLAGS) \
 
 $(MODULE_3_NAME)_Src = $(MODULE_3_NAME)/TitleAndFooterWidget.swift $(MODULE_3_NAME)/AppInfoWidget.swift $(MODULE_3_NAME)/MenuWidget.swift \
 	$(MODULE_3_NAME)/ModulesWidget.swift $(MODULE_3_NAME)/PopupWidget.swift \
-	$(MODULE_3_NAME)/BackgroundWidget.swift $(MODULE_3_NAME)/InputPopupWidget.swift $(MODULE_3_NAME)/GUITypes.swift
+	$(MODULE_3_NAME)/BackgroundWidget.swift $(MODULE_3_NAME)/InputPopupWidget.swift $(MODULE_3_NAME)/GUITypes.swift $(MODULE_3_NAME)/CursesHelper.swift
 $(MODULE_3_NAME)_Obj = $(addsuffix .o, $(basename $($(MODULE_3_NAME)_Src)))
 $(MODULE_3_NAME)_Modules = $(addprefix $(MODULE_CACHE_PATH)/, $(addsuffix .swiftmodule, $(basename $($(MODULE_3_NAME)_Src))))
 

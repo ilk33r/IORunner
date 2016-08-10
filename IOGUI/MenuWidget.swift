@@ -164,25 +164,17 @@ public struct MenuWidget {
 				wattrset(menuWindow, COLOR_PAIR(WidgetUIColor.Background.rawValue))
 			}
 			
-			var paddingSize = COLS - menuAreaWidth - choices[idx].choiceName.characters.count - 7
-			if paddingSize < 0 {
-				paddingSize = 0
-			}
-		#if swift(>=3)
-			
-			let choiceStringPadding = String(repeating: Character(" "), count: paddingSize)
-		#else
-			
-			let choiceStringPadding = String(count: Int(paddingSize), repeatedValue: Character(" "))
-		#endif
+			let menuStringWidth = Int(COLS) - Int(menuAreaWidth) - 1
+
 			let choiceString: String
 			if(currentChoiceIdx == idx) {
-				choiceString = " \u{2192} \(choices[idx].choiceName)\(choiceStringPadding)\n"
+				choiceString = " \u{2192} \(choices[idx].choiceName)"
 			}else{
-				choiceString = "   \(choices[idx].choiceName)\(choiceStringPadding)\n"
+				choiceString = "   \(choices[idx].choiceName)"
 			}
 			
-			waddstr(menuWindow, choiceString)
+			AddStringToWindow(paddingString: choiceString, textWidth: menuStringWidth, textStartSpace: 1, window: menuWindow)
+			AddStringToWindow(normalString: "\n", window: menuWindow)
 			currentLine += 1
 			
 			lineLeft -= 1
@@ -190,7 +182,7 @@ public struct MenuWidget {
 		}
 		
 		wattrset(menuWindow, COLOR_PAIR(WidgetUIColor.Background.rawValue))
-		waddstr(menuWindow, "\t")
+		AddStringToWindow(normalString: "\t", window: menuWindow)
 		wborder(menuWindow, 0, 0, 0, 0, 0, 0, 0, 0)
 		touchwin(menuWindow)
 		wrefresh(menuWindow)

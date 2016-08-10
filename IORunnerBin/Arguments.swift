@@ -6,6 +6,13 @@
 //
 //
 
+#if os(Linux)
+	import Glibc
+#else
+	import Darwin
+#endif
+import Foundation
+
 internal struct Arguments {
 	
 	// [name] [short name] [variable name] [type] [description] [tab size]
@@ -22,10 +29,17 @@ internal struct Arguments {
 	
 	#if os(OSX)
 	private static let appNameHeader = "\n\u{001B}[31m %@ \u{001B}[0m"
+	#elseif os(Linux)
+	private static let appNameHeader = "\n%s"
 	#else
 	private static let appNameHeader = "\n%@"
 	#endif
+	
+	#if os(OSX)
 	private static let usageString = "\n\nUsage: %@ -arg1 value -arg2 value -arg3  value ...\nArguments: \n\n"
+	#else
+	private static let usageString = "\n\nUsage: %s -arg1 value -arg2 value -arg3  value ...\nArguments: \n\n"
+	#endif
 	
 	var appPath: String
 	var config: String?
@@ -90,7 +104,13 @@ internal struct Arguments {
 	static func getUsage() -> String {
 		
 	#if os(Linux)
-		var currentUsageString = String(format: Arguments.appNameHeader, arguments: [Constants.APP_NAME as! CVarArg]) + String(format: Arguments.usageString, arguments: [Constants.APP_PACKAGE_NAME as! CVarArg])
+		
+		let arg1: UnsafeMutablePointer<CChar> = strdup(Constants.APP_NAME)
+		let arg2: UnsafeMutablePointer<CChar> = strdup(Constants.APP_PACKAGE_NAME)
+		
+		var currentUsageString = String(format: Arguments.appNameHeader, arguments: [arg1]) + String(format: Arguments.usageString, arguments: [arg2])
+		arg1.deinitialize()
+		arg2.deinitialize()
 	#else
 		var currentUsageString = String(format: Arguments.appNameHeader, Constants.APP_NAME) + String(format: Arguments.usageString, Constants.APP_PACKAGE_NAME)
 	#endif
@@ -125,7 +145,10 @@ internal struct Arguments {
 	static func getVersion() -> String {
 		
 	#if os(Linux)
-		let currentUsageString = String(format: Arguments.appNameHeader, arguments: [Constants.APP_NAME as! CVarArg]) + "\n" + Constants.APP_VERSION + "\n" + Constants.APP_CREDITS
+		let arg1: UnsafeMutablePointer<CChar> = strdup(Constants.APP_NAME)
+		
+		let currentUsageString = String(format: Arguments.appNameHeader, arguments: [arg1]) + "\n" + Constants.APP_VERSION + "\n" + Constants.APP_CREDITS
+		arg1.deinitialize()
 	#else
 		let currentUsageString = String(format: Arguments.appNameHeader, Constants.APP_NAME) + "\n" + Constants.APP_VERSION + "\n" + Constants.APP_CREDITS
 	#endif
@@ -135,7 +158,10 @@ internal struct Arguments {
 	static func getBuildInfo() -> String {
 		
 	#if os(Linux)
-		var currentUsageString = String(format: Arguments.appNameHeader, arguments: [Constants.APP_NAME as! CVarArg]) + "\nOS\t\t\t: "
+		let arg1: UnsafeMutablePointer<CChar> = strdup(Constants.APP_NAME)
+		
+		var currentUsageString = String(format: Arguments.appNameHeader, arguments: [arg1]) + "\nOS\t\t\t: "
+		arg1.deinitialize()
 	#else
 		var currentUsageString = String(format: Arguments.appNameHeader, Constants.APP_NAME) + "\nOS\t\t\t: "
 	#endif

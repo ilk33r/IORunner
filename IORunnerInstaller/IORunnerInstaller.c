@@ -244,6 +244,7 @@ int main(int argc, const char *argv[]) {
 		int processResult = system(unzipCommand);
 		sleep(2);
 		free(unzipCommand);
+		long writableChmode = strtol("0777", 0, 8);
 
 		if(processResult == 0) {
 		
@@ -264,6 +265,8 @@ int main(int argc, const char *argv[]) {
 				if(currentDir->isEqualToString(currentDir, ".") == TRUE) {
 					continue;
 				}
+				
+				
 			
 				unsigned char isExtensionsDir = currentDir->isEqualToString(currentDir, "extensions");
 				if(isExtensionsDir == TRUE) {
@@ -273,9 +276,11 @@ int main(int argc, const char *argv[]) {
 					IODirectory *sourceDir = INIT_DIRECTORY(currentDirPath);
 					IOString *tmpDestinationPath = INIT_STRING(installPath->value);
 					tmpDestinationPath->appendByPathComponent(tmpDestinationPath, currentDir->value);
-					mkdir(tmpDestinationPath->value, 0775);
+					IO_UNUSED mkdir(tmpDestinationPath->value, 0775);
+					IO_UNUSED chmod(tmpDestinationPath->value, writableChmode);
 					tmpDestinationPath->appendByPathComponent(tmpDestinationPath, "available");
-					mkdir(tmpDestinationPath->value, 0775);
+					IO_UNUSED mkdir(tmpDestinationPath->value, 0777);
+					IO_UNUSED chmod(tmpDestinationPath->value, writableChmode);
 					MOVE_DIR(sourceDir, tmpDestinationPath);
 					tmpDestinationPath->release(tmpDestinationPath);
 					sourceDir->release(sourceDir);
@@ -298,7 +303,8 @@ int main(int argc, const char *argv[]) {
 		
 			IOString *enabledExtensionsDir = INIT_STRING(installPath->value);
 			enabledExtensionsDir->appendByPathComponent(enabledExtensionsDir, "extensions/enabled");
-			IO_UNUSED mkdir(enabledExtensionsDir->value, 0775);
+			IO_UNUSED mkdir(enabledExtensionsDir->value, 0777);
+			IO_UNUSED chmod(enabledExtensionsDir->value, writableChmode);
 			enabledExtensionsDir->release(enabledExtensionsDir);
 		
 			IOString *etcDir = INIT_STRING(installPath->value);
@@ -307,15 +313,18 @@ int main(int argc, const char *argv[]) {
 			
 			IOString *varDir = INIT_STRING(installPath->value);
 			varDir->appendByPathComponent(varDir, "var");
-			IO_UNUSED mkdir(varDir->value, 0775);
+			IO_UNUSED mkdir(varDir->value, 0777);
+			IO_UNUSED chmod(varDir->value, writableChmode);
 		
 			IOString *logDir = INIT_STRING(installPath->value);
 			logDir->appendByPathComponent(logDir, "var/log");
 			IO_UNUSED mkdir(logDir->value, 0777);
+			IO_UNUSED chmod(logDir->value, writableChmode);
 		
 			IOString *runDir = INIT_STRING(installPath->value);
 			runDir->appendByPathComponent(runDir, "var/run");
-			mkdir(runDir->value, 0777);
+			IO_UNUSED mkdir(runDir->value, 0777);
+			IO_UNUSED chmod(runDir->value, writableChmode);
 		
 			IOString *extensionDir = INIT_STRING(installPath->value);
 			extensionDir->appendByPathComponent(extensionDir, "extensions");

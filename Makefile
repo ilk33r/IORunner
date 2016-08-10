@@ -27,7 +27,7 @@ Darwin_SWIFTC_FLAGS := $(Darwin_SWIFTC_FLAGS.$(BUILD))
 Linux_SWIFTC_FLAGS = -I linked/LinuxBridge
 Linux_EXTRA_FLAGS.release = -D $(LSB_OS)_$(subst .,_,$(LSB_VER))
 Linux_EXTRA_FLAGS.debug = -D $(LSB_OS)_$(subst .,_,$(LSB_VER)) -D DEBUG
-Linux_EXTRA_FLAGS := $(Linux_EXTRA_FLAGS.$(BUILD))
+Linux_EXTRA_FLAGS := $(Linux_EXTRA_FLAGS.$(BUILD)) -D $(OS) -Xcc -D$(OS)=1
 
 SWIFT_Darwin_libs = $(XCODE)/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx
 SWIFT_Linux_libs = $(shell dirname $(shell dirname $(shell which swiftc)))/lib/swift/linux

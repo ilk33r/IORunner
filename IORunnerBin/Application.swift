@@ -645,13 +645,13 @@ internal final class Application {
 	#if os(Linux)
 
 		repeat {
+			
 			let _ = signalHandler.process()
 			self.mainGUI.onGUI()
 			
 			let curDate: UInt = UInt(Date().timeIntervalSince1970)
 			let dateDif = curDate - loopStartDate
 			if(dateDif > 30) {
-				logger.writeLog(level: Logger.LogLevels.WARNINGS, message: "Updating info data")
 				loopStartDate = curDate
 				
 				if(self.mainGUI.hasAppInfoWidget()) {
@@ -661,8 +661,9 @@ internal final class Application {
 			}
 			
 			usleep(Constants.GuiRefreshRate)
+			let _ = runLoop.run(mode: RunLoopMode.defaultRunLoopMode, before: NSDate().addingTimeInterval(-1 * Constants.CpuSleepMsec))
 			
-		} while (inGuiLoop && runLoop.run(mode: RunLoopMode.defaultRunLoopMode, before: NSDate().addingTimeInterval(-1 * Constants.CpuSleepMsec)))
+		} while (inGuiLoop)
 	#else
 		
 		repeat {

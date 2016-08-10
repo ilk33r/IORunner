@@ -159,7 +159,8 @@ public struct PopupWidget {
 		}
 		
 		wmove(self.popupWindow, 1, 2)
-		waddstr(self.popupWindow, self.popupContent)
+		AddStringToWindow(normalString: self.popupContent, window: self.popupWindow)
+		AddStringToWindow(normalString: "\n", window: self.popupWindow)
 		wborder(self.popupWindow, 0, 0, 0, 0, 0, 0, 0, 0)
 		touchwin(self.popupWindow)
 		wrefresh(self.popupWindow)
@@ -197,7 +198,11 @@ public struct PopupWidget {
 			#else
 				wbkgd(currentButtonShadowWindow, UInt32(COLOR_PAIR(WidgetUIColor.Background.rawValue)))
 			#endif
+				AddStringToWindow(paddingString: "", textWidth: Int(buttonSizes.0) - 1, textStartSpace: 0, window: currentButtonShadowWindow!)
+				AddStringToWindow(normalString: "\n", window: currentButtonShadowWindow!)
+				touchwin(currentButtonShadowWindow)
 				wrefresh(currentButtonShadowWindow)
+				
 				
 				let currentButtonWindow = subwin(mainWindow, 2, buttonSizes.0, buttonTop, currentButtonLeft)
 			#if os(Linux)
@@ -206,17 +211,13 @@ public struct PopupWidget {
 				wbkgd(currentButtonWindow, UInt32(COLOR_PAIR(WidgetUIColor.ButtonDanger.rawValue)))
 			#endif
 				
-				let buttonSpace = (buttonSizes.0 - Int32(buttonData.characters.count)) / 2
-			#if swift(>=3)
-				
-				let buttonSpaceString = String(repeating: Character(" "), count: Int(buttonSpace))
-			#else
-				
-				let buttonSpaceString = String(count: Int(buttonSpace), repeatedValue: Character(" "))
-			#endif
-				let buttonText = "\(buttonSpaceString)\(buttonData)\n"
+				let buttonWidth = (Int(buttonSizes.0) - 2) / 2
+				//let buttonSpace = (buttonSizes.0 - Int32(buttonData.characters.count)) / 2
+			#if os(OSX)
 				wborder(currentButtonWindow, 1, 1, 1, 1, 1, 1, 1, 1)
-				waddstr(currentButtonWindow, buttonText)
+			#endif
+				AddStringToWindow(paddingString: buttonData, textWidth: buttonWidth, textStartSpace: buttonWidth, window: currentButtonWindow!)
+				AddStringToWindow(normalString: "\n", window: currentButtonWindow!)
 				
 				if(currentSelectedButtonIdx == btnIdx) {
 					
@@ -226,8 +227,9 @@ public struct PopupWidget {
 				}
 				mvwhline(currentButtonWindow, 1, 1, 0, buttonSizes.0 - 2)
 				
-				
+				touchwin(currentButtonWindow)
 				wrefresh(currentButtonWindow)
+				
 			#if swift(>=3)
 				
 				self.buttonWindows.append(currentButtonShadowWindow!)
@@ -329,7 +331,7 @@ public struct PopupWidget {
 				if(percent == percentStringStartPos) {
 				
 					wattrset(self.buttonWindows[0], COLOR_PAIR(WidgetUIColor.ProgressText.rawValue))
-					waddstr(self.buttonWindows[0], percentString)
+					AddStringToWindow(normalString: percentString, window: self.buttonWindows[0])
 					stringWrited = true
 				}else{
 				
@@ -350,7 +352,7 @@ public struct PopupWidget {
 				let spaceString = String(count: Int((percentStringStartPos - progressPercentWidth)), repeatedValue: Character(" "))
 			#endif
 				let percentDisplayString = "\(spaceString)\(percentString)"
-				waddstr(self.buttonWindows[0], percentDisplayString)
+				AddStringToWindow(normalString: percentDisplayString, window: self.buttonWindows[0])
 			}
 			wrefresh(self.buttonWindows[0])
 		}

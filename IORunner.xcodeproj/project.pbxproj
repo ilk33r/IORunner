@@ -40,7 +40,9 @@
 		DEB8433F1D452EC600E1AE5B /* ModulesWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE0EBB7E1D3896BC0036B004 /* ModulesWidget.swift */; };
 		DEB843401D45309F00E1AE5B /* BackgroundWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE21771B1D3D0D4B000C21B1 /* BackgroundWidget.swift */; };
 		DEB843411D4530CA00E1AE5B /* InputPopupWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE8EC34A1D3D239F00C4F522 /* InputPopupWidget.swift */; };
+		DEC14BF31D5BC42D00F03DCF /* Makefile in Sources */ = {isa = PBXBuildFile; fileRef = DEC14BF11D5BC42D00F03DCF /* Makefile */; };
 		DEC3E5C01D357C2000FB1662 /* IOGUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DEC3E5AC1D3579CA00FB1662 /* IOGUI.framework */; };
+		DED6771A1D5B50D200B6F836 /* CursesHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = DED677191D5B50D200B6F836 /* CursesHelper.swift */; };
 		DEE47AFE1D3A6A1500D55F92 /* TestHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEE47AFC1D3A6A1100D55F92 /* TestHandler.swift */; };
 		DEE47AFF1D3A7D8000D55F92 /* IOIni.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = "_____Product_ini" /* IOIni.framework */; };
 		DEF667111D3A4EB700A56CA2 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DE8F5DF21D2A4A9400BE7C35 /* Foundation.framework */; };
@@ -116,8 +118,12 @@
 		DE9F8EFC1D353BFB006F9B9D /* IORunnerExtension.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = IORunnerExtension.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		DEA356EC1D34EFB600BE6E8E /* libTestHandler.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libTestHandler.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
 		DEB6EC611D376F2E007A1E30 /* TitleAndFooterWidget.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TitleAndFooterWidget.swift; path = IOGUI/TitleAndFooterWidget.swift; sourceTree = "<group>"; };
+		DEBCAE491D5A160900224026 /* String.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = String.playground; sourceTree = "<group>"; };
+		DEC14BF11D5BC42D00F03DCF /* Makefile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
+		DEC14BF21D5BC42D00F03DCF /* LICENSE */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
 		DEC3E5AC1D3579CA00FB1662 /* IOGUI.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = IOGUI.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		DEC3E5CC1D357FA500FB1662 /* GUITypes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = GUITypes.swift; path = IOGUI/GUITypes.swift; sourceTree = "<group>"; };
+		DED677191D5B50D200B6F836 /* CursesHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CursesHelper.swift; path = IOGUI/CursesHelper.swift; sourceTree = "<group>"; };
 		DEE47AFC1D3A6A1100D55F92 /* TestHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TestHandler.swift; path = Extensions/TestHandler/TestHandler.swift; sourceTree = "<group>"; };
 		"_____Product_BouncyProcessChecker" /* IORunner */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; path = IORunner; sourceTree = BUILT_PRODUCTS_DIR; };
 		"_____Product_ini" /* IOIni.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = IOIni.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -263,6 +269,7 @@
 				DE43E63A1D391FC000886A0B /* PopupWidget.swift */,
 				DE21771B1D3D0D4B000C21B1 /* BackgroundWidget.swift */,
 				DE8EC34A1D3D239F00C4F522 /* InputPopupWidget.swift */,
+				DED677191D5B50D200B6F836 /* CursesHelper.swift */,
 			);
 			name = IOGUI;
 			sourceTree = "<group>";
@@ -286,6 +293,9 @@
 		"___RootGroup_" = {
 			isa = PBXGroup;
 			children = (
+				DEC14BF11D5BC42D00F03DCF /* Makefile */,
+				DEC14BF21D5BC42D00F03DCF /* LICENSE */,
+				DEBCAE491D5A160900224026 /* String.playground */,
 				"_____Configs_" /* Configs */,
 				"_____Sources_" /* Sources */,
 				DE9F8EFD1D353BFB006F9B9D /* IORunnerExtension */,
@@ -567,6 +577,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 0;
 			files = (
+				DEC14BF31D5BC42D00F03DCF /* Makefile in Sources */,
 				DE7D5BB81D427B7F00888821 /* parseINI.swift in Sources */,
 				DE7D5BB61D427B7F00888821 /* Error.swift in Sources */,
 			);
@@ -611,6 +622,7 @@
 				DEB8433C1D452A4600E1AE5B /* AppInfoWidget.swift in Sources */,
 				DEB8433E1D452DCA00E1AE5B /* PopupWidget.swift in Sources */,
 				DEB843401D45309F00E1AE5B /* BackgroundWidget.swift in Sources */,
+				DED6771A1D5B50D200B6F836 /* CursesHelper.swift in Sources */,
 				DE7D5BC51D42860900888821 /* TitleAndFooterWidget.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1067,6 +1079,7 @@
 				FRAMEWORK_VERSION = A;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = "Darwin=1";
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
 				GCC_WARN_UNDECLARED_SELECTOR = YES;
@@ -1139,6 +1152,7 @@
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
+					"Darwin=1",
 				);
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;

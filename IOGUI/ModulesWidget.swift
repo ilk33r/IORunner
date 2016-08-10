@@ -212,7 +212,7 @@ public struct ModulesWidget {
 		waddch(modulesTitleWindow, 32)
 		waddch(modulesTitleWindow, 32)
 		wattrset(modulesTitleWindow, COLOR_PAIR(WidgetUIColor.WarningLevelSuccess.rawValue))
-		waddstr(modulesTitleWindow, leftSideTitle)
+		AddStringToWindow(normalString: leftSideTitle, window: modulesTitleWindow)
 		
 		wattrset(modulesTitleWindow, COLOR_PAIR(WidgetUIColor.Background.rawValue))
 		let rightColumnStart = 2 + leftSideTitle.characters.count
@@ -222,7 +222,7 @@ public struct ModulesWidget {
 		}
 		
 		wattrset(modulesTitleWindow, COLOR_PAIR(WidgetUIColor.WarningLevelDanger.rawValue))
-		waddstr(modulesTitleWindow, rightSideTitle)
+		AddStringToWindow(normalString: rightSideTitle, window: modulesTitleWindow)
 		wrefresh(modulesTitleWindow)
 	}
 	
@@ -256,25 +256,18 @@ public struct ModulesWidget {
 				wattrset(modulesActiveWindow, COLOR_PAIR(WidgetUIColor.Background.rawValue))
 			}
 			
-			var paddingSize = moduleWinColumnSize - choices[idx].choiceName.characters.count - 7
-			if paddingSize < 0 {
-				paddingSize = 0
-			}
-		#if swift(>=3)
-			
-			let choiceStringPadding = String(repeating: Character(" "), count: Int(paddingSize))
-		#else
-			
-			let choiceStringPadding = String(count: Int(paddingSize), repeatedValue: Character(" "))
-		#endif
+			let choiceStringWidth = Int(moduleWinColumnSize) - 1
+			//var paddingSize = moduleWinColumnSize - choices[idx].choiceName.characters.count - 7
+
 			let choiceString: String
 			if(currentLeftChoiceIdx == idx) {
-				choiceString = " \u{2192} \(choices[idx].choiceName)\(choiceStringPadding)\n"
+				choiceString = " \u{2192} \(choices[idx].choiceName)"
 			}else{
-				choiceString = "   \(choices[idx].choiceName)\(choiceStringPadding)\n"
+				choiceString = "   \(choices[idx].choiceName)"
 			}
 			
-			waddstr(modulesActiveWindow, choiceString)
+			AddStringToWindow(paddingString: choiceString, textWidth: choiceStringWidth, textStartSpace: 1, window: modulesActiveWindow)
+			AddStringToWindow(normalString: "\n", window: modulesActiveWindow)
 			currentLine += 1
 			
 			lineLeft -= 1
@@ -282,7 +275,7 @@ public struct ModulesWidget {
 		}
 		
 		wattrset(modulesActiveWindow, COLOR_PAIR(WidgetUIColor.Background.rawValue))
-		waddstr(modulesActiveWindow, "\t")
+		AddStringToWindow(normalString: "\t", window: modulesActiveWindow)
 		wborder(modulesActiveWindow, 0, 0, 0, 0, 0, 0, 0, 0)
 		touchwin(modulesActiveWindow)
 		wrefresh(modulesActiveWindow)
@@ -319,25 +312,18 @@ public struct ModulesWidget {
 				wattrset(modulesPassiveWindow, COLOR_PAIR(WidgetUIColor.Background.rawValue))
 			}
 			
-			var paddingSize = moduleWinColumnSize - choices[idx].choiceName.characters.count - 7
-			if paddingSize < 0 {
-				paddingSize = 0
-			}
-		#if swift(>=3)
-			
-			let choiceStringPadding = String(repeating: Character(" "), count: Int(paddingSize))
-		#else
-			
-			let choiceStringPadding = String(count: Int(paddingSize), repeatedValue: Character(" "))
-		#endif
+			let choiceStringWidth = Int(moduleWinColumnSize) - 1
+			//var paddingSize = moduleWinColumnSize - choices[idx].choiceName.characters.count - 7
+
 			let choiceString: String
 			if(currentRightChoiceIdx == idx) {
-				choiceString = " \u{2192} \(choices[idx].choiceName)\(choiceStringPadding)\n"
+				choiceString = " \u{2192} \(choices[idx].choiceName)"
 			}else{
-				choiceString = "   \(choices[idx].choiceName)\(choiceStringPadding)\n"
+				choiceString = "   \(choices[idx].choiceName)"
 			}
 			
-			waddstr(modulesPassiveWindow, choiceString)
+			AddStringToWindow(paddingString: choiceString, textWidth: choiceStringWidth, textStartSpace: 1, window: modulesPassiveWindow)
+			AddStringToWindow(normalString: "\n", window: modulesPassiveWindow)
 			currentLine += 1
 			
 			lineLeft -= 1
@@ -345,7 +331,7 @@ public struct ModulesWidget {
 		}
 		
 		wattrset(modulesPassiveWindow, COLOR_PAIR(WidgetUIColor.Background.rawValue))
-		waddstr(modulesPassiveWindow, "\t")
+		AddStringToWindow(normalString: "\n", window: modulesPassiveWindow)
 		wborder(modulesPassiveWindow, 0, 0, 0, 0, 0, 0, 0, 0)
 		touchwin(modulesPassiveWindow)
 		wrefresh(modulesPassiveWindow)

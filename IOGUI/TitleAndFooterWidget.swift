@@ -121,7 +121,7 @@ public struct TitleAndFooterWidget {
 		}
 		
 		let titleString = "   \(self.title)"
-		waddstr(titleWindow, titleString)
+		AddStringToWindow(normalString: titleString, window: titleWindow)
 		wrefresh(titleWindow)
 	}
 	
@@ -134,9 +134,9 @@ public struct TitleAndFooterWidget {
 		wclear(footerWindow)
 		wattrset(footerWindow, COLOR_PAIR(WidgetUIColor.Background.rawValue))
 		wmove(footerWindow, 0, 0)
-		waddstr(footerWindow, "\(keyControls.0) \n")
+		AddStringToWindow(normalString: "\(keyControls.0) \n", window: footerWindow)
 		wmove(footerWindow, 1, 0)
-		waddstr(footerWindow, keyControls.1)
+		AddStringToWindow(normalString: keyControls.1, window: footerWindow)
 	}
 	
 	private func drawFooter() {
@@ -147,20 +147,7 @@ public struct TitleAndFooterWidget {
 		
 		wmove(footerWindow, 2, 0)
 		wattrset(footerWindow, COLOR_PAIR(WidgetUIColor.FooterBackground.rawValue))
-		
-		var paddingSize = Int(COLS) - self.copyright.characters.count - 3
-		if paddingSize < 0 {
-			paddingSize = 0
-		}
-	#if swift(>=3)
-		
-		let copyrightStringPadding = String(repeating: Character(" "), count: paddingSize)
-	#else
-		
-		let copyrightStringPadding = String(count: paddingSize, repeatedValue: Character(" "))
-	#endif
-		let copyrightString = "   \(self.copyright)\(copyrightStringPadding)"
-		waddstr(footerWindow, copyrightString)
+		AddStringToWindow(paddingString: self.copyright, textWidth: Int(COLS), textStartSpace: 3, window: footerWindow)
 		
 		wrefresh(footerWindow)
 	}

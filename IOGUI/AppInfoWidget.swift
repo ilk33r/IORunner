@@ -106,20 +106,20 @@ public struct AppInfoWidget {
 			
 			wmove(self.appInfoWindow, Int32(curStartRow), 4)
 			wattrset(self.appInfoWindow, COLOR_PAIR(WidgetUIColor.Background.rawValue))
-			waddstr(self.appInfoWindow, appInfoData.infoKey)
+			AddStringToWindow(normalString: appInfoData.infoKey, window: self.appInfoWindow)
 			wattrset(self.appInfoWindow, 13)
 			
 			switch appInfoData.infoType {
 			case .NORMAL:
 				wattrset(self.appInfoWindow, COLOR_PAIR(WidgetUIColor.WarningLevelCool.rawValue))
-				waddstr(self.appInfoWindow, appInfoData.infoVal)
+				AddStringToWindow(normalString: appInfoData.infoVal, window: self.appInfoWindow)
 			case .DANGER:
 				wattrset(self.appInfoWindow, COLOR_PAIR(WidgetUIColor.WarningLevelDanger.rawValue))
-				waddstr(self.appInfoWindow, appInfoData.infoVal)
+				AddStringToWindow(normalString: appInfoData.infoVal, window: self.appInfoWindow)
 				break
 			case .SUCCESS:
 				wattrset(self.appInfoWindow, COLOR_PAIR(WidgetUIColor.WarningLevelSuccess.rawValue))
-				waddstr(self.appInfoWindow, appInfoData.infoVal)
+				AddStringToWindow(normalString: appInfoData.infoVal, window: self.appInfoWindow)
 				break
 			}
 			

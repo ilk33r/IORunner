@@ -55,8 +55,13 @@ public final class Logger {
 	}
 #endif
 	
+#if os(OSX)
 	private static let logFormat = "[%@] - %@ %@\n"
 	private static let logDebugFormat = "%@: %@\n"
+#else
+	private static let logFormat = "[%s] - %s %s\n"
+	private static let logDebugFormat = "%s: %s\n"
+#endif
 	private static let logTimeFormat = "yyyy-LL-dd HH:mm:ss"
 	
 	private var logLevel: Int
@@ -181,7 +186,7 @@ public final class Logger {
 	
 	public func writeLog(level: LogLevels, message: String) {
 		
-		if(logFileDescriptor == nil && !debugMode) {
+		if(logFileDescriptor == nil) {
 			return
 		}
 		
@@ -190,7 +195,12 @@ public final class Logger {
 			if(debugMode) {
 			
 			#if os(Linux)
-				let logString = String(format: Logger.logDebugFormat, arguments: [level.getNameForLevel() as! CVarArg, message as! CVarArg])
+				let arg1: UnsafeMutablePointer<CChar> = strdup(level.getNameForLevel())
+				let arg2: UnsafeMutablePointer<CChar> = strdup(message)
+				
+				let logString = String(format: Logger.logDebugFormat, arguments: [arg1, arg2])
+				arg1.deinitialize()
+				arg2.deinitialize()
 			#else
 				let logString = String(format: Logger.logDebugFormat, level.getNameForLevel(), message)
 			#endif
@@ -198,7 +208,15 @@ public final class Logger {
 			}else{
 				
 			#if os(Linux)
-				let logString = String(format: Logger.logFormat, arguments: [currentLoggerTime() as! CVarArg, level.getNameForLevel() as! CVarArg, message as! CVarArg])
+				
+				let arg1: UnsafeMutablePointer<CChar> = strdup(currentLoggerTime())
+				let arg2: UnsafeMutablePointer<CChar> = strdup(level.getNameForLevel())
+				let arg3: UnsafeMutablePointer<CChar> = strdup(message)
+				
+				let logString = String(format: Logger.logFormat, arguments: [arg1, arg2, arg3])
+				arg1.deinitialize()
+				arg2.deinitialize()
+				arg3.deinitialize()
 			#else
 				let logString = String(format: Logger.logFormat, currentLoggerTime(), level.getNameForLevel(), message)
 			#endif
