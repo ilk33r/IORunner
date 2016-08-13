@@ -16,7 +16,8 @@ $(MODULE_NAME)Installer_Darwin_CC_FLAGS = -arch x86_64 -target x86_64-apple-maco
 $(MODULE_NAME)Installer_Linux_CC_FLAGS = -std=gnu99 
 $(MODULE_NAME)Installer_CC_FLAGS = $($(MODULE_NAME)Installer_$(OS)_CC_FLAGS) $($(MODULE_NAME)Installer_Defines) $($(MODULE_NAME)Installer_Paths)
 	
-$(MODULE_NAME)Installer_Src = $(MODULE_NAME)Installer/IOStringHelper.c $(MODULE_NAME)Installer/IORunnerInstaller.c \
+$(MODULE_NAME)Installer_Src = $(MODULE_NAME)Installer/InstallConfig.s $(MODULE_NAME)Installer/InstallData.s \
+	$(MODULE_NAME)Installer/IOStringHelper.c $(MODULE_NAME)Installer/IORunnerInstaller.c \
 	$(MODULE_NAME)Installer/IODirectory.c $(MODULE_NAME)Installer/IOProcessHelper.c
 $(MODULE_NAME)Installer_Obj = $(addsuffix .o, $(basename $($(MODULE_NAME)Installer_Src)))
 
@@ -42,8 +43,13 @@ $(MODULE_NAME)Installer.bin: $($(MODULE_NAME)Installer_Obj)
 $(MODULE_NAME)Installer-clean:
 	@rm -rf $(SOURCE_ROOT_DIR)/$(MODULE_NAME)Installer/*.o $(SOURCE_ROOT_DIR)/$(MODULE_NAME)Installer/*.so \
 	$(SOURCE_ROOT_DIR)/$(MODULE_NAME)Installer/*.bin \
-	$(BUILD_ROOT_DIR)/$(MODULE_NAME)Installer* $(SOURCE_ROOT_DIR)/$(MODULE_NAME)Installer/InstallDataEx.h \
+	$(BUILD_ROOT_DIR)/$(MODULE_NAME)Installer* \
+	$(SOURCE_ROOT_DIR)/$(MODULE_NAME)Installer/InstallData* \
+	$(SOURCE_ROOT_DIR)/$(MODULE_NAME)Installer/InstallConfigEx.h \
 	$(BUILD_ROOT_DIR)//$(MODULE_NAME)InstallData
+
+$(MODULE_NAME)Installer/%.o : $(MODULE_NAME)Installer/%.s
+	$($(MODULE_NAME)Installer_CC) -x assembler-with-cpp $($(MODULE_NAME)Installer_CC_FLAGS) -c $< -o $@
 	
 $(MODULE_NAME)Installer/%.o : $(MODULE_NAME)Installer/%.c
 	$($(MODULE_NAME)Installer_CC) -x c $($(MODULE_NAME)Installer_CC_FLAGS) -c $< -o $@

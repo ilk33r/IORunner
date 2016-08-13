@@ -208,7 +208,7 @@ public class parseINI {
 					lastValue! += "\(scannedCharacter)"
 				}else{
 				
-					if(self.currentScanning != SCAN_STATUS.INITIAL_STATE) {
+					if(self.currentScanning != SCAN_STATUS.INITIAL_STATE && self.currentScanning != SCAN_STATUS.SCANNING_COMMENT) {
 						
 						throw ParseError.InvalidSyntax(err: "INI Syntax error. Line \(currentLine) Section \(currentSection)")
 					}
@@ -227,7 +227,7 @@ public class parseINI {
 					lastValue! += "\(scannedCharacter)"
 				}else{
 					
-					if(self.currentScanning != SCAN_STATUS.INITIAL_STATE) {
+					if(self.currentScanning != SCAN_STATUS.INITIAL_STATE && self.currentScanning != SCAN_STATUS.SCANNING_COMMENT) {
 						
 						throw ParseError.InvalidSyntax(err: "INI Syntax error. Line \(currentLine) Section \(currentSection)")
 					}
@@ -344,7 +344,9 @@ public class parseINI {
 				self.currentScanning = SCAN_STATUS.SCANNING_VALUE
 			}else{
 				
-				throw ParseError.UnsupportedToken(err: "INI Parse error on Line \(currentLine) Section \(currentSection)")
+				if(self.currentScanning != SCAN_STATUS.SCANNING_COMMENT) {
+					throw ParseError.UnsupportedToken(err: "INI Parse error on Line \(currentLine) Section \(currentSection)")
+				}
 			}
 			break
 		case INI_TOKENS.STRING_VALUE_ESCAPE.rawValue:

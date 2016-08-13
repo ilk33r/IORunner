@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		DE1338D61D358581002E109B /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DE8F5DF21D2A4A9400BE7C35 /* Foundation.framework */; };
 		DE1338E21D359886002E109B /* GUITypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEC3E5CC1D357FA500FB1662 /* GUITypes.swift */; };
+		DE1B36E11D5F0CCC00D234A6 /* InstallConfig.s in Sources */ = {isa = PBXBuildFile; fileRef = DE1B36E01D5F0CCB00D234A6 /* InstallConfig.s */; };
 		DE2E825C1D465749004953A9 /* AppExit.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE2E82481D46571A004953A9 /* AppExit.swift */; };
 		DE2E825D1D465749004953A9 /* Application.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE2E82491D46571A004953A9 /* Application.swift */; };
 		DE2E825E1D465749004953A9 /* AppWorker.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE2E824A1D46571A004953A9 /* AppWorker.swift */; };
@@ -40,11 +41,11 @@
 		DEB8433F1D452EC600E1AE5B /* ModulesWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE0EBB7E1D3896BC0036B004 /* ModulesWidget.swift */; };
 		DEB843401D45309F00E1AE5B /* BackgroundWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE21771B1D3D0D4B000C21B1 /* BackgroundWidget.swift */; };
 		DEB843411D4530CA00E1AE5B /* InputPopupWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE8EC34A1D3D239F00C4F522 /* InputPopupWidget.swift */; };
-		DEC14BF31D5BC42D00F03DCF /* Makefile in Sources */ = {isa = PBXBuildFile; fileRef = DEC14BF11D5BC42D00F03DCF /* Makefile */; };
 		DEC3E5C01D357C2000FB1662 /* IOGUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DEC3E5AC1D3579CA00FB1662 /* IOGUI.framework */; };
 		DED6771A1D5B50D200B6F836 /* CursesHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = DED677191D5B50D200B6F836 /* CursesHelper.swift */; };
 		DEE47AFE1D3A6A1500D55F92 /* TestHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEE47AFC1D3A6A1100D55F92 /* TestHandler.swift */; };
 		DEE47AFF1D3A7D8000D55F92 /* IOIni.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = "_____Product_ini" /* IOIni.framework */; };
+		DEED6B451D5E73B20030CC1E /* InstallData.s in Sources */ = {isa = PBXBuildFile; fileRef = DEED6B441D5E73B20030CC1E /* InstallData.s */; };
 		DEF667111D3A4EB700A56CA2 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DE8F5DF21D2A4A9400BE7C35 /* Foundation.framework */; };
 /* End PBXBuildFile section */
 
@@ -75,8 +76,11 @@
 /* Begin PBXFileReference section */
 		DE0EBB7E1D3896BC0036B004 /* ModulesWidget.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ModulesWidget.swift; path = IOGUI/ModulesWidget.swift; sourceTree = "<group>"; };
 		DE1338DF1D3597D6002E109B /* IOGUI-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "IOGUI-Bridging-Header.h"; path = "IOGUI/IOGUI-Bridging-Header.h"; sourceTree = "<group>"; };
+		DE1B36E01D5F0CCB00D234A6 /* InstallConfig.s */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.asm; name = InstallConfig.s; path = IORunnerInstaller/InstallConfig.s; sourceTree = SOURCE_ROOT; };
 		DE2177111D3D0A4B000C21B1 /* IORunnerInstaller */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = IORunnerInstaller; sourceTree = BUILT_PRODUCTS_DIR; };
 		DE21771B1D3D0D4B000C21B1 /* BackgroundWidget.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = BackgroundWidget.swift; path = IOGUI/BackgroundWidget.swift; sourceTree = "<group>"; };
+		DE239E961D5C5D5800A31DF7 /* CreateExtensionConfigs.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = CreateExtensionConfigs.sh; sourceTree = "<group>"; };
+		DE239E971D5C623500A31DF7 /* Service.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = Service.sh; sourceTree = "<group>"; };
 		DE2E82481D46571A004953A9 /* AppExit.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AppExit.swift; path = IORunnerBin/AppExit.swift; sourceTree = SOURCE_ROOT; };
 		DE2E82491D46571A004953A9 /* Application.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Application.swift; path = IORunnerBin/Application.swift; sourceTree = SOURCE_ROOT; };
 		DE2E824A1D46571A004953A9 /* AppWorker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AppWorker.swift; path = IORunnerBin/AppWorker.swift; sourceTree = SOURCE_ROOT; };
@@ -126,6 +130,7 @@
 		DEC3E5CC1D357FA500FB1662 /* GUITypes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = GUITypes.swift; path = IOGUI/GUITypes.swift; sourceTree = "<group>"; };
 		DED677191D5B50D200B6F836 /* CursesHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CursesHelper.swift; path = IOGUI/CursesHelper.swift; sourceTree = "<group>"; };
 		DEE47AFC1D3A6A1100D55F92 /* TestHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TestHandler.swift; path = Extensions/TestHandler/TestHandler.swift; sourceTree = "<group>"; };
+		DEED6B441D5E73B20030CC1E /* InstallData.s */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.asm; name = InstallData.s; path = IORunnerInstaller/InstallData.s; sourceTree = SOURCE_ROOT; };
 		"_____Product_BouncyProcessChecker" /* IORunner */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; path = IORunner; sourceTree = BUILT_PRODUCTS_DIR; };
 		"_____Product_ini" /* IOIni.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = IOIni.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -220,6 +225,8 @@
 				DE2ECF3D1D51D25B00129548 /* IORunnerInstaller.h */,
 				DE2ECF3E1D51D25B00129548 /* IOStringHelper.c */,
 				DE2ECF3F1D51D25B00129548 /* IOStringHelper.h */,
+				DEED6B441D5E73B20030CC1E /* InstallData.s */,
+				DE1B36E01D5F0CCB00D234A6 /* InstallConfig.s */,
 			);
 			name = IORunnerInstaller;
 			path = IOProcessCheckerInstaller;
@@ -306,7 +313,9 @@
 				DE2177121D3D0A4B000C21B1 /* IORunnerInstaller */,
 				"____Products_" /* Products */,
 				DE8F5DF11D2A4A9400BE7C35 /* Frameworks */,
+				DE239E961D5C5D5800A31DF7 /* CreateExtensionConfigs.sh */,
 				DEC14BF41D5BC46F00F03DCF /* CreateExtension.sh */,
+				DE239E971D5C623500A31DF7 /* Service.sh */,
 			);
 			sourceTree = "<group>";
 		};
@@ -579,7 +588,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 0;
 			files = (
-				DEC14BF31D5BC42D00F03DCF /* Makefile in Sources */,
 				DE7D5BB81D427B7F00888821 /* parseINI.swift in Sources */,
 				DE7D5BB61D427B7F00888821 /* Error.swift in Sources */,
 			);
@@ -589,6 +597,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DEED6B451D5E73B20030CC1E /* InstallData.s in Sources */,
+				DE1B36E11D5F0CCC00D234A6 /* InstallConfig.s in Sources */,
 				DE2ECF441D51D26E00129548 /* IOStringHelper.c in Sources */,
 				DE2ECF451D51D27100129548 /* IOProcessHelper.c in Sources */,
 				DE2ECF461D51D27300129548 /* IODirectory.c in Sources */,
@@ -696,6 +706,12 @@
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				MTL_ENABLE_DEBUG_INFO = NO;
+				OTHER_LDFLAGS = (
+					"-sectcreate",
+					__DATA,
+					__installdata,
+					"$(PROJECT_DIR)/Build/InstallData.zip",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "";
@@ -753,6 +769,12 @@
 				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = (
+					"-sectcreate",
+					__DATA,
+					__installdata,
+					"$(PROJECT_DIR)/Build/InstallData.zip",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "";

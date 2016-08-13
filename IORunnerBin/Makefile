@@ -31,15 +31,14 @@ $(MODULE_4_NAME)_Darwin_LFLAGS = $($(MODULE_4_NAME)_SHLIB_PATH) -arch x86_64 \
 	-Xlinker -rpath -Xlinker @executable_path/../frameworks \
 	-Xlinker -no_deduplicate \
 	-framework Foundation -framework $(MODULE_1_NAME) -framework $(MODULE_3_NAME) -framework $(MODULE_2_NAME)
-
-$(MODULE_4_NAME)_Linux_LFLAGS = $($(MODULE_4_NAME)_SHLIB_PATH) -lswiftCore -lswiftGlibc -lm -ldl -lpthread -licui18n -licuuc -lFoundation -lbsd \
+$(MODULE_4_NAME)_Linux_LFLAGS = $($(MODULE_4_NAME)_SHLIB_PATH) -static-libgcc -lc \
+	-lswiftCore -lswiftGlibc -ldl -lFoundation -lbsd -licui18n -licuuc -licudata -lm -lpthread \
 	-lncurses -l$(MODULE_1_NAME) -l$(MODULE_2_NAME) -l$(MODULE_3_NAME) -fuse-ld=gold \
 	-Xlinker -export-dynamic \
 	-Xlinker --exclude-libs -Xlinker ALL \
 	-Xlinker -rpath -Xlinker '$$ORIGIN/../lib/x86_64/$(MODULE_4_NAME).swiftmodule' \
 	-Xlinker -rpath -Xlinker '$$ORIGIN/../lib' \
 	$(SWIFT_libs)/x86_64/swift_end.o
-
 $(MODULE_4_NAME)_LFLAGS = $($(MODULE_4_NAME)_$(OS)_LFLAGS)
 
 $(MODULE_4_NAME)-install:

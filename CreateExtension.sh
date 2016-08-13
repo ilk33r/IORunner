@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 #  CreateExtension.sh
 #  IORunner
@@ -73,7 +73,7 @@ CREATE_EXT_MAKE_FILE() {
 	echo "	-Xlinker -rpath -Xlinker @executable_path/../frameworks \\" >> $1
 	echo "	-compatibility_version 1 -current_version 1 \\" >> $1
 	echo "	-framework Foundation -framework \$(MODULE_2_NAME) -framework \$(MODULE_1_NAME)" >> $1
-	echo "${2}_Linux_LFLAGS = \$(${2}_SHLIB_PATH) -lswiftCore -lswiftGlibc -ldl -lm -lpthread -licui18n -licuuc -lFoundation -lbsd \\" >> $1
+	echo "${2}_Linux_LFLAGS = \$(${2}_SHLIB_PATH) -lswiftCore -lswiftGlibc -ldl -lFoundation -lbsd \\" >> $1
 	echo "	-l\$(MODULE_1_NAME) -l\$(MODULE_2_NAME) -shared -fuse-ld=gold \\" >> $1
 	echo "	-Xlinker -export-dynamic \\" >> $1
 	echo "	-Xlinker --exclude-libs -Xlinker ALL \\" >> $1
@@ -85,6 +85,54 @@ CREATE_EXT_MAKE_FILE() {
 	echo "" >> $1
 	echo "ext-${2}-objects: $(${2}_Obj)" >> $1
 	echo "" >> $1
+	echo "" >> $1
+}
+
+CREATE_EXT_CONFIG_FILE() {
+
+	echo "" >> $1
+	echo "; ${2} extension config file" >> $1
+	echo "; [${2}]" >> $1
+	echo "; File = /usr/local" >> $1
+	echo "; Enabled = 1" >> $1
+	echo "" >> $1
+}
+
+GENERATE_SUB_MAKEFILE() {
+
+	echo "" > $1
+	echo "# Makefile for AllExtensions" >> $1
+	echo "" >> $1
+
+	local DIRECTORY_COUNT=0
+	local DIRECTORY_LIST=(./Extensions/*)
+	local DIRECTORIES;
+
+	for ((i=0; i<${#DIRECTORY_LIST[@]}; i++)); do
+
+		if [ -d "${DIRECTORY_LIST[$i]}" ]; then
+
+			local FN=$(basename "${DIRECTORY_LIST[$i]}")
+			DIRECTORIES[$DIRECTORY_COUNT]=$FN
+			DIRECTORY_COUNT=$((DIRECTORY_COUNT + 1))
+			echo "include \$(SOURCE_ROOT_DIR)/Extensions/${FN}/Makefile" >> $1
+		fi
+	done
+
+	echo "" >> $1
+	local ALL_EXTENSIONS_MAKE=""
+	local ALL_EXTENSIONS_CLEAN=""
+
+	for i in "${DIRECTORIES[@]}"; do
+
+		ALL_EXTENSIONS_MAKE="${ALL_EXTENSIONS_MAKE} ext-${i}-make"
+		ALL_EXTENSIONS_CLEAN="${ALL_EXTENSIONS_CLEAN} ext-${i}-clean"
+	done
+
+	echo "" >> $1
+	echo "AllExtensions: ${ALL_EXTENSIONS_MAKE}" >> $1
+	echo "" >> $1
+	echo "AllExtensions-Clean: ${ALL_EXTENSIONS_CLEAN}" >> $1
 	echo "" >> $1
 }
 
@@ -104,5 +152,8 @@ else
 	mkdir $EXTENSION_DIRECTORY
 	CREATE_EXT_SKELL_FILE "${EXTENSION_DIRECTORY}/${EXTENSION_NAME}.swift" "${EXTENSION_NAME}.swift" "${EXTENSION_NAME}"
 	CREATE_EXT_MAKE_FILE "${EXTENSION_DIRECTORY}/Makefile" "${EXTENSION_NAME}"
+	CREATE_EXT_CONFIG_FILE "${EXTENSION_DIRECTORY}/Config.ini" "${EXTENSION_NAME}"
 	chmod +x "${EXTENSION_DIRECTORY}/Makefile"
+	GENERATE_SUB_MAKEFILE "./Extensions/MakefileSub"
+	echo "Extension created!"
 fi

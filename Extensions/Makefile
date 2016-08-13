@@ -23,24 +23,10 @@ ext-%-clean:
 	$(SOURCE_ROOT_DIR)/Extensions/$(*)/*.d $(MODULE_CACHE_PATH)/Extensions/$(*) $(BUILD_ROOT_DIR)/extensions/$(*)*
 	
 Extensions/%.o : Extensions/%.swift
-	@echo "1 $(*)"
-	@echo "2 $(<)"
-	@echo "3 $(@)"
-	@echo "4 $(subst $<,,$($(*)_Src))"
-
-#	$(SWIFT) -frontend -c $(subst $<,,$($(ExtensionName)_Src)) -primary-file $< \
-#	-emit-module-path $(MODULE_CACHE_PATH)/$(subst .o,.swiftmodule,$@) \
-#	-emit-module-doc-path $(MODULE_CACHE_PATH)/$(subst .o,.swiftdoc,$@) \
-#	-emit-dependencies-path $(MODULE_CACHE_PATH)/$(subst .swift,.d,$<) \
-#	-emit-reference-dependencies-path $(MODULE_CACHE_PATH)/$(subst .swift,.swiftdeps,$<) \
-#	$($(ExtensionName)_SWIFTC_FLAGS) \
-#	-o $@
-
-#Extensions/$(ExtensionName)/%.o : Extensions/$(ExtensionName)/%.swift
-#	$(SWIFT) -frontend -c $(subst $<,,$($(ExtensionName)_Src)) -primary-file $< \
-#	-emit-module-path $(MODULE_CACHE_PATH)/$(subst .o,.swiftmodule,$@) \
-#	-emit-module-doc-path $(MODULE_CACHE_PATH)/$(subst .o,.swiftdoc,$@) \
-#	-emit-dependencies-path $(MODULE_CACHE_PATH)/$(subst .swift,.d,$<) \
-#	-emit-reference-dependencies-path $(MODULE_CACHE_PATH)/$(subst .swift,.swiftdeps,$<) \
-#	$($(ExtensionName)_SWIFTC_FLAGS) \
-#	-o $@
+	$(SWIFT) -frontend -c $(subst $<,,$($(notdir $(*))_Src)) -primary-file $< \
+	-emit-module-path $(MODULE_CACHE_PATH)/$(subst .o,.swiftmodule,$@) \
+	-emit-module-doc-path $(MODULE_CACHE_PATH)/$(subst .o,.swiftdoc,$@) \
+	-emit-dependencies-path $(MODULE_CACHE_PATH)/$(subst .swift,.d,$<) \
+	-emit-reference-dependencies-path $(MODULE_CACHE_PATH)/$(subst .swift,.swiftdeps,$<) \
+	$($(notdir $(*))_SWIFTC_FLAGS) \
+	-o $@

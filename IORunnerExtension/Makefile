@@ -30,7 +30,7 @@ $(MODULE_2_NAME)_Darwin_LFLAGS = $($(MODULE_2_NAME)_SHLIB_PATH) -arch x86_64 -dy
 	-compatibility_version 1 -current_version 1 \
 	-framework $(MODULE_1_NAME) -framework Foundation
 
-$(MODULE_2_NAME)_Linux_LFLAGS = $($(MODULE_2_NAME)_SHLIB_PATH) -lswiftCore -lswiftGlibc -lm -ldl -lpthread -licui18n -licuuc -lFoundation -lbsd \
+$(MODULE_2_NAME)_Linux_LFLAGS = $($(MODULE_2_NAME)_SHLIB_PATH) -lswiftCore -lswiftGlibc -ldl -lFoundation -lbsd \
 	-l$(MODULE_1_NAME) -shared -fuse-ld=gold \
 	-Xlinker -export-dynamic \
 	-Xlinker --exclude-libs -Xlinker ALL \

@@ -21,8 +21,8 @@ SDK = $(XCODE)/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk
 LSB_OS = $(shell lsb_release -si)
 LSB_VER = $(shell lsb_release -sr)
 
-Darwin_SWIFTC_FLAGS.release = -sdk $(SDK) -D $(OS)_$(subst .,_,$(shell uname -r))
-Darwin_SWIFTC_FLAGS.debug= -sdk $(SDK) -D $(OS)_$(subst .,_,$(shell uname -r)) -D DEBUG
+Darwin_SWIFTC_FLAGS.release = -sdk $(SDK) -D $(OS)_$(subst .,_,$(shell uname -r)) -Xcc -D$(OS)=1
+Darwin_SWIFTC_FLAGS.debug= -sdk $(SDK) -D $(OS)_$(subst .,_,$(shell uname -r)) -D DEBUG -Xcc -D$(OS)=1
 Darwin_SWIFTC_FLAGS := $(Darwin_SWIFTC_FLAGS.$(BUILD))
 Linux_SWIFTC_FLAGS = -I linked/LinuxBridge
 Linux_EXTRA_FLAGS.release = -D $(LSB_OS)_$(subst .,_,$(LSB_VER))
@@ -91,6 +91,9 @@ Copy_Linux_dependencies:
 	@cp -r $(SWIFT_libs)/libswiftCore.so $(BUILD_ROOT_DIR)/lib
 	@cp -r $(SWIFT_libs)/libswiftGlibc.so $(BUILD_ROOT_DIR)/lib
 	@cp -r $(SWIFT_libs)/libFoundation.so $(BUILD_ROOT_DIR)/lib
+	@cp -Hr /usr/lib/x86_64-linux-gnu/libicui18n.so $(BUILD_ROOT_DIR)/lib
+	@cp -Hr /usr/lib/x86_64-linux-gnu/libicuuc.so $(BUILD_ROOT_DIR)/lib
+	@cp -Hr /usr/lib/x86_64-linux-gnu/libicudata.so $(BUILD_ROOT_DIR)/lib
 	
 include $(SOURCE_ROOT_DIR)/$(MODULE_1_NAME)/Makefile $(SOURCE_ROOT_DIR)/$(MODULE_2_NAME)/Makefile $(SOURCE_ROOT_DIR)/$(MODULE_3_NAME)/Makefile \
 	$(SOURCE_ROOT_DIR)/$(MODULE_4_NAME)/Makefile $(SOURCE_ROOT_DIR)/Extensions/Makefile \
@@ -113,11 +116,17 @@ dist-clean: clean $(MODULE_NAME)-clean $(MODULE_NAME)Installer-clean
 	@rm -rf $(BUILD_ROOT_DIR)
 	
 dist-create-zip:
-	@zip -r -D -y $(BUILD_ROOT_DIR)/$(MODULE_NAME)-$(OS)-x86_64.zip Build/bin/ Build/extensions/ Build/lib/ Build/frameworks/
-	@mv $(BUILD_ROOT_DIR)/$(MODULE_NAME)-$(OS)-x86_64.zip $(BUILD_ROOT_DIR)/$(MODULE_NAME)InstallData
-	@xxd -i Build/$(MODULE_NAME)InstallData $(SOURCE_ROOT_DIR)/$(MODULE_NAME)Installer/InstallDataEx.h 
+	$(eval ZIP_FILE_EXISTS := $(shell [ -e $(BUILD_ROOT_DIR)/$(MODULE_NAME)InstallData ] && echo 1 || echo 0 ))
+	@if [ $(ZIP_FILE_EXISTS) = 0 ]; then\
+		eval zip -r -D -y $(BUILD_ROOT_DIR)/$(MODULE_NAME)-$(OS)-x86_64.zip Build/bin/ Build/extensions/ Build/lib/ Build/frameworks/; \
+		eval mv $(BUILD_ROOT_DIR)/$(MODULE_NAME)-$(OS)-x86_64.zip $(BUILD_ROOT_DIR)/$(MODULE_NAME)InstallData; \
+	fi
+	$(eval CONFIG_FILE_EXISTS := $(shell [ -e Build/$(MODULE_NAME)InstallConfig ] && echo 1 || echo 0 ))
+	@if [ $(CONFIG_FILE_EXISTS) = 0 ]; then\
+		eval $(SOURCE_ROOT_DIR)/CreateExtensionConfigs.sh; \
+	fi
 	
-dist: dist-create-zip $(MODULE_NAME)Installer
+dist: $(MODULE_NAME) extensions dist-create-zip $(MODULE_NAME)Installer
 	
 source-dist: dist-clean
 	@mkdir -p $(BUILD_ROOT_DIR)
@@ -132,6 +141,7 @@ source-dist: dist-clean
 	@cp $(SOURCE_ROOT_DIR)/LICENSE $(BUILD_ROOT_DIR)/$(MODULE_NAME)
 	@cp -r $(SOURCE_ROOT_DIR)/$(MODULE_NAME).xcodeproj $(BUILD_ROOT_DIR)/$(MODULE_NAME)
 	@cp -r $(SOURCE_ROOT_DIR)/CreateExtension.sh $(BUILD_ROOT_DIR)/$(MODULE_NAME)
+	@cp -r $(SOURCE_ROOT_DIR)/CreateExtensionConfigs.sh $(BUILD_ROOT_DIR)/$(MODULE_NAME)
 	@mv $(BUILD_ROOT_DIR)/$(MODULE_NAME) $(SOURCE_ROOT_DIR)/$(MODULE_NAME)-Src
 	@find $(SOURCE_ROOT_DIR)/$(MODULE_NAME)-Src -name ".*" -exec rm -rf {} \;
 	@tar -cvzf $(BUILD_ROOT_DIR)/$(MODULE_NAME)-Source.tar.gz $(MODULE_NAME)-Src
@@ -139,7 +149,7 @@ source-dist: dist-clean
 	@rm -f $(SOURCE_ROOT_DIR)/Config.ini*
 	@rm -rf $(BUILD_ROOT_DIR)/lldb-ext*
 	
-.PHONY: all extensions clean dist-clean dist source-dist debug list-dependencies
+.PHONY: all extensions clean dist-clean dist source-dist debug
 
 
 	
