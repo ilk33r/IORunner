@@ -74,7 +74,7 @@ CREATE_EXT_MAKE_FILE() {
 	echo "	-compatibility_version 1 -current_version 1 \\" >> $1
 	echo "	-framework Foundation -framework \$(MODULE_2_NAME) -framework \$(MODULE_1_NAME)" >> $1
 	echo "${2}_Linux_LFLAGS = \$(${2}_SHLIB_PATH) -lswiftCore -lswiftGlibc -ldl -lFoundation -lbsd \\" >> $1
-	echo "	-l\$(MODULE_1_NAME) -l\$(MODULE_2_NAME) -shared -fuse-ld=gold \\" >> $1
+	echo "	-l\$(MODULE_1_NAME) -l\$(MODULE_2_NAME) -shared -flto -fuse-ld=gold \\" >> $1
 	echo "	-Xlinker -export-dynamic \\" >> $1
 	echo "	-Xlinker --exclude-libs -Xlinker ALL \\" >> $1
 	echo "	-Xlinker -rpath -Xlinker '\$\$ORIGIN/../lib' \\" >> $1

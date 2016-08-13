@@ -6,13 +6,13 @@
 //
 //
 
-	.global _InstallData
+	.global _InstallData_Data
 	.global _InstallData_Size
-_InstallData:
+_InstallData_Data:
 	.incbin "Build/IORunnerInstallData"
 1:
 _InstallData_Size:
-	.int 1b - _InstallData
+	.int 1b - _InstallData_Data
 
 
 //    .global blob

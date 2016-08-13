@@ -6,10 +6,10 @@
 //
 //
 
-	.global _InstallConfig
+	.global _InstallConfig_Data
 	.global _InstallConfig_Size
-_InstallConfig:
+_InstallConfig_Data:
 	.incbin "Build/IORunnerInstallConfig"
 1:
 _InstallConfig_Size:
-	.int 1b - _InstallConfig
+	.int 1b - _InstallConfig_Data

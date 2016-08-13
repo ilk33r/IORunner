@@ -29,7 +29,7 @@ TestHandler_Darwin_LFLAGS = $(TestHandler_SHLIB_PATH) -arch x86_64 -dynamiclib \
 	-compatibility_version 1 -current_version 1 \
 	-framework Foundation -framework $(MODULE_2_NAME) -framework $(MODULE_1_NAME)
 TestHandler_Linux_LFLAGS = $(TestHandler_SHLIB_PATH) -lswiftCore -lswiftGlibc -ldl -lFoundation -lbsd \
-	-l$(MODULE_1_NAME) -l$(MODULE_2_NAME) -shared -fuse-ld=gold \
+	-l$(MODULE_1_NAME) -l$(MODULE_2_NAME) -shared -flto -fuse-ld=gold \
 	-Xlinker -export-dynamic \
 	-Xlinker --exclude-libs -Xlinker ALL \
 	-Xlinker -rpath -Xlinker '$$ORIGIN/../lib' \

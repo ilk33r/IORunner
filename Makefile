@@ -33,8 +33,13 @@ SWIFT_Darwin_libs = $(XCODE)/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/m
 SWIFT_Linux_libs = $(shell dirname $(shell dirname $(shell which swiftc)))/lib/swift/linux
 SWIFT_libs = $(SWIFT_$(OS)_libs)
 
+SWIFT_Static_Darwin_libs = $(XCODE)/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift_static/macosx
+SWIFT_Static_Linux_libs = $(shell dirname $(shell dirname $(shell which swiftc)))/lib/swift_static/linux
+SWIFT_Static_libs = $(SWIFT_Static_$(OS)_libs)
+
 Darwin_Dependencies_Command=otool -L /usr/local/$(MODULE_NAME)/bin/$(MODULE_NAME)
 Linux_Dependencies_Command=readelf -d /usr/local/$(MODULE_NAME)/bin/$(MODULE_NAME)
+# ldd /usr/local/$(MODULE_NAME)/bin/$(MODULE_NAME)
 Dependencies_Command=$($(OS)_Dependencies_Command)
 
 MODULE_1_NAME=IOIni
@@ -91,9 +96,9 @@ Copy_Linux_dependencies:
 	@cp -r $(SWIFT_libs)/libswiftCore.so $(BUILD_ROOT_DIR)/lib
 	@cp -r $(SWIFT_libs)/libswiftGlibc.so $(BUILD_ROOT_DIR)/lib
 	@cp -r $(SWIFT_libs)/libFoundation.so $(BUILD_ROOT_DIR)/lib
-	@cp -Hr /usr/lib/x86_64-linux-gnu/libicui18n.so $(BUILD_ROOT_DIR)/lib
-	@cp -Hr /usr/lib/x86_64-linux-gnu/libicuuc.so $(BUILD_ROOT_DIR)/lib
-	@cp -Hr /usr/lib/x86_64-linux-gnu/libicudata.so $(BUILD_ROOT_DIR)/lib
+	@cp -Hr /usr/lib/x86_64-linux-gnu/libicui18n.so $(BUILD_ROOT_DIR)/lib/libicui18n.so.55
+	@cp -Hr /usr/lib/x86_64-linux-gnu/libicuuc.so $(BUILD_ROOT_DIR)/lib/libicuuc.so.55
+	@cp -Hr /usr/lib/x86_64-linux-gnu/libicudata.so $(BUILD_ROOT_DIR)/lib/libicudata.so.55
 	
 include $(SOURCE_ROOT_DIR)/$(MODULE_1_NAME)/Makefile $(SOURCE_ROOT_DIR)/$(MODULE_2_NAME)/Makefile $(SOURCE_ROOT_DIR)/$(MODULE_3_NAME)/Makefile \
 	$(SOURCE_ROOT_DIR)/$(MODULE_4_NAME)/Makefile $(SOURCE_ROOT_DIR)/Extensions/Makefile \

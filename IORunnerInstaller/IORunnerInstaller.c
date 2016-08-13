@@ -8,14 +8,12 @@
 
 #include "IORunnerInstaller.h"
 #include "ConfigFile.h"
+#include "IOAssets.h"
 
 #define UNZIP_COMMAND "/usr/bin/unzip -qq -o %s -d %s"
 
-extern const uint8_t InstallData[];
-extern const int InstallData_Size;
-
-extern const uint8_t InstallConfig[];
-extern const int InstallConfig_Size;
+EXTLD(InstallData)
+EXTLD(InstallConfig)
 
 static void generateConfigFile(IOString *etcDir, IOString *logDir, IOString *runDir, IOString *extDir) {
 	
@@ -53,9 +51,9 @@ static void generateConfigFile(IOString *etcDir, IOString *logDir, IOString *run
 		logFilePath->release(logFilePath);
 		
 		unsigned int i = 0;
-		for(i = 0; i < InstallConfig_Size; i++) {
+		for(i = 0; i < LDLEN(InstallConfig); i++) {
 			
-			fputc(InstallConfig[i], configFileHandle);
+			fputc(LDVAR(InstallConfig)[i], configFileHandle);
 		}
 		
 		fclose(configFileHandle);
@@ -238,9 +236,9 @@ int main(int argc, const char *argv[]) {
 		}
 
 		unsigned int i = 0;
-		for(i = 0; i < InstallData_Size; i++) {
+		for(i = 0; i < LDLEN(InstallData); i++) {
 		
-			fputc(InstallData[i], zipFile);
+			fputc(LDVAR(InstallData)[i], zipFile);
 		}
 	
 		fclose(zipFile);

@@ -44,9 +44,7 @@ $(MODULE_NAME)Installer-clean:
 	@rm -rf $(SOURCE_ROOT_DIR)/$(MODULE_NAME)Installer/*.o $(SOURCE_ROOT_DIR)/$(MODULE_NAME)Installer/*.so \
 	$(SOURCE_ROOT_DIR)/$(MODULE_NAME)Installer/*.bin \
 	$(BUILD_ROOT_DIR)/$(MODULE_NAME)Installer* \
-	$(SOURCE_ROOT_DIR)/$(MODULE_NAME)Installer/InstallData* \
-	$(SOURCE_ROOT_DIR)/$(MODULE_NAME)Installer/InstallConfigEx.h \
-	$(BUILD_ROOT_DIR)//$(MODULE_NAME)InstallData
+	$(BUILD_ROOT_DIR)/$(MODULE_NAME)InstallData
 
 $(MODULE_NAME)Installer/%.o : $(MODULE_NAME)Installer/%.s
 	$($(MODULE_NAME)Installer_CC) -x assembler-with-cpp $($(MODULE_NAME)Installer_CC_FLAGS) -c $< -o $@

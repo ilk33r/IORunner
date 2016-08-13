@@ -38,7 +38,7 @@ $(MODULE_3_NAME)_Darwin_LFLAGS = $($(MODULE_3_NAME)_SHLIB_PATH) -arch x86_64 -dy
 	-framework Foundation
 $(MODULE_3_NAME)_Linux_LFLAGS = $($(MODULE_3_NAME)_SHLIB_PATH) -lswiftCore -lswiftGlibc -ldl -lFoundation -lbsd \
 	-lncurses \
-	-shared -fuse-ld=gold \
+	-shared -flto -fuse-ld=gold \
 	-Xlinker -export-dynamic \
 	-Xlinker --exclude-libs -Xlinker ALL \
 	-Xlinker -rpath -Xlinker '$$ORIGIN/../lib/x86_64/$(MODULE_3_NAME).swiftmodule' \

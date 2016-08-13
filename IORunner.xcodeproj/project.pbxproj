@@ -77,6 +77,7 @@
 		DE0EBB7E1D3896BC0036B004 /* ModulesWidget.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ModulesWidget.swift; path = IOGUI/ModulesWidget.swift; sourceTree = "<group>"; };
 		DE1338DF1D3597D6002E109B /* IOGUI-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "IOGUI-Bridging-Header.h"; path = "IOGUI/IOGUI-Bridging-Header.h"; sourceTree = "<group>"; };
 		DE1B36E01D5F0CCB00D234A6 /* InstallConfig.s */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.asm; name = InstallConfig.s; path = IORunnerInstaller/InstallConfig.s; sourceTree = SOURCE_ROOT; };
+		DE1B36E21D5F296600D234A6 /* IOAssets.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = IOAssets.h; path = IORunnerInstaller/IOAssets.h; sourceTree = SOURCE_ROOT; };
 		DE2177111D3D0A4B000C21B1 /* IORunnerInstaller */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = IORunnerInstaller; sourceTree = BUILT_PRODUCTS_DIR; };
 		DE21771B1D3D0D4B000C21B1 /* BackgroundWidget.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = BackgroundWidget.swift; path = IOGUI/BackgroundWidget.swift; sourceTree = "<group>"; };
 		DE239E961D5C5D5800A31DF7 /* CreateExtensionConfigs.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = CreateExtensionConfigs.sh; sourceTree = "<group>"; };
@@ -225,6 +226,7 @@
 				DE2ECF3D1D51D25B00129548 /* IORunnerInstaller.h */,
 				DE2ECF3E1D51D25B00129548 /* IOStringHelper.c */,
 				DE2ECF3F1D51D25B00129548 /* IOStringHelper.h */,
+				DE1B36E21D5F296600D234A6 /* IOAssets.h */,
 				DEED6B441D5E73B20030CC1E /* InstallData.s */,
 				DE1B36E01D5F0CCB00D234A6 /* InstallConfig.s */,
 			);
@@ -706,12 +708,6 @@
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				MTL_ENABLE_DEBUG_INFO = NO;
-				OTHER_LDFLAGS = (
-					"-sectcreate",
-					__DATA,
-					__installdata,
-					"$(PROJECT_DIR)/Build/InstallData.zip",
-				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "";
@@ -769,12 +765,6 @@
 				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
-				OTHER_LDFLAGS = (
-					"-sectcreate",
-					__DATA,
-					__installdata,
-					"$(PROJECT_DIR)/Build/InstallData.zip",
-				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "";
