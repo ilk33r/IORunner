@@ -83,7 +83,7 @@ CREATE_EXT_MAKE_FILE() {
 	echo "" >> $1
 	echo "ext-${2}-make: ext-${2}-modulecache ext-${2}.so ext-${2}-install" >> $1
 	echo "" >> $1
-	echo "ext-${2}-objects: $(${2}_Obj)" >> $1
+	echo "ext-${2}-objects: \$(${2}_Obj)" >> $1
 	echo "" >> $1
 	echo "" >> $1
 }

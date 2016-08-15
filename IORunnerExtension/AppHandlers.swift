@@ -6,6 +6,12 @@
 //
 //
 
+#if os(Linux)
+	import Glibc
+#else
+	import Darwin
+#endif
+import Foundation
 import IOIni
 
 public class AppHandlers {
@@ -18,6 +24,41 @@ public class AppHandlers {
 		self.logger = logger
 		self.moduleConfig = moduleConfig
 	}
+	
+#if swift(>=3)
+	public func checkProcess(processName: String) -> [Int] {
+		
+		var retval = [Int]()
+		
+		let task = Task()
+		task.launchPath = "/usr/bin/pgrep"
+		task.arguments = [processName]
+		
+		let pipe = Pipe()
+		task.standardOutput = pipe
+		task.launch()
+		
+		let data = pipe.fileHandleForReading.readDataToEndOfFile()
+		let output = String(data: data, encoding: String.Encoding.utf8)
+		
+		if(output != nil) {
+			
+			if let splittedPids = output?.characters.split(separator: "\n") {
+			
+				for pids in splittedPids {
+				
+					if let pidInt = Int(String(pids)) {
+						
+						retval.append(pidInt)
+					}
+				}
+			}
+		}
+		
+		return retval
+	}
+	
+#endif
 	
 	public func forStart() -> Void {
 		// pass

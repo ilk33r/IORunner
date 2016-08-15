@@ -7,7 +7,7 @@
 		<key>IOGUI.xcscheme_^#shared#^_</key>
 		<dict>
 			<key>orderHint</key>
-			<integer>5</integer>
+			<integer>4</integer>
 		</dict>
 		<key>IOIni.xcscheme_^#shared#^_</key>
 		<dict>
@@ -22,22 +22,32 @@
 		<key>IORunnerExtension.xcscheme_^#shared#^_</key>
 		<dict>
 			<key>orderHint</key>
-			<integer>4</integer>
+			<integer>3</integer>
 		</dict>
 		<key>IORunnerInstaller.xcscheme</key>
 		<dict>
 			<key>orderHint</key>
-			<integer>6</integer>
+			<integer>5</integer>
 		</dict>
 		<key>IORunner_GUI.xcscheme</key>
 		<dict>
 			<key>orderHint</key>
 			<integer>1</integer>
 		</dict>
+		<key>NginxHandler.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>7</integer>
+		</dict>
+		<key>PHPFastCGIHandler.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>8</integer>
+		</dict>
 		<key>TestHandler.xcscheme</key>
 		<dict>
 			<key>orderHint</key>
-			<integer>3</integer>
+			<integer>6</integer>
 		</dict>
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
@@ -98,6 +108,16 @@
 			<true/>
 		</dict>
 		<key>DEED71181D49D9B300D33A3A</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>DEFBEA081D61D0BA008BA2D8</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>DEFBEA1D1D61E802008BA2D8</key>
 		<dict>
 			<key>primary</key>
 			<true/>

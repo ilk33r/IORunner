@@ -1,9 +1,12 @@
 
 # Makefile for AllExtensions
 
+include $(SOURCE_ROOT_DIR)/Extensions/NginxHandler/Makefile
+include $(SOURCE_ROOT_DIR)/Extensions/PHPFastCGIHandler/Makefile
 include $(SOURCE_ROOT_DIR)/Extensions/TestHandler/Makefile
 
-AllExtensions:  ext-TestHandler-make
 
-AllExtensions-Clean:  ext-TestHandler-clean
+AllExtensions:  ext-NginxHandler-make ext-PHPFastCGIHandler-make ext-TestHandler-make
+
+AllExtensions-Clean:  ext-NginxHandler-clean ext-PHPFastCGIHandler-clean ext-TestHandler-clean
 

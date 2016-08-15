@@ -47,6 +47,14 @@
 		DEE47AFF1D3A7D8000D55F92 /* IOIni.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = "_____Product_ini" /* IOIni.framework */; };
 		DEED6B451D5E73B20030CC1E /* InstallData.s in Sources */ = {isa = PBXBuildFile; fileRef = DEED6B441D5E73B20030CC1E /* InstallData.s */; };
 		DEF667111D3A4EB700A56CA2 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DE8F5DF21D2A4A9400BE7C35 /* Foundation.framework */; };
+		DEFBEA0C1D61D0BA008BA2D8 /* IOIni.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = "_____Product_ini" /* IOIni.framework */; };
+		DEFBEA0D1D61D0BA008BA2D8 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DE8F5DF21D2A4A9400BE7C35 /* Foundation.framework */; };
+		DEFBEA0E1D61D0BA008BA2D8 /* IORunnerExtension.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DE9F8EFC1D353BFB006F9B9D /* IORunnerExtension.framework */; };
+		DEFBEA151D61D0D0008BA2D8 /* NginxHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEFBEA051D61D0A5008BA2D8 /* NginxHandler.swift */; };
+		DEFBEA221D61E802008BA2D8 /* IOIni.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = "_____Product_ini" /* IOIni.framework */; };
+		DEFBEA231D61E802008BA2D8 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DE8F5DF21D2A4A9400BE7C35 /* Foundation.framework */; };
+		DEFBEA241D61E802008BA2D8 /* IORunnerExtension.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DE9F8EFC1D353BFB006F9B9D /* IORunnerExtension.framework */; };
+		DEFBEA2B1D61E818008BA2D8 /* PHPFastCGIHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEFBEA1A1D61E7F3008BA2D8 /* PHPFastCGIHandler.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -82,6 +90,8 @@
 		DE21771B1D3D0D4B000C21B1 /* BackgroundWidget.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = BackgroundWidget.swift; path = IOGUI/BackgroundWidget.swift; sourceTree = "<group>"; };
 		DE239E961D5C5D5800A31DF7 /* CreateExtensionConfigs.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = CreateExtensionConfigs.sh; sourceTree = "<group>"; };
 		DE239E971D5C623500A31DF7 /* Service.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = Service.sh; sourceTree = "<group>"; };
+		DE28D8501D61CB2200C357DA /* Config.ini */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Config.ini; path = Extensions/TestHandler/Config.ini; sourceTree = "<group>"; };
+		DE28D8511D61CB2200C357DA /* Makefile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.make; name = Makefile; path = Extensions/TestHandler/Makefile; sourceTree = "<group>"; };
 		DE2E82481D46571A004953A9 /* AppExit.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AppExit.swift; path = IORunnerBin/AppExit.swift; sourceTree = SOURCE_ROOT; };
 		DE2E82491D46571A004953A9 /* Application.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Application.swift; path = IORunnerBin/Application.swift; sourceTree = SOURCE_ROOT; };
 		DE2E824A1D46571A004953A9 /* AppWorker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AppWorker.swift; path = IORunnerBin/AppWorker.swift; sourceTree = SOURCE_ROOT; };
@@ -132,6 +142,15 @@
 		DED677191D5B50D200B6F836 /* CursesHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CursesHelper.swift; path = IOGUI/CursesHelper.swift; sourceTree = "<group>"; };
 		DEE47AFC1D3A6A1100D55F92 /* TestHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TestHandler.swift; path = Extensions/TestHandler/TestHandler.swift; sourceTree = "<group>"; };
 		DEED6B441D5E73B20030CC1E /* InstallData.s */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.asm; name = InstallData.s; path = IORunnerInstaller/InstallData.s; sourceTree = SOURCE_ROOT; };
+		DEFBEA031D61D0A5008BA2D8 /* Config.ini */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Config.ini; sourceTree = "<group>"; };
+		DEFBEA041D61D0A5008BA2D8 /* Makefile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
+		DEFBEA051D61D0A5008BA2D8 /* NginxHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NginxHandler.swift; sourceTree = "<group>"; };
+		DEFBEA141D61D0BA008BA2D8 /* libNginxHandler.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libNginxHandler.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
+		DEFBEA161D61DB16008BA2D8 /* StringFuncs.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = StringFuncs.playground; sourceTree = "<group>"; };
+		DEFBEA181D61E7F3008BA2D8 /* Config.ini */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Config.ini; sourceTree = "<group>"; };
+		DEFBEA191D61E7F3008BA2D8 /* Makefile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
+		DEFBEA1A1D61E7F3008BA2D8 /* PHPFastCGIHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PHPFastCGIHandler.swift; sourceTree = "<group>"; };
+		DEFBEA2A1D61E802008BA2D8 /* libPHPFastCGIHandler.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libPHPFastCGIHandler.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
 		"_____Product_BouncyProcessChecker" /* IORunner */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; path = IORunner; sourceTree = BUILT_PRODUCTS_DIR; };
 		"_____Product_ini" /* IOIni.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = IOIni.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -168,6 +187,26 @@
 			buildActionMask = 2147483647;
 			files = (
 				DE1338D61D358581002E109B /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		DEFBEA0B1D61D0BA008BA2D8 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				DEFBEA0C1D61D0BA008BA2D8 /* IOIni.framework in Frameworks */,
+				DEFBEA0D1D61D0BA008BA2D8 /* Foundation.framework in Frameworks */,
+				DEFBEA0E1D61D0BA008BA2D8 /* IORunnerExtension.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		DEFBEA211D61E802008BA2D8 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				DEFBEA221D61E802008BA2D8 /* IOIni.framework in Frameworks */,
+				DEFBEA231D61E802008BA2D8 /* Foundation.framework in Frameworks */,
+				DEFBEA241D61E802008BA2D8 /* IORunnerExtension.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -287,6 +326,8 @@
 		DEE47AFA1D3A69F700D55F92 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
+				DEFBEA171D61E7F3008BA2D8 /* PHPFastCGIHandler */,
+				DEFBEA021D61D0A5008BA2D8 /* NginxHandler */,
 				DEE47AFB1D3A6A0400D55F92 /* TestHandler */,
 			);
 			name = Extensions;
@@ -295,9 +336,33 @@
 		DEE47AFB1D3A6A0400D55F92 /* TestHandler */ = {
 			isa = PBXGroup;
 			children = (
+				DE28D8501D61CB2200C357DA /* Config.ini */,
+				DE28D8511D61CB2200C357DA /* Makefile */,
 				DEE47AFC1D3A6A1100D55F92 /* TestHandler.swift */,
 			);
 			name = TestHandler;
+			sourceTree = "<group>";
+		};
+		DEFBEA021D61D0A5008BA2D8 /* NginxHandler */ = {
+			isa = PBXGroup;
+			children = (
+				DEFBEA031D61D0A5008BA2D8 /* Config.ini */,
+				DEFBEA041D61D0A5008BA2D8 /* Makefile */,
+				DEFBEA051D61D0A5008BA2D8 /* NginxHandler.swift */,
+			);
+			name = NginxHandler;
+			path = Extensions/NginxHandler;
+			sourceTree = "<group>";
+		};
+		DEFBEA171D61E7F3008BA2D8 /* PHPFastCGIHandler */ = {
+			isa = PBXGroup;
+			children = (
+				DEFBEA181D61E7F3008BA2D8 /* Config.ini */,
+				DEFBEA191D61E7F3008BA2D8 /* Makefile */,
+				DEFBEA1A1D61E7F3008BA2D8 /* PHPFastCGIHandler.swift */,
+			);
+			name = PHPFastCGIHandler;
+			path = Extensions/PHPFastCGIHandler;
 			sourceTree = "<group>";
 		};
 		"___RootGroup_" = {
@@ -305,6 +370,7 @@
 			children = (
 				DEC14BF11D5BC42D00F03DCF /* Makefile */,
 				DEC14BF21D5BC42D00F03DCF /* LICENSE */,
+				DEFBEA161D61DB16008BA2D8 /* StringFuncs.playground */,
 				DEBCAE491D5A160900224026 /* String.playground */,
 				"_____Configs_" /* Configs */,
 				"_____Sources_" /* Sources */,
@@ -330,6 +396,8 @@
 				DE9F8EFC1D353BFB006F9B9D /* IORunnerExtension.framework */,
 				DEC3E5AC1D3579CA00FB1662 /* IOGUI.framework */,
 				DE2177111D3D0A4B000C21B1 /* IORunnerInstaller */,
+				DEFBEA141D61D0BA008BA2D8 /* libNginxHandler.dylib */,
+				DEFBEA2A1D61E802008BA2D8 /* libPHPFastCGIHandler.dylib */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -368,6 +436,20 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		DEC3E5A91D3579CA00FB1662 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		DEFBEA0F1D61D0BA008BA2D8 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		DEFBEA251D61E802008BA2D8 /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -445,6 +527,42 @@
 			productName = CNCURSES;
 			productReference = DEC3E5AC1D3579CA00FB1662 /* IOGUI.framework */;
 			productType = "com.apple.product-type.framework";
+		};
+		DEFBEA081D61D0BA008BA2D8 /* NginxHandler */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = DEFBEA111D61D0BA008BA2D8 /* Build configuration list for PBXNativeTarget "NginxHandler" */;
+			buildPhases = (
+				DEFBEA091D61D0BA008BA2D8 /* Sources */,
+				DEFBEA0B1D61D0BA008BA2D8 /* Frameworks */,
+				DEFBEA0F1D61D0BA008BA2D8 /* Headers */,
+				DEFBEA101D61D0BA008BA2D8 /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = NginxHandler;
+			productName = TestHandler;
+			productReference = DEFBEA141D61D0BA008BA2D8 /* libNginxHandler.dylib */;
+			productType = "com.apple.product-type.library.dynamic";
+		};
+		DEFBEA1D1D61E802008BA2D8 /* PHPFastCGIHandler */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = DEFBEA271D61E802008BA2D8 /* Build configuration list for PBXNativeTarget "PHPFastCGIHandler" */;
+			buildPhases = (
+				DEFBEA1E1D61E802008BA2D8 /* Sources */,
+				DEFBEA211D61E802008BA2D8 /* Frameworks */,
+				DEFBEA251D61E802008BA2D8 /* Headers */,
+				DEFBEA261D61E802008BA2D8 /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = PHPFastCGIHandler;
+			productName = TestHandler;
+			productReference = DEFBEA2A1D61E802008BA2D8 /* libPHPFastCGIHandler.dylib */;
+			productType = "com.apple.product-type.library.dynamic";
 		};
 		"______Target_BouncyProcessChecker" /* IORunner */ = {
 			isa = PBXNativeTarget;
@@ -534,10 +652,12 @@
 			targets = (
 				"______Target_ini" /* IOIni */,
 				"______Target_BouncyProcessChecker" /* IORunner */,
-				DEA356EB1D34EFB600BE6E8E /* TestHandler */,
 				DE9F8EFB1D353BFB006F9B9D /* IORunnerExtension */,
 				DEC3E5AB1D3579CA00FB1662 /* IOGUI */,
 				DE2177101D3D0A4B000C21B1 /* IORunnerInstaller */,
+				DEA356EB1D34EFB600BE6E8E /* TestHandler */,
+				DEFBEA081D61D0BA008BA2D8 /* NginxHandler */,
+				DEFBEA1D1D61E802008BA2D8 /* PHPFastCGIHandler */,
 			);
 		};
 /* End PBXProject section */
@@ -564,7 +684,35 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\nLIBRARY_NAME=\"${EXECUTABLE_PREFIX}${PRODUCT_NAME}.${EXECUTABLE_EXTENSION}\"\nLIBRARY_SOURCE_PATH=\"${CONFIGURATION_BUILD_DIR}/${LIBRARY_NAME}\"\nLIBRARY_DESTINATION_DIR=\"${SRCROOT}/../extensions/available\"\n\ncp $LIBRARY_SOURCE_PATH $LIBRARY_DESTINATION_DIR";
+			shellScript = "\nLIBRARY_NAME=\"${EXECUTABLE_PREFIX}${PRODUCT_NAME}.${EXECUTABLE_EXTENSION}\"\nLIBRARY_SOURCE_PATH=\"${CONFIGURATION_BUILD_DIR}/${LIBRARY_NAME}\"\nLIBRARY_DESTINATION_DIR=\"/usr/local/IORunner/extensions/available\"\n\ncp $LIBRARY_SOURCE_PATH $LIBRARY_DESTINATION_DIR";
+			showEnvVarsInLog = 0;
+		};
+		DEFBEA101D61D0BA008BA2D8 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\nLIBRARY_NAME=\"${EXECUTABLE_PREFIX}${PRODUCT_NAME}.${EXECUTABLE_EXTENSION}\"\nLIBRARY_SOURCE_PATH=\"${CONFIGURATION_BUILD_DIR}/${LIBRARY_NAME}\"\nLIBRARY_DESTINATION_DIR=\"/usr/local/IORunner/extensions/available\"\n\ncp $LIBRARY_SOURCE_PATH $LIBRARY_DESTINATION_DIR";
+			showEnvVarsInLog = 0;
+		};
+		DEFBEA261D61E802008BA2D8 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\nLIBRARY_NAME=\"${EXECUTABLE_PREFIX}${PRODUCT_NAME}.${EXECUTABLE_EXTENSION}\"\nLIBRARY_SOURCE_PATH=\"${CONFIGURATION_BUILD_DIR}/${LIBRARY_NAME}\"\nLIBRARY_DESTINATION_DIR=\"/usr/local/IORunner/extensions/available\"\n\ncp $LIBRARY_SOURCE_PATH $LIBRARY_DESTINATION_DIR";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -638,6 +786,22 @@
 				DEB843401D45309F00E1AE5B /* BackgroundWidget.swift in Sources */,
 				DED6771A1D5B50D200B6F836 /* CursesHelper.swift in Sources */,
 				DE7D5BC51D42860900888821 /* TitleAndFooterWidget.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		DEFBEA091D61D0BA008BA2D8 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				DEFBEA151D61D0D0008BA2D8 /* NginxHandler.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		DEFBEA1E1D61E802008BA2D8 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				DEFBEA2B1D61E818008BA2D8 /* PHPFastCGIHandler.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1201,6 +1365,210 @@
 			};
 			name = Debug;
 		};
+		DEFBEA121D61D0BA008BA2D8 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = DE5ECB631D423F3600C06781 /* Project.xcconfig */;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD)";
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				EXECUTABLE_PREFIX = lib;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = s;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = "";
+				SWIFT_INCLUDE_PATHS = "";
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+			};
+			name = Release;
+		};
+		DEFBEA131D61D0BA008BA2D8 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = DE5ECB631D423F3600C06781 /* Project.xcconfig */;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD)";
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				EXECUTABLE_PREFIX = lib;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = NO;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = "";
+				SWIFT_INCLUDE_PATHS = "";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		DEFBEA281D61E802008BA2D8 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = DE5ECB631D423F3600C06781 /* Project.xcconfig */;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD)";
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				EXECUTABLE_PREFIX = lib;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = s;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = "";
+				SWIFT_INCLUDE_PATHS = "";
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+			};
+			name = Release;
+		};
+		DEFBEA291D61E802008BA2D8 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = DE5ECB631D423F3600C06781 /* Project.xcconfig */;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD)";
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				EXECUTABLE_PREFIX = lib;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = NO;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = "";
+				SWIFT_INCLUDE_PATHS = "";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
 		_ReleaseConf_BouncyProcessChecker /* Release */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = DE5ECB631D423F3600C06781 /* Project.xcconfig */;
@@ -1296,6 +1664,24 @@
 			buildConfigurations = (
 				DEC3E5B21D3579CA00FB1662 /* Release */,
 				DEC3E5B31D3579CA00FB1662 /* Debug */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		DEFBEA111D61D0BA008BA2D8 /* Build configuration list for PBXNativeTarget "NginxHandler" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				DEFBEA121D61D0BA008BA2D8 /* Release */,
+				DEFBEA131D61D0BA008BA2D8 /* Debug */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		DEFBEA271D61E802008BA2D8 /* Build configuration list for PBXNativeTarget "PHPFastCGIHandler" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				DEFBEA281D61E802008BA2D8 /* Release */,
+				DEFBEA291D61E802008BA2D8 /* Debug */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
