@@ -1,0 +1,453 @@
+//
+//  BouncyHandler.swift
+//  IORunner/Extensions/BouncyHandler
+//
+//  Created by ilker özcan on 10/08/16.
+//
+//
+
+import Foundation
+import IOIni
+import IORunnerExtension
+
+public class BouncyHandler: AppHandlers {
+
+	private var processStatus: [Int] = [Int]()
+	private var checkingFrequency: Int = 60
+#if swift(>=3)
+	private var lastCheckDate: Date?
+#endif
+	
+	private struct JobserverCommand {
+		
+		private var _server: String
+		private var _pid: String
+		private var _log: String
+		private var _db: String
+		private var _sock: String
+		private var _videos: String
+		
+		var Command: String {
+			
+			get {
+				return _server
+			}
+		}
+		
+		var PidFile: String {
+			
+			get {
+				return _pid
+			}
+		}
+		
+		var LogFile: String {
+			
+			get {
+				return _log
+			}
+		}
+		
+		var DBFile: String {
+			
+			get {
+				return _db
+			}
+		}
+		
+		var SockFile: String {
+			
+			get {
+				return _sock
+			}
+		}
+		
+		var VideosFile: String {
+			
+			get {
+				return _videos
+			}
+		}
+		
+		init(ServerCommand: String, PidFile: String, LogFile: String, DBFile: String, Socket: String, VideosFolder: String) {
+			
+			self._server = ServerCommand
+			self._pid = PidFile
+			self._log = LogFile
+			self._db = DBFile
+			self._sock = Socket
+			self._videos = VideosFolder
+		}
+	}
+	private var jobServerSettings: JobserverCommand?
+	
+	private struct PushserverCommand {
+		
+		private var _server: String
+		private var _pid: String
+		private var _log: String
+		private var _dbHost: String
+		private var _dbUser: String
+		private var _dbPassword: String
+		private var _dbName: String
+		
+		var Command: String {
+			
+			get {
+				return _server
+			}
+		}
+		
+		var PidFile: String {
+			
+			get {
+				return _pid
+			}
+		}
+		
+		var LogFile: String {
+			
+			get {
+				return _log
+			}
+		}
+		
+		var DBHost: String {
+			
+			get {
+				return _dbHost
+			}
+		}
+		
+		var DBUser: String {
+			
+			get {
+				return _dbUser
+			}
+		}
+		
+		var DBPassword: String {
+			
+			get {
+				return _dbPassword
+			}
+		}
+		
+		var DBName: String {
+			
+			get {
+				return _dbName
+			}
+		}
+
+		init(ServerCommand: String, PidFile: String, LogFile: String,
+		     DBHost: String, DBUser: String, DBPassword: String, DBName: String) {
+			
+			self._server = ServerCommand
+			self._pid = PidFile
+			self._log = LogFile
+			self._dbHost = DBHost
+			self._dbUser = DBUser
+			self._dbPassword = DBPassword
+			self._dbName = DBName
+		}
+	}
+	private var pushServerSettings: PushserverCommand?
+	
+	public required init(logger: Logger, moduleConfig: Section?) {
+		
+		super.init(logger: logger, moduleConfig: moduleConfig)
+		
+		if let currentProcessFrequency = moduleConfig?["ProcessFrequency"] {
+			
+			if let frequencyInt = Int(currentProcessFrequency) {
+				
+				self.checkingFrequency = frequencyInt
+			}
+		}
+	#if swift(>=3)
+		self.generateJobServerSettings()
+		self.generatePushServerSettings()
+	#endif
+	}
+	
+	public override func forStart() {
+		
+		if(!self.checkJobserverProcess()) {
+			
+			self.restartJobserver()
+		}
+		
+		if(!self.checkPushserverProcess()) {
+			
+			self.restartPushserver()
+		}
+	}
+	
+	public override func inLoop() {
+		
+	#if swift(>=3)
+			
+		if(lastCheckDate != nil) {
+				
+			let currentDate = Int(Date().timeIntervalSince1970)
+			let lastCheckDif = currentDate - Int(lastCheckDate!.timeIntervalSince1970)
+				
+			if(lastCheckDif >= self.checkingFrequency) {
+					
+				if(!self.checkJobserverProcess()) {
+					
+					self.restartJobserver()
+				}
+				
+				if(!self.checkPushserverProcess()) {
+					
+					self.restartPushserver()
+				}
+			}
+		}
+	#endif
+	}
+	
+#if swift(>=3)
+	private func generateJobServerSettings() {
+		
+		guard moduleConfig != nil else {
+			return
+		}
+		
+		let processCommand = moduleConfig!["JobServer"]
+		guard processCommand != nil else {
+				
+			return
+		}
+			
+		let processPidFile = moduleConfig!["JobServerPidFile"]
+		guard processPidFile != nil else {
+				
+			return
+		}
+		
+		let processLogFile = moduleConfig!["JobServerLogFile"]
+		guard processLogFile != nil else {
+			
+			return
+		}
+		
+		let processDBFile = moduleConfig!["JobServerDBFile"]
+		guard processDBFile != nil else {
+			
+			return
+		}
+		
+		let processSockFile = moduleConfig!["JobServerSockFile"]
+		guard processSockFile != nil else {
+			
+			return
+		}
+		
+		let processVideosFile = moduleConfig!["JobServerVideosFile"]
+		guard processVideosFile != nil else {
+			
+			return
+		}
+		
+		self.jobServerSettings = JobserverCommand(ServerCommand: processCommand!, PidFile: processPidFile!, LogFile: processLogFile!, DBFile: processDBFile!, Socket: processSockFile!, VideosFolder: processVideosFile!)
+	}
+	
+	private func generatePushServerSettings() {
+		
+		guard moduleConfig != nil else {
+			return
+		}
+		
+		let processCommand = moduleConfig!["PushServer"]
+		guard processCommand != nil else {
+			
+			return
+		}
+		
+		let processPidFile = moduleConfig!["PushServerPidFile"]
+		guard processPidFile != nil else {
+			
+			return
+		}
+		
+		let processLogFile = moduleConfig!["PushServerLogFile"]
+		guard processLogFile != nil else {
+			
+			return
+		}
+		
+		let processDBHost = moduleConfig!["PushServerDBHost"]
+		guard processDBHost != nil else {
+			
+			return
+		}
+		
+		let processDBUser = moduleConfig!["PushServerDBUser"]
+		guard processDBUser != nil else {
+			
+			return
+		}
+		
+		let processDBPassword = moduleConfig!["PushServerDBPassword"]
+		guard processDBPassword != nil else {
+			
+			return
+		}
+		
+		let processDBName = moduleConfig!["PushServerDBName"]
+		guard processDBName != nil else {
+			
+			return
+		}
+		
+		self.pushServerSettings = PushserverCommand(ServerCommand: processCommand!, PidFile: processPidFile!, LogFile: processLogFile!, DBHost: processDBHost!, DBUser: processDBUser!, DBPassword: processDBPassword!, DBName: processDBName!)
+	}
+#endif
+	
+	private func checkJobserverProcess() -> Bool {
+		
+		guard self.jobServerSettings != nil else {
+			return true
+		}
+		
+	#if swift(>=3)
+		let procArgs: [String] = [ "status", "-p", self.jobServerSettings!.PidFile ]
+		if let response = self.executeTaskWithPipe(command: self.jobServerSettings!.Command, args: procArgs) {
+			
+			if let integerResponse = Int(response) {
+				
+				if(integerResponse == 200) {
+					return true
+				}else{
+					
+					self.logger.writeLog(level: Logger.LogLevels.ERROR, message: "JOB SERVER is not running...")
+					return false
+				}
+			}
+		}
+		
+		self.logger.writeLog(level: Logger.LogLevels.ERROR, message: "JOB SERVER is not running...")
+		return false
+	#else
+		return true
+	#endif
+	}
+	
+	private func checkPushserverProcess() -> Bool {
+		
+		guard self.pushServerSettings != nil else {
+			return true
+		}
+		
+	#if swift(>=3)
+		let procArgs: [String] = [ "status", "-p", self.pushServerSettings!.PidFile ]
+		if let response = self.executeTaskWithPipe(command: self.pushServerSettings!.Command, args: procArgs) {
+				
+			if let integerResponse = Int(response) {
+					
+				if(integerResponse == 200) {
+					return true
+				}else{
+						
+					self.logger.writeLog(level: Logger.LogLevels.ERROR, message: "PUSH SERVER is not running...")
+					return false
+				}
+			}
+		}
+			
+		self.logger.writeLog(level: Logger.LogLevels.ERROR, message: "PUSH SERVER is not running...")
+		return false
+	#else
+		return true
+	#endif
+	}
+	
+	private func executeTaskWithPipe(command: String, args: [String]) -> String? {
+		
+	#if swift(>=3)
+		let task = Task()
+		task.launchPath = command
+		task.arguments = args
+		let pipe = Pipe()
+		task.standardOutput = pipe
+		task.launch()
+		
+		let data = pipe.fileHandleForReading.readDataToEndOfFile()
+		let output = String(data: data, encoding: String.Encoding.utf8)
+		return output
+	#else
+		return nil
+	#endif
+	}
+	
+	private func restartJobserver() {
+		
+	#if swift(>=3)
+		self.logger.writeLog(level: Logger.LogLevels.ERROR, message: "Restarting JOB SERVER ...")
+			
+		guard self.jobServerSettings != nil else {
+			return
+		}
+		
+		let procStopArgs: [String] = [ "stop", "-p", self.jobServerSettings!.PidFile ]
+		if let _ = self.executeTaskWithPipe(command: self.jobServerSettings!.Command, args: procStopArgs) {
+			
+			let procStartArgs: [String] = [
+				"start",
+				"-p",
+				self.jobServerSettings!.PidFile,
+				"-l",
+				self.jobServerSettings!.LogFile,
+				"-j",
+				self.jobServerSettings!.DBFile,
+				"-s",
+				self.jobServerSettings!.SockFile,
+				"-v",
+				self.jobServerSettings!.VideosFile
+			]
+			
+			let _ = self.executeTaskWithPipe(command: self.jobServerSettings!.Command, args: procStartArgs)
+		}
+		
+	#endif
+	}
+	
+	private func restartPushserver() {
+		
+	#if swift(>=3)
+		self.logger.writeLog(level: Logger.LogLevels.ERROR, message: "Restarting PUSH SERVER ...")
+			
+		guard self.pushServerSettings != nil else {
+			return
+		}
+			
+		let procStopArgs: [String] = [ "stop", "-p", self.pushServerSettings!.PidFile ]
+		if let _ = self.executeTaskWithPipe(command: self.pushServerSettings!.Command, args: procStopArgs) {
+				
+			let procStartArgs: [String] = [
+				"start",
+				"-l",
+				self.pushServerSettings!.LogFile,
+				"-p",
+				self.pushServerSettings!.PidFile,
+				"-mh",
+				self.pushServerSettings!.DBHost,
+				"-mu",
+				self.pushServerSettings!.DBUser,
+				"-mp",
+				self.pushServerSettings!.DBPassword,
+				"-md",
+				self.pushServerSettings!.DBName
+			]
+				
+			let _ = self.executeTaskWithPipe(command: self.pushServerSettings!.Command, args: procStartArgs)
+		}
+			
+	#endif
+	}
+
+}
+

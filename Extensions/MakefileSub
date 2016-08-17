@@ -1,12 +1,16 @@
 
 # Makefile for AllExtensions
 
+include $(SOURCE_ROOT_DIR)/Extensions/BouncyHandler/Makefile
+include $(SOURCE_ROOT_DIR)/Extensions/DovecotHandler/Makefile
 include $(SOURCE_ROOT_DIR)/Extensions/NginxHandler/Makefile
+include $(SOURCE_ROOT_DIR)/Extensions/OpendkimHandler/Makefile
 include $(SOURCE_ROOT_DIR)/Extensions/PHPFastCGIHandler/Makefile
+include $(SOURCE_ROOT_DIR)/Extensions/PostfixHandler/Makefile
+include $(SOURCE_ROOT_DIR)/Extensions/SSHHandler/Makefile
 include $(SOURCE_ROOT_DIR)/Extensions/TestHandler/Makefile
 
+AllExtensions:  ext-BouncyHandler-make ext-DovecotHandler-make ext-NginxHandler-make ext-OpendkimHandler-make ext-PHPFastCGIHandler-make ext-PostfixHandler-make ext-SSHHandler-make ext-TestHandler-make
 
-AllExtensions:  ext-NginxHandler-make ext-PHPFastCGIHandler-make ext-TestHandler-make
-
-AllExtensions-Clean:  ext-NginxHandler-clean ext-PHPFastCGIHandler-clean ext-TestHandler-clean
+AllExtensions-Clean:  ext-BouncyHandler-clean ext-DovecotHandler-clean ext-NginxHandler-clean ext-OpendkimHandler-clean ext-PHPFastCGIHandler-clean ext-PostfixHandler-clean ext-SSHHandler-clean ext-TestHandler-clean
 

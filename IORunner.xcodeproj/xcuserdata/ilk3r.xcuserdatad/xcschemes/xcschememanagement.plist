@@ -4,6 +4,16 @@
 <dict>
 	<key>SchemeUserState</key>
 	<dict>
+		<key>BouncyHandler.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>13</integer>
+		</dict>
+		<key>DovecotHandler.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>9</integer>
+		</dict>
 		<key>IOGUI.xcscheme_^#shared#^_</key>
 		<dict>
 			<key>orderHint</key>
@@ -39,10 +49,25 @@
 			<key>orderHint</key>
 			<integer>7</integer>
 		</dict>
+		<key>OpendkimHandler.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>10</integer>
+		</dict>
 		<key>PHPFastCGIHandler.xcscheme</key>
 		<dict>
 			<key>orderHint</key>
 			<integer>8</integer>
+		</dict>
+		<key>PostfixHandler.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>11</integer>
+		</dict>
+		<key>SSHHandler.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>12</integer>
 		</dict>
 		<key>TestHandler.xcscheme</key>
 		<dict>
@@ -118,6 +143,36 @@
 			<true/>
 		</dict>
 		<key>DEFBEA1D1D61E802008BA2D8</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>DEFBEA321D61FA4D008BA2D8</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>DEFBEA461D61FBC5008BA2D8</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>DEFBEA541D61FCE4008BA2D8</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>DEFBEA681D620146008BA2D8</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>DEFBEA7C1D620446008BA2D8</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>DEFBEA901D620F77008BA2D8</key>
 		<dict>
 			<key>primary</key>
 			<true/>

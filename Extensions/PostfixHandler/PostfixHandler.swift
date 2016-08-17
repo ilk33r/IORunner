@@ -1,6 +1,6 @@
 //
-//  PHPFastCGIHandler.swift
-//  IORunner/Extensions/PHPFastCGIHandler
+//  PostfixHandler.swift
+//  IORunner/Extensions/PostfixHandler
 //
 //  Created by ilker özcan on 10/08/16.
 //
@@ -10,16 +10,16 @@ import Foundation
 import IOIni
 import IORunnerExtension
 
-public class PHPFastCGIHandler: AppHandlers {
-
+public class PostfixHandler: AppHandlers {
+	
 	private var processStatus: [Int] = [Int]()
 	private var checkingFrequency: Int = 60
 #if swift(>=3)
 	private var lastCheckDate: Date?
 #endif
-
+	
 	public required init(logger: Logger, moduleConfig: Section?) {
-
+		
 		super.init(logger: logger, moduleConfig: moduleConfig)
 		
 		if let currentProcessFrequency = moduleConfig?["ProcessFrequency"] {
@@ -30,15 +30,15 @@ public class PHPFastCGIHandler: AppHandlers {
 			}
 		}
 	}
-
+	
 	public override func forStart() {
 		
-		if(!self.checkPHPFPMProcess()) {
+		if(!self.checkPostfixProcess()) {
 			
-			self.restartPHPFPM()
+			self.restartPostfix()
 		}
 	}
-
+	
 	public override func inLoop() {
 		
 	#if swift(>=3)
@@ -50,18 +50,19 @@ public class PHPFastCGIHandler: AppHandlers {
 				
 			if(lastCheckDif >= self.checkingFrequency) {
 					
-				if(!self.checkPHPFPMProcess()) {
+				if(!self.checkPostfixProcess()) {
 						
-					self.restartPHPFPM()
+					self.restartPostfix()
 				}
 			}
 		}
 	#endif
 	}
-
-	private func checkPHPFPMProcess() -> Bool {
+	
+	private func checkPostfixProcess() -> Bool {
 		
 		if let currentProcessName = moduleConfig?["ProcessName"] {
+			
 		#if swift(>=3)
 			self.processStatus = self.checkProcess(processName: currentProcessName)
 			self.lastCheckDate = Date()
@@ -69,7 +70,7 @@ public class PHPFastCGIHandler: AppHandlers {
 				return true
 			}else{
 					
-				self.logger.writeLog(level: Logger.LogLevels.ERROR, message: "Warning Process PHP-FPM does not working!")
+				self.logger.writeLog(level: Logger.LogLevels.ERROR, message: "Warning Process POSTFIX does not working!")
 				return false
 			}
 		#endif
@@ -78,17 +79,17 @@ public class PHPFastCGIHandler: AppHandlers {
 		return true
 	}
 	
-	private func restartPHPFPM() {
+	private func restartPostfix() {
 	#if swift(>=3)
-		self.logger.writeLog(level: Logger.LogLevels.ERROR, message: "Restarting PHP-FPM ...")
-			
+		self.logger.writeLog(level: Logger.LogLevels.ERROR, message: "Restarting POSTFIX ...")
+		
 		if let processStopCommand = moduleConfig?["ProcessStopCommand"] {
-				
+		
 			self.executeTask(command: processStopCommand)
 		}
-			
+		
 		if let processStartCommand = moduleConfig?["ProcessStartCommand"] {
-				
+			
 			self.executeTask(command: processStartCommand)
 		}
 	#endif

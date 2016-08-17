@@ -32,8 +32,15 @@ public class AppHandlers {
 		
 		let task = Task()
 		task.launchPath = "/usr/bin/pgrep"
-		task.arguments = [processName]
 		
+		var processArguments = [String]()
+		let splittedProcName = processName.characters.split(separator: " ").map(String.init)
+		
+		for procArg in splittedProcName {
+			processArguments.append(procArg)
+		}
+		
+		task.arguments = processArguments
 		let pipe = Pipe()
 		task.standardOutput = pipe
 		task.launch()
@@ -56,6 +63,31 @@ public class AppHandlers {
 		}
 		
 		return retval
+	}
+	
+	public func executeTask(command: String) {
+		
+		let commandWithArgs = command.characters.split(separator: " ")
+				
+		if(commandWithArgs.count > 0) {
+					
+			let task = Task()
+			task.launchPath = String(commandWithArgs[0])
+					
+			var taskArgs = [String]()
+			var loopIdx = 0
+			for argument in commandWithArgs {
+						
+				if(loopIdx > 0) {
+							
+					taskArgs.append(String(argument))
+				}
+						
+				loopIdx += 1
+			}
+					
+			task.launch()
+		}
 	}
 	
 #endif

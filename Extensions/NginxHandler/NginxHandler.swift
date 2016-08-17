@@ -79,43 +79,17 @@ public class NginxHandler: AppHandlers {
 	}
 	
 	private func restartNginx() {
-		
+	#if swift(>=3)
 		self.logger.writeLog(level: Logger.LogLevels.ERROR, message: "Restarting NGINX ...")
-	
-	#if swift(>=3)
-		executeTask(command: "Stop")
-		executeTask(command: "Start")
-	#endif
-	}
-	
-	private func executeTask(command: String) {
-	
-	#if swift(>=3)
-		
-		let commandName = "Process\(command)Command"
-		if let processCommand = moduleConfig?[commandName] {
 			
-			let commandWithArgs = processCommand.characters.split(separator: " ")
+		if let processStopCommand = moduleConfig?["ProcessStopCommand"] {
+				
+			self.executeTask(command: processStopCommand)
+		}
 			
-			if(commandWithArgs.count > 0) {
+		if let processStartCommand = moduleConfig?["ProcessStartCommand"] {
 				
-				let task = Task()
-				task.launchPath = String(commandWithArgs[0])
-				
-				var taskArgs = [String]()
-				var loopIdx = 0
-				for argument in commandWithArgs {
-					
-					if(loopIdx > 0) {
-						
-						taskArgs.append(String(argument))
-					}
-					
-					loopIdx += 1
-				}
-				
-				task.launch()
-			}
+			self.executeTask(command: processStartCommand)
 		}
 	#endif
 	}
