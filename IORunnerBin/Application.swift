@@ -240,19 +240,17 @@ internal final class Application {
 			AppExit.Exit(true, status: AppExit.EXIT_STATUS.SUCCESS)
 		#endif
 		}else{
-			
-			self.mainGUI = GUIWidgets() { (action) in
+		
+		#if swift(>=3)
+			if(appArguments.keepalive){
 				
-				#if swift(>=3)
-					
-					self.setGuiAction(action: action)
-				#elseif swift(>=2.2) && os(OSX)
-					
-					self.setGuiAction(action)
-				#endif
-				}
-			inGuiLoop = true
-			onGUI()
+				self.startHandlers(isChildProcess: true)
+			}else{
+				self.startGUI()
+			}
+		#else
+			self.startGUI()
+		#endif
 		}
 		
 	#if swift(>=3)
@@ -264,7 +262,23 @@ internal final class Application {
 	#endif
 		logger.closeLogFile()
 	}
-	
+
+	private func startGUI() {
+		
+		self.mainGUI = GUIWidgets() { (action) in
+			
+			#if swift(>=3)
+				
+				self.setGuiAction(action: action)
+			#elseif swift(>=2.2) && os(OSX)
+				
+				self.setGuiAction(action)
+			#endif
+		}
+		inGuiLoop = true
+		onGUI()
+	}
+
 	private func startHandlers(isChildProcess: Bool) {
 		
 		let daemonize: Int

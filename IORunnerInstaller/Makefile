@@ -1,11 +1,9 @@
 # Makefile for IORunnerInstaller
 
-$(MODULE_NAME)Installer_Darwin_CC = clang
-$(MODULE_NAME)Installer_Linux_CC = clang
-$(MODULE_NAME)Installer_CC = $($(MODULE_NAME)Installer_$(OS)_CC)
+$(MODULE_NAME)Installer_CC = clang
 
 $(MODULE_NAME)Installer_Defines = -DBUILD_OS_$(OS)=1 -DAPP_NAME=\"$(MODULE_NAME)\" -DAPP_PACKAGE_NAME=\"$(MODULE_NAME)\" \
-	-DAPP_VERSION=\"1.0.0\" -DINSTALLER_PACKAGE_NAME=\"$(MODULE_NAME)Installer\"
+	-DAPP_VERSION=\"1.0.0\" -DINSTALLER_PACKAGE_NAME=\"$(MODULE_NAME)Installer\" -DDARWIN_SERVICE_NAME=\"com.ilkerozcan.iorunner.plist\"
 
 $(MODULE_NAME)Installer_Darwin_Paths = -I$(SOURCE_ROOT_DIR)/$(MODULE_NAME)Installer
 $(MODULE_NAME)Installer_Linux_Paths = -I$(SOURCE_ROOT_DIR)/$(MODULE_NAME)Installer -I/usr/include -L/usr/lib -L/lib/x86_64-linux-gnu -I/usr/include/x86_64-linux-gnu

@@ -11,6 +11,7 @@
 #include "IOAssets.h"
 
 #define UNZIP_COMMAND "/usr/bin/unzip -qq -o %s -d %s"
+#define DARWIN_SERVICE_FILE RUNNER_DARWIN_SERVICE_PATH DARWIN_SERVICE_NAME
 
 EXTLD(InstallData)
 EXTLD(InstallConfig)
@@ -61,7 +62,7 @@ static void generateConfigFile(IOString *etcDir, IOString *logDir, IOString *run
 	configFile->release(configFile);
 }
 
-static void generateBashScript(IOString *installDir) {
+static void generateBashScript(IOString *installDir, IOString *binDir) {
 	
 	size_t lastCharacterIdx = installDir->length - 1;
 	IOString *lastCharacter = installDir->subString(installDir, lastCharacterIdx, 1);
@@ -79,7 +80,7 @@ static void generateBashScript(IOString *installDir) {
 	
 	lastCharacter->release(lastCharacter);
 	
-	IOString *shortcutFile = INIT_STRING(installRealPath->value);
+	IOString *shortcutFile = INIT_STRING(binDir->value);
 	shortcutFile->appendByPathComponent(shortcutFile, APP_PACKAGE_NAME);
 	FILE *appShortcut = fopen(shortcutFile->value, "w");
 	if(appShortcut) {
@@ -100,6 +101,7 @@ static void generateBashScript(IOString *installDir) {
 		
 		fclose(appShortcut);
 		destinationPath = INIT_STRING("/usr/local/bin/");
+		destinationPath->append(destinationPath, APP_PACKAGE_NAME);
 		copyResult = copyFile(shortcutFile, destinationPath);
 	}
 	
@@ -164,6 +166,82 @@ static void updateFilePermissions(IODirectory *dirFiles, const char* mode) {
 	
 	dirFiles->release(dirFiles);
 }
+
+#ifdef BUILD_OS_Darwin
+static void generateService(IOString *installDir, IOString *etcDir) {
+	
+	size_t lastCharacterIdx = installDir->length - 1;
+	IOString *lastCharacter = installDir->subString(installDir, lastCharacterIdx, 1);
+	IOString *installRealPath = NULL;
+	IOString *destinationPath = NULL;
+	int copyResult = -1;
+	
+	if(lastCharacter->isEqualToString(lastCharacter, "/") == TRUE) {
+		
+		installRealPath = installDir->subString(installDir, 0, lastCharacterIdx);
+	}else{
+		
+		installRealPath = INIT_STRING(installDir->value);
+	}
+	
+	lastCharacter->release(lastCharacter);
+	
+	IOString *shortcutFile = INIT_STRING(etcDir->value);
+	shortcutFile->appendByPathComponent(shortcutFile, DARWIN_SERVICE_NAME);
+	FILE *appShortcut = fopen(shortcutFile->value, "w");
+	if(appShortcut) {
+		
+		size_t shortcutFileContentLength = strlen(RUNNER_DARWIN_SERVICE) + 1 + (installRealPath->length * 2);
+		char *shortcutFileContent = malloc(shortcutFileContentLength);
+		if(shortcutFileContent) {
+			
+			memset(shortcutFileContent, 0, shortcutFileContentLength);
+			sprintf(shortcutFileContent, RUNNER_DARWIN_SERVICE, installRealPath->value, installRealPath->value);
+			fputs(shortcutFileContent, appShortcut);
+			free(shortcutFileContent);
+			
+			char mode[] = "0644";
+			long i = strtol(mode, 0, 8);
+			IO_UNUSED chmod(shortcutFile->value ,i);
+			
+			const char *chownCommandSchema = "chown root %s";
+			size_t chownCommandLen = strlen(chownCommandSchema) + shortcutFile->length + 1;
+			char *chownCommand = malloc(chownCommandLen);
+			memset(chownCommand, 0, chownCommandLen);
+			sprintf(chownCommand, chownCommandSchema, shortcutFile->value);
+			IO_UNUSED system(chownCommand);
+			free(chownCommand);
+		}
+		
+		fclose(appShortcut);
+		destinationPath = INIT_STRING(RUNNER_DARWIN_SERVICE_PATH);
+		destinationPath->append(destinationPath, DARWIN_SERVICE_NAME);
+		copyResult = copyFile(shortcutFile, destinationPath);
+	}
+	
+	if(copyResult == -1) {
+		
+		if(destinationPath != NULL) {
+			printf("\t[FAIL]\n\nAn error occured for creating system service file. Please run\ncp %s %s\ncommand as administrator.\nInstall complete with errors!\n", shortcutFile->value, destinationPath->value);
+		}else{
+			printf("\t[FAIL]\n\nAn error occured for creating system service file.\nInstall complete with errors!\n");
+		}
+	}else{
+		printf("\t[OK]\n\nInstall complete.\n");
+	}
+	
+	if(destinationPath != NULL) {
+		destinationPath->release(destinationPath);
+	}
+	
+	shortcutFile->release(shortcutFile);
+	installRealPath->release(installRealPath);
+}
+#elif defined BUILD_OS_Linux
+static void generateService(IOString *installDir, IOString *etcDir) {}
+#else
+static void generateService(IOString *installDir, IOString *etcDir) {}
+#endif
 
 int main(int argc, const char *argv[]) {
 	
@@ -300,7 +378,6 @@ int main(int argc, const char *argv[]) {
 					MOVE_DIR(sourceDir, tmpDestinationPath);
 					tmpDestinationPath->release(tmpDestinationPath);
 					sourceDir->release(sourceDir);
-				
 				}
 			}
 		
@@ -335,29 +412,37 @@ int main(int argc, const char *argv[]) {
 			IOString *extensionDir = INIT_STRING(installPath->value);
 			extensionDir->appendByPathComponent(extensionDir, "extensions");
 		
+			IOString *binPath = INIT_STRING(installPath->value);
+			binPath->appendByPathComponent(binPath, "bin");
+			
 			printf("\nGenerating config file ...");
 			generateConfigFile(etcDir, logDir, runDir, extensionDir);
 			printf("\t[OK]\n");
 			printf("Generating shortcut file ...");
-			generateBashScript(installPath);
+			generateBashScript(installPath, binPath);
+			printf("Generating system service file ...");
+			generateService(installPath, etcDir);
 			
 			IODirectory *etcIODir = INIT_DIRECTORY(etcDir);
 			updateFilePermissions(etcIODir, "0644");
 			
-			IOString *binPath = INIT_STRING(installPath->value);
-			binPath->appendByPathComponent(binPath, "bin");
 			IODirectory *binIODir = INIT_DIRECTORY(binPath);
 			updateFilePermissions(binIODir, "0755");
 			
 			IOString *libIOPath = INIT_STRING(installPath->value);
 			libIOPath->appendByPathComponent(libIOPath, "lib");
 			IODirectory *libIODir = INIT_DIRECTORY(libIOPath);
-			updateFilePermissions(libIODir, "0644");
+			updateFilePermissions(libIODir, "0755");
 			
 			IOString *enabledExtensionDir = INIT_STRING(extensionDir->value);
 			enabledExtensionDir->appendByPathComponent(enabledExtensionDir, "available");
 			IODirectory *enabledExtensionIODir = INIT_DIRECTORY(enabledExtensionDir);
-			updateFilePermissions(enabledExtensionIODir, "0644");
+			updateFilePermissions(enabledExtensionIODir, "0755");
+			
+			IOString *frameworksDirPath = INIT_STRING(installPath->value);
+			frameworksDirPath->appendByPathComponent(frameworksDirPath, "frameworks");
+			IODirectory *frameworksDirectory = INIT_DIRECTORY(frameworksDirPath);
+			updateFilePermissions(frameworksDirectory, "0755");
 			
 			extensionDir->release(extensionDir);
 			varDir->release(varDir);
@@ -379,8 +464,29 @@ int main(int argc, const char *argv[]) {
 	
 		return 0;
 	}else{
-		// uninstall
-		printf("Process response: \n%s.\n.", processResponse->value);
+		
+		IOStringBucket *installedPaths = processResponse->split(processResponse, "\n");
+		if(installedPaths->count > 0) {
+			
+			IOString *installedPathStr = installedPaths->get(installedPaths, 0);
+			IOString *installedPathStrCopy = INIT_STRING(installedPathStr->value);
+			installedPaths->release(installedPaths);
+			IODirectory *installedPathDir = INIT_DIRECTORY(installedPathStrCopy);
+			Bool uninstallResult = deleteDirectory(installedPathDir);
+			if(uninstallResult == TRUE) {
+				
+				unlink(PROCESS_MAIN_COMMAND);
+				unlink(DARWIN_SERVICE_FILE);
+				printf("Application uninstalled.\nPlease re-run installer.");
+			}else{
+				printf("An error occured when uninstalling %s\n", APP_NAME);
+			}
+			
+			installedPathDir->release(installedPathDir);
+		}else{
+			printf("An error occured when uninstalling %s\n", APP_NAME);
+		}
+		
 		processResponse->release(processResponse);
 		return 0;
 	}

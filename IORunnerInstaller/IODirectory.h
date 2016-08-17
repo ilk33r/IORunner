@@ -117,4 +117,6 @@ unsigned char copyDirectory_ex(IODirectory *sourceDirectory, IOString *destinati
 	(retVal);															\
 })
 
+unsigned char deleteDirectory(IODirectory *directory);
+
 #endif /* IODirectory_h */

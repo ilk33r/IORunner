@@ -80,6 +80,24 @@ IOString *IOString_subString(IOString *self_pp, size_t start, size_t length) {
 	return retval;
 }
 
+IOStringBucket *IOString_split(IOString *self_pp, const char *split) {
+	
+	IOString *inputStringCopy = INIT_STRING(self_pp->value);
+	char *line = "";
+	IOStringBucket *retval = INIT_STRING_ARRAY();
+	
+	line = strtok(inputStringCopy->value, split);
+	while( line != NULL ) {
+		
+		STRING_ARRAY_PUSH_CHAR(retval, line);
+		line = strtok(NULL, split);
+	}
+	
+	inputStringCopy->release(inputStringCopy);
+	
+	return retval;
+}
+
 unsigned char IOString_isEqualToString(IOString *self_pp, const char *equality) {
 	
 	unsigned char retVal = 0;

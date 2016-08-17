@@ -18,6 +18,7 @@
 #include <sys/stat.h>
 
 typedef struct _IOString IOString;
+typedef struct _IOStringBucket IOStringBucket;
 
 struct _IOString {
 	
@@ -28,6 +29,7 @@ struct _IOString {
 	void (*append)(IOString *, const char *);
 	void (*appendByPathComponent)(IOString *, const char *);
 	IOString *(*subString)(IOString *, size_t, size_t);
+	IOStringBucket *(*split)(IOString *, const char *);
 	unsigned char (*isEqualToString)(IOString *, const char *);
 };
 
@@ -35,6 +37,7 @@ extern void IOString_release(IOString *self_pp);
 extern void IOString_append(IOString *self_pp, const char *appendString);
 extern void IOString_appendByPathComponent(IOString *self_pp, const char *appendString);
 extern IOString *IOString_subString(IOString *self_pp, size_t start, size_t length);
+extern IOStringBucket *IOString_split(IOString *self_pp, const char *splitCharacter);
 extern unsigned char IOString_isEqualToString(IOString *self_pp, const char *equality);
 
 #define INIT_STRING(constCharP) ({												\
@@ -50,11 +53,10 @@ extern unsigned char IOString_isEqualToString(IOString *self_pp, const char *equ
 	retVal->append = &IOString_append;											\
 	retVal->appendByPathComponent = &IOString_appendByPathComponent;			\
 	retVal->subString = &IOString_subString;									\
+	retVal->split = &IOString_split;											\
 	retVal->isEqualToString = &IOString_isEqualToString;						\
 	(retVal);																	\
 })
-
-typedef struct _IOStringBucket IOStringBucket;
 
 struct _IOStringBucket {
 	

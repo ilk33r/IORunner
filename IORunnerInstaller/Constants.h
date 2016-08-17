@@ -36,4 +36,12 @@
 #	define PROCESS_IS_INSTALLED_COMMAND "/usr/local/bin/" APP_PACKAGE_NAME " --isInstalled"
 #endif
 
+#ifndef PROCESS_MAIN_COMMAND
+#	define PROCESS_MAIN_COMMAND "/usr/local/bin/" APP_PACKAGE_NAME
+#endif
+
+#ifndef DARWIN_SERVICE_NAME
+#	define DARWIN_SERVICE_NAME "com.ilkerozcan.ioapp"
+#endif
+
 #endif /* Constants_h */

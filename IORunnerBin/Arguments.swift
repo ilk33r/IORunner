@@ -24,7 +24,8 @@ internal struct Arguments {
 		["--buildinfo", "-bi", "buildinfo", "Bool", "Display build info", "2"],
 		["--configdump", "-cd", "configdump", "Bool", "Display all configuration", "2"],
 		["--onlyusearguments", "-ua", "usetextbased", "Bool", "Only use arguments", "1"],
-		["--signal", "-s", "signalname", "String", "If only using arguments send signal.\n(start|stop|restart|force-stop)\n", "2"]
+		["--signal", "-s", "signalname", "String", "If only using arguments send signal.\n\t\t\t\t\t(start|stop|restart|force-stop)", "2"],
+		["--keepalive", "-ka", "keepalive", "Bool", "Do not exit after create the child process\n", "2"]
 	]
 	
 	#if os(OSX)
@@ -50,6 +51,7 @@ internal struct Arguments {
 	var configDumpMode: Bool = false
 	var textMode: Bool = false
 	var signalName: String?
+	var keepalive: Bool = false
 	
 	init(appPath: String) {
 		
@@ -95,6 +97,9 @@ internal struct Arguments {
 			break
 		case "usetextbased":
 			self.textMode = true
+			break
+		case "keepalive":
+			self.keepalive = true
 			break
 		default:
 			break

@@ -153,6 +153,51 @@ unsigned char copyDirectory_ex(IODirectory *sourceDirectory, IOString *destinati
 	return retVal;
 }
 
+unsigned char deleteDirectory(IODirectory *sourceDirectory) {
+	
+	unsigned char retVal = 0;
+	sourceDirectory->generateContentlist(sourceDirectory);
+	
+	size_t i = 0;
+	for (i = 0; i < sourceDirectory->fileCount; i++) {
+		
+		IOString *sourceFileName = sourceDirectory->contents->get(sourceDirectory->contents, i);
+		if(sourceFileName->value == NULL) {
+			continue;
+		}
+		
+		if(sourceFileName->isEqualToString(sourceFileName, "..") == TRUE) {
+			continue;
+		}
+		
+		if(sourceFileName->isEqualToString(sourceFileName, ".") == TRUE) {
+			continue;
+		}
+		
+		if(IS_FILE(sourceDirectory, i) || IS_LINK(sourceDirectory, i)) {
+			
+			IOString *sourceFilePath = INIT_STRING(sourceDirectory->path->value);
+			sourceFilePath->appendByPathComponent(sourceFilePath, sourceFileName->value);
+			IO_UNUSED unlink(sourceFilePath->value);
+			sourceFilePath->release(sourceFilePath);
+			
+		}else if (IS_DIR(sourceDirectory, i)) {
+			
+			IOString *sourceDirPath = INIT_STRING(sourceDirectory->path->value);
+			sourceDirPath->appendByPathComponent(sourceDirPath, sourceFileName->value);
+			IODirectory *currentSourceDirectory = INIT_DIRECTORY(sourceDirPath);
+			IO_UNUSED deleteDirectory(currentSourceDirectory);
+			IO_UNUSED rmdir(sourceFileName->value);
+			currentSourceDirectory->release(currentSourceDirectory);
+		}
+	}
+	
+	IO_UNUSED rmdir(sourceDirectory->path->value);
+	
+	retVal = 1;
+	return retVal;
+}
+
 int copyFile(IOString *source, IOString *destination) {
 	
 	int input, output;

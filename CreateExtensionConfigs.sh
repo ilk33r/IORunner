@@ -6,29 +6,45 @@
 #  Created by ilker özcan on 11/08/16.
 #
 
-DIRECTORY_LIST=$(ls -m ./Extensions/)
-
-IFS=', ' read -r -a EXTENSIONS_ARR <<< "$DIRECTORY_LIST";
-FILESCOUNT=${#EXTENSIONS_ARR[@]}
+# DIRECTORY_LIST=$(./Extensions/*)
+# IFS=', ' read -r -a EXTENSIONS_ARR <<< "$DIRECTORY_LIST";
+# FILESCOUNT=${#DIRECTORY_LIST[@]}
 ALL_CONFIG_FILES_PATH=""
 
 IDX=0
+for CURRENT_EXT_DIR in ./Extensions/*; do
 
-for ((i=0; i<$FILESCOUNT; i++)); do
-
-	CURRENT_EXT_DIR="./Extensions/${EXTENSIONS_ARR[$i]}"
 	if [ -d "${CURRENT_EXT_DIR}" ]; then
 
+		echo "Reading ${CURRENT_EXT_DIR} extension config file"
 		if [ $IDX -eq 0 ]; then
 			ALL_CONFIG_FILES_PATH="${CURRENT_EXT_DIR}/Config.ini"
 		else
 			ALL_CONFIG_FILES_PATH="${ALL_CONFIG_FILES_PATH} ${CURRENT_EXT_DIR}/Config.ini"
 		fi
 
-		(( IDX++ ))
-	fi
+	(( IDX++ ))
+fi
 
 done
+
+
+#for ((i=0; i<$FILESCOUNT; i++)); do
+
+#	CURRENT_EXT_DIR="./Extensions/${DIRECTORY_LIST[$i]}"
+#	if [ -d "${CURRENT_EXT_DIR}" ]; then
+
+#		echo "Reading ${CURRENT_EXT_DIR} extension config file"
+#		if [ $IDX -eq 0 ]; then
+#			ALL_CONFIG_FILES_PATH="${CURRENT_EXT_DIR}/Config.ini"
+#		else
+#			ALL_CONFIG_FILES_PATH="${ALL_CONFIG_FILES_PATH} ${CURRENT_EXT_DIR}/Config.ini"
+#		fi
+#
+#		(( IDX++ ))
+#	fi
+
+#done
 
 rm -f ./Build/IORunnerInstallConfig
 touch ./Build/IORunnerInstallConfig
