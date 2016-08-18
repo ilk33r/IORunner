@@ -244,12 +244,82 @@ internal final class Application {
 		#if swift(>=3)
 			if(appArguments.keepalive){
 				
-				self.startHandlers(isChildProcess: true)
+				let pidStatus = worker.checkPid()
+				var startApplication = false
+				
+				if(pidStatus == -1) {
+					
+					startApplication = true
+				}else{
+					if(kill(pidStatus, 0) != 0) {
+
+						worker.deletePid()
+						startApplication = true
+					}
+				}
+				
+				if(startApplication) {
+					
+					let procPid = getpid()
+					do {
+						
+						try worker.setChildProcessPid(pid: procPid)
+						self.startHandlers(isChildProcess: true)
+						
+					} catch AppWorker.AppWorkerError.PidFileExists {
+						
+						self.logger.writeLog(level: Logger.LogLevels.MINIMAL, message: "Pid file exists.")
+					} catch AppWorker.AppWorkerError.PidFileIsNotWritable {
+						
+						self.logger.writeLog(level: Logger.LogLevels.MINIMAL, message: "Pid file is not writable.")
+					} catch _ {
+						
+						self.logger.writeLog(level: Logger.LogLevels.MINIMAL, message: "An error occured for creating pid file.")
+					}
+				}
 			}else{
 				self.startGUI()
 			}
-		#else
-			self.startGUI()
+		#elseif swift(>=2.2) && os(OSX)
+			
+			if(appArguments.keepalive){
+				
+				let pidStatus = worker.checkPid()
+				var startApplication = false
+				
+				if(pidStatus == -1) {
+					
+					startApplication = true
+				}else{
+					if(kill(pidStatus, 0) != 0) {
+						
+						worker.deletePid()
+						startApplication = true
+					}
+				}
+				
+				if(startApplication) {
+					
+					let procPid = getpid()
+					do {
+						
+						try worker.setChildProcessPid(procPid)
+						self.startHandlers(true)
+						
+					} catch AppWorker.AppWorkerError.PidFileExists {
+						
+						self.logger.writeLog(Logger.LogLevels.MINIMAL, message: "Pid file exists.")
+					} catch AppWorker.AppWorkerError.PidFileIsNotWritable {
+						
+						self.logger.writeLog(Logger.LogLevels.MINIMAL, message: "Pid file is not writable.")
+					} catch _ {
+						
+						self.logger.writeLog(Logger.LogLevels.MINIMAL, message: "An error occured for creating pid file.")
+					}
+				}
+			}else{
+				self.startGUI()
+			}
 		#endif
 		}
 		
@@ -973,7 +1043,11 @@ internal final class Application {
 				#endif
 			
 					self.mainGUI.deinitPopupWidget()
+				#if swift(>=3)
 					self.mainGUI.waitPopup(waitForSecond: 1)
+				#elseif swift(>=2.2) && os(OSX)
+					self.mainGUI.waitPopup(1)
+				#endif
 					
 					let resultPopup = PopupWidget(popuptype: PopupWidget.GUIPopupTypes.SYNC_WAIT, popupContent: "Application restarted!", popupButtons: ["OK"], hasShadow: false, popupDelegate: { (selectedChoiceIdx) in
 						

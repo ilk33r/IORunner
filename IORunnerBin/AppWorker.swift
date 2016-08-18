@@ -537,7 +537,7 @@ internal final class AppWorker {
 	#endif
 	}
 	
-	private func setChildProcessPid(pid: Int32) throws {
+	func setChildProcessPid(pid: Int32) throws {
 		
 	#if swift(>=3)
 		
@@ -645,7 +645,7 @@ internal final class AppWorker {
 	#endif
 	}
 	
-	private func deletePid() {
+	func deletePid() {
 		
 	#if swift(>=3)
 

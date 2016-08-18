@@ -11,7 +11,12 @@
 #include "IOAssets.h"
 
 #define UNZIP_COMMAND "/usr/bin/unzip -qq -o %s -d %s"
-#define DARWIN_SERVICE_FILE RUNNER_DARWIN_SERVICE_PATH DARWIN_SERVICE_NAME
+
+#if IS_DARWIN == TRUE
+#	define DARWIN_SERVICE_FILE RUNNER_DARWIN_SERVICE_PATH DARWIN_SERVICE_NAME
+#elif IS_LINUX == TRUE
+#	define LINUX_SERVICE_FILE RUNNER_LINUX_SERVICE_PATH LINUX_SERVICE_NAME
+#endif
 
 EXTLD(InstallData)
 EXTLD(InstallConfig)
@@ -82,6 +87,7 @@ static void generateBashScript(IOString *installDir, IOString *binDir) {
 	
 	IOString *shortcutFile = INIT_STRING(binDir->value);
 	shortcutFile->appendByPathComponent(shortcutFile, APP_PACKAGE_NAME);
+	shortcutFile->append(shortcutFile, "_shortcut.sh");
 	FILE *appShortcut = fopen(shortcutFile->value, "w");
 	if(appShortcut) {
 		
@@ -167,7 +173,7 @@ static void updateFilePermissions(IODirectory *dirFiles, const char* mode) {
 	dirFiles->release(dirFiles);
 }
 
-#ifdef BUILD_OS_Darwin
+#if IS_DARWIN == TRUE
 static void generateService(IOString *installDir, IOString *etcDir) {
 	
 	size_t lastCharacterIdx = installDir->length - 1;
@@ -237,8 +243,77 @@ static void generateService(IOString *installDir, IOString *etcDir) {
 	shortcutFile->release(shortcutFile);
 	installRealPath->release(installRealPath);
 }
-#elif defined BUILD_OS_Linux
-static void generateService(IOString *installDir, IOString *etcDir) {}
+#elif IS_LINUX == TRUE
+static void generateService(IOString *installDir, IOString *etcDir) {
+
+	size_t lastCharacterIdx = installDir->length - 1;
+	IOString *lastCharacter = installDir->subString(installDir, lastCharacterIdx, 1);
+	IOString *installRealPath = NULL;
+	IOString *destinationPath = NULL;
+	int copyResult = -1;
+	
+	if(lastCharacter->isEqualToString(lastCharacter, "/") == TRUE) {
+		
+		installRealPath = installDir->subString(installDir, 0, lastCharacterIdx);
+	}else{
+		
+		installRealPath = INIT_STRING(installDir->value);
+	}
+	
+	lastCharacter->release(lastCharacter);
+	
+	IOString *shortcutFile = INIT_STRING(etcDir->value);
+	shortcutFile->appendByPathComponent(shortcutFile, LINUX_SERVICE_NAME);
+	shortcutFile->append(shortcutFile, ".init_d");
+	FILE *appShortcut = fopen(shortcutFile->value, "w");
+	if(appShortcut) {
+		
+		size_t shortcutFileContentLength = strlen(RUNNER_LINUX_SERVICE) + 1 + installRealPath->length;
+		char *shortcutFileContent = malloc(shortcutFileContentLength);
+		if(shortcutFileContent) {
+			
+			memset(shortcutFileContent, 0, shortcutFileContentLength);
+			sprintf(shortcutFileContent, RUNNER_LINUX_SERVICE, installRealPath->value);
+			fputs(shortcutFileContent, appShortcut);
+			free(shortcutFileContent);
+			
+			char mode[] = "0755";
+			long i = strtol(mode, 0, 8);
+			IO_UNUSED chmod(shortcutFile->value ,i);
+			
+			const char *chownCommandSchema = "chown root %s";
+			size_t chownCommandLen = strlen(chownCommandSchema) + shortcutFile->length + 1;
+			char *chownCommand = malloc(chownCommandLen);
+			memset(chownCommand, 0, chownCommandLen);
+			sprintf(chownCommand, chownCommandSchema, shortcutFile->value);
+			IO_UNUSED system(chownCommand);
+			free(chownCommand);
+		}
+		
+		fclose(appShortcut);
+		destinationPath = INIT_STRING(RUNNER_LINUX_SERVICE_PATH);
+		destinationPath->append(destinationPath, LINUX_SERVICE_NAME);
+		copyResult = copyFile(shortcutFile, destinationPath);
+	}
+	
+	if(copyResult == -1) {
+		
+		if(destinationPath != NULL) {
+			printf("\t[FAIL]\n\nAn error occured for creating system service file. Please run\ncp %s %s\ncommand as administrator.\nInstall complete with errors!\n", shortcutFile->value, destinationPath->value);
+		}else{
+			printf("\t[FAIL]\n\nAn error occured for creating system service file.\nInstall complete with errors!\n");
+		}
+	}else{
+		printf("\t[OK]\n\nInstall complete.\n");
+	}
+	
+	if(destinationPath != NULL) {
+		destinationPath->release(destinationPath);
+	}
+	
+	shortcutFile->release(shortcutFile);
+	installRealPath->release(installRealPath);
+}
 #else
 static void generateService(IOString *installDir, IOString *etcDir) {}
 #endif
@@ -326,7 +401,7 @@ int main(int argc, const char *argv[]) {
 		memset(unzipCommand, 0, unzipCommadLen);
 		sprintf(unzipCommand, UNZIP_COMMAND, zipFilePath->value, installPath->value);
 		int processResult = system(unzipCommand);
-		sleep(2);
+		sleep(4);
 		free(unzipCommand);
 		long writableChmode = strtol("0777", 0, 8);
 
@@ -350,8 +425,6 @@ int main(int argc, const char *argv[]) {
 					continue;
 				}
 				
-				
-			
 				unsigned char isExtensionsDir = currentDir->isEqualToString(currentDir, "extensions");
 				if(isExtensionsDir == TRUE) {
 				
@@ -365,7 +438,8 @@ int main(int argc, const char *argv[]) {
 					tmpDestinationPath->appendByPathComponent(tmpDestinationPath, "available");
 					IO_UNUSED mkdir(tmpDestinationPath->value, 0777);
 					IO_UNUSED chmod(tmpDestinationPath->value, writableChmode);
-					MOVE_DIR(sourceDir, tmpDestinationPath);
+// MOVE_DIR(sourceDir, tmpDestinationPath);
+COPY_DIR(sourceDir, tmpDestinationPath);
 					tmpDestinationPath->release(tmpDestinationPath);
 					sourceDir->release(sourceDir);
 				
@@ -375,7 +449,8 @@ int main(int argc, const char *argv[]) {
 					IODirectory *sourceDir = INIT_DIRECTORY(currentDirPath);
 					IOString *tmpDestinationPath = INIT_STRING(installPath->value);
 					tmpDestinationPath->appendByPathComponent(tmpDestinationPath, currentDir->value);
-					MOVE_DIR(sourceDir, tmpDestinationPath);
+// MOVE_DIR(sourceDir, tmpDestinationPath);
+COPY_DIR(sourceDir, tmpDestinationPath);
 					tmpDestinationPath->release(tmpDestinationPath);
 					sourceDir->release(sourceDir);
 				}
@@ -476,7 +551,11 @@ int main(int argc, const char *argv[]) {
 			if(uninstallResult == TRUE) {
 				
 				unlink(PROCESS_MAIN_COMMAND);
+				#if IS_DARWIN == TRUE
 				unlink(DARWIN_SERVICE_FILE);
+				#elif IS_LINUX == TRUE
+				unlink(LINUX_SERVICE_FILE);
+				#endif
 				printf("Application uninstalled.\nPlease re-run installer.");
 			}else{
 				printf("An error occured when uninstalling %s\n", APP_NAME);

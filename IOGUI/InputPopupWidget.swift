@@ -222,8 +222,13 @@ public struct InputPopupWidget {
 		#if os(OSX)
 			wborder(currentButtonWindow, 1, 1, 1, 1, 1, 1, 1, 1)
 		#endif
+		#if swift(>=3)
 			AddStringToWindow(paddingString: buttonData, textWidth: buttonWidth, textStartSpace: buttonWidth, window: currentButtonWindow!)
 			AddStringToWindow(normalString: "\n", window: currentButtonWindow!)
+		#elseif swift(>=2.2) && os(OSX)
+			AddStringToWindow(paddingString: buttonData, textWidth: buttonWidth, textStartSpace: buttonWidth, window: currentButtonWindow)
+			AddStringToWindow(normalString: "\n", window: currentButtonWindow)
+		#endif
 				
 			if(currentSelectedButtonIdx == btnIdx) {
 				

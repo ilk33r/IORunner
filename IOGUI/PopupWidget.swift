@@ -198,8 +198,13 @@ public struct PopupWidget {
 			#else
 				wbkgd(currentButtonShadowWindow, UInt32(COLOR_PAIR(WidgetUIColor.Background.rawValue)))
 			#endif
+			#if swift(>=3)
 				AddStringToWindow(paddingString: "", textWidth: Int(buttonSizes.0) - 1, textStartSpace: 0, window: currentButtonShadowWindow!)
 				AddStringToWindow(normalString: "\n", window: currentButtonShadowWindow!)
+			#elseif swift(>=2.2) && os(OSX)
+				AddStringToWindow(paddingString: "", textWidth: Int(buttonSizes.0) - 1, textStartSpace: 0, window: currentButtonShadowWindow)
+				AddStringToWindow(normalString: "\n", window: currentButtonShadowWindow)
+			#endif
 				touchwin(currentButtonShadowWindow)
 				wrefresh(currentButtonShadowWindow)
 				
@@ -216,8 +221,13 @@ public struct PopupWidget {
 			#if os(OSX)
 				wborder(currentButtonWindow, 1, 1, 1, 1, 1, 1, 1, 1)
 			#endif
+			#if swift(>=3)
 				AddStringToWindow(paddingString: buttonData, textWidth: buttonWidth, textStartSpace: buttonWidth, window: currentButtonWindow!)
 				AddStringToWindow(normalString: "\n", window: currentButtonWindow!)
+			#elseif swift(>=2.2) && os(OSX)
+				AddStringToWindow(paddingString: buttonData, textWidth: buttonWidth, textStartSpace: buttonWidth, window: currentButtonWindow)
+				AddStringToWindow(normalString: "\n", window: currentButtonWindow)
+			#endif
 				
 				if(currentSelectedButtonIdx == btnIdx) {
 					

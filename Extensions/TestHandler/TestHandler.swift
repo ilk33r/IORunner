@@ -12,10 +12,16 @@ import IORunnerExtension
 
 public class TestHandler: AppHandlers {
 	
+#if swift(>=3.0)
+	
 #if os(Linux)
 	private var currentUnixTime = NSDate().timeIntervalSince1970
 #else
 	private var currentUnixTime = Date().timeIntervalSince1970
+#endif
+	
+#elseif swift(>=2.2) && os(OSX)
+	private var currentUnixTime = NSDate().timeIntervalSince1970
 #endif
 	
 	public required init(logger: Logger, moduleConfig: Section?) {

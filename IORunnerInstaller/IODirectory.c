@@ -200,6 +200,36 @@ unsigned char deleteDirectory(IODirectory *sourceDirectory) {
 
 int copyFile(IOString *source, IOString *destination) {
 	
+	/*
+	struct stat st = {0};
+	
+	if (stat(source->value, &st) == -1) {
+		
+		return -1;
+	}else{
+		
+		FILE *destinationFD = fopen(destination->value, "w");
+		if(destinationFD != NULL) {
+			
+			FILE *sourceFileFD = fopen(source->value, "r");
+			fseek(sourceFileFD, 0L, SEEK_END);
+			size_t sourceSize = ftell(sourceFileFD);
+			rewind(sourceFileFD);
+			size_t i = 0;
+			for (i = 0; i < sourceSize; i++) {
+				
+				fputc(fgetc(sourceFileFD), destinationFD);
+			}
+			
+			fclose(sourceFileFD);
+			fclose(destinationFD);
+			return 0;
+			
+		}else{
+			return -1;
+		}
+	}*/
+	
 	int input, output;
 	if ((input = open(source->value, O_RDONLY)) == -1)
 	{

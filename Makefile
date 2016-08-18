@@ -90,7 +90,7 @@ Copy_Darwin_dependencies:
 	@cp -r $(SWIFT_libs)/libswiftFoundation.dylib $(BUILD_ROOT_DIR)/lib
 	@cp -r $(SWIFT_libs)/libswiftIOKit.dylib $(BUILD_ROOT_DIR)/lib
 	@cp -r $(SWIFT_libs)/libswiftObjectiveC.dylib $(BUILD_ROOT_DIR)/lib
-	@cp -r $(SWIFT_libs)/libswiftXPC.dylib $(BUILD_ROOT_DIR)/lib
+	@cp -r $(SWIFT_libs)/libswiftXPC.dylib $(BUILD_ROOT_DIR)/lib 2>/dev/null || :
 	
 Copy_Linux_dependencies:
 	@cp -r $(SWIFT_libs)/libswiftCore.so $(BUILD_ROOT_DIR)/lib

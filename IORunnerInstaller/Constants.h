@@ -44,4 +44,8 @@
 #	define DARWIN_SERVICE_NAME "com.ilkerozcan.ioapp"
 #endif
 
+#ifndef LINUX_SERVICE_NAME
+#	define LINUX_SERVICE_NAME APP_PACKAGE_NAME
+#endif
+
 #endif /* Constants_h */
