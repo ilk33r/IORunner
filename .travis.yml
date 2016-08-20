@@ -1,14 +1,23 @@
 os:
-- linux
-- osx
+  - linux
+  - osx
 language: generic
-sudo: required
-dist: trusty
-osx_image: xcode8.0
 env:
-- SWIFT_VERSION=swift-3.0-PREVIEW-6
+  - SWIFT_VERSION=swift-3.0-PREVIEW-4
+matrix:
+  include:
+    - os: linux
+      dist: trusty
+      sudo: required
+      env: SWIFT_BUILD=Ubuntu14
+    - os: linux
+      dist: wily
+      sudo: required
+      env: SWIFT_BUILD=Ubuntu15
+    - os: osx
+      osx_image: xcode8
+      env: SWIFT_BUILD=OSX
 install:
-- mkdir swift
-- curl https://swift.org/builds/swift-3.0-preview-6/ubuntu1404/swift-3.0-PREVIEW-6/swift-3.0-PREVIEW-6-ubuntu14.04.tar.gz -s | tar xz -C swift &> /dev/null
+  - ./Travis/BeforeInstall.sh
 script:
-- env PATH=$(pwd)/swift/$SWIFT_VERSION-ubuntu14.04/usr/bin:$PATH make
+  - make dist
