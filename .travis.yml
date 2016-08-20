@@ -11,3 +11,4 @@ install:
   - ./Travis/BeforeInstall.sh
 script:
   - ./Travis/Build.sh
+  - make dist

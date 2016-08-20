@@ -9,7 +9,6 @@
 
 if [[ $TRAVIS_OS_NAME == 'linux' ]]; then
 
-	env PATH=$pwd/swift/$SWIFT_VERSION-ubuntu14.04/usr/bin:$PATH make dist
-else
-	make dist
+	export PATH=$pwd/swift/$SWIFT_VERSION-ubuntu14.04/usr/bin:$PATH
+	echo $PATH
 fi
