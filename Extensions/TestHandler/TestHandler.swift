@@ -14,19 +14,15 @@ public class TestHandler: AppHandlers {
 	
 #if swift(>=3.0)
 	
-#if os(Linux)
-	private var currentUnixTime = NSDate().timeIntervalSince1970
-#else
 	private var currentUnixTime = Date().timeIntervalSince1970
-#endif
 	
 #elseif swift(>=2.2) && os(OSX)
 	private var currentUnixTime = NSDate().timeIntervalSince1970
 #endif
 	
-	public required init(logger: Logger, moduleConfig: Section?) {
+	public required init(logger: Logger, configFilePath: String, moduleConfig: Section?) {
 		
-		super.init(logger: logger, moduleConfig: moduleConfig)
+		super.init(logger: logger, configFilePath: configFilePath, moduleConfig: moduleConfig)
 		
 		if(moduleConfig != nil) {
 		#if swift(>=3)
@@ -37,6 +33,11 @@ public class TestHandler: AppHandlers {
 			logger.writeLog(Logger.LogLevels.WARNINGS, message: "Test worker init with config \(moduleConfig)")
 		#endif
 		}
+	}
+	
+	public override func getClassName() -> String {
+		
+		return String(self)
 	}
 	
 	public override func forStart() {
@@ -63,11 +64,8 @@ public class TestHandler: AppHandlers {
 	
 	public override func inLoop() {
 		
-	#if os(Linux)
-		let uTime = NSDate().timeIntervalSince1970
-	#else
 		let uTime = Date().timeIntervalSince1970
-	#endif
+		
 		if(uTime - currentUnixTime >= 60) {
 			currentUnixTime = uTime
 			logger.writeLog(level: Logger.LogLevels.WARNINGS, message: "Test worker in loop current unix time \(uTime)!")

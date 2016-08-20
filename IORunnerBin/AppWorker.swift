@@ -104,238 +104,17 @@ internal final class AppWorker {
 			
 			if daemonize {
 				
-				var procPid = pid_t()
-				let argumets = Process.arguments
-			#if swift(>=3)
-			#if os(Linux)
-				let cArgs = UnsafeMutablePointer<maybeCChar?>.allocate(capacity: 7)
-				defer {
-					cArgs.deinitialize(count: 7)
-					cArgs.deallocate(capacity: 7)
+				var processConfig = ProcessConfigData()
+				processConfig.ProcessArgs = [Process.arguments[0], "--config", appArguments.config!, "--onlyusearguments", "--signal", "environ"]
+				processConfig.Environments = [("IO_RUNNER_SN", "child-start")]
+				
+				var procPid: pid_t! = 0
+				do {
+					
+					procPid = try SpawnCurrentProcess(logger: self.logger, configData: processConfig)
+				} catch _ {
+					throw AppWorkerError.DaemonizeFailed
 				}
-			#else
-				let cArgs = UnsafeMutablePointer<maybeCChar?>(allocatingCapacity: 7)
-				defer {
-					cArgs.deinitialize(count: 7)
-					cArgs.deallocateCapacity(7)
-				}
-			#endif
-			#else
-				
-				let cArgs = UnsafeMutablePointer<maybeCChar>.alloc(7)
-				defer {
-					cArgs.dealloc(7)
-					cArgs.destroy(7)
-				}
-			#endif
-			
-				cArgs[0] = strdup(Process.arguments[0])
-				cArgs[1] = strdup("--config")
-				cArgs[2] = strdup(appArguments.config!)
-				cArgs[3] = strdup("--onlyusearguments")
-				cArgs[4] = strdup("--signal")
-				cArgs[5] = strdup("environ")
-			#if swift(>=3)
-				
-				cArgs[6] = UnsafeMutablePointer<CChar>(nil)
-				
-			#if os(Linux)
-				var environments = ProcessInfo.processInfo().environment
-			#else
-				var environments = ProcessInfo().environment
-			#endif
-				environments["IO_RUNNER_SN"] = "child-start"
-			#if os(Linux)
-				let cEnv = UnsafeMutablePointer<maybeCChar?>.allocate(capacity: environments.count + 1)
-				
-				defer {
-					cEnv.deinitialize(count: environments.count + 1)
-					cEnv.deallocate(capacity: environments.count + 1)
-				}
-			#else
-				let cEnv = UnsafeMutablePointer<maybeCChar?>(allocatingCapacity: environments.count + 1)
-				
-				defer {
-					cEnv.deinitialize(count: environments.count + 1)
-					cEnv.deallocateCapacity(environments.count + 1)
-				}
-			#endif
-				cEnv[environments.count] = UnsafeMutablePointer<CChar>(nil)
-			#else
-				
-				cArgs[6] = UnsafeMutablePointer<CChar>(nil)
-				
-				var environments = NSProcessInfo().environment
-				environments["IO_RUNNER_SN"] = "child-start"
-				let cEnv = UnsafeMutablePointer<maybeCChar>.alloc(environments.count + 1)
-				
-				defer {
-					cEnv.dealloc( environments.count + 1)
-					cEnv.destroy(environments.count + 1)
-				}
-				cEnv[environments.count] = UnsafeMutablePointer<CChar>(nil)
-			#endif
-
-			
-				var idx = 0
-				for environmentData in environments {
-				
-					cEnv[idx] = strdup(environmentData.0 + "=" + environmentData.1)
-					idx += 1
-				}
-			
-				var fSTDIN: [Int32] = [0, 0]
-				var fSTDOUT: [Int32] = [0, 0]
-				var fSTDERR: [Int32] = [0, 0]
-			
-				pipe(UnsafeMutablePointer<Int32>(fSTDIN))
-				pipe(UnsafeMutablePointer<Int32>(fSTDOUT))
-				pipe(UnsafeMutablePointer<Int32>(fSTDERR))
-				#if os(Linux)
-					var fileActions = posix_spawn_file_actions_t()
-				#else
-					var fileActions = posix_spawn_file_actions_t(nil)
-				#endif
-			
-				posix_spawn_file_actions_init(&fileActions);
-				posix_spawn_file_actions_adddup2(&fileActions, fSTDOUT[1], STDOUT_FILENO);
-				posix_spawn_file_actions_adddup2(&fileActions, fSTDIN[0], STDIN_FILENO);
-				posix_spawn_file_actions_adddup2(&fileActions, fSTDERR[1], STDERR_FILENO);
-			
-				posix_spawn_file_actions_addclose(&fileActions, fSTDOUT[0]);
-				posix_spawn_file_actions_addclose(&fileActions, fSTDIN[0]);
-				posix_spawn_file_actions_addclose(&fileActions, fSTDERR[0]);
-				posix_spawn_file_actions_addclose(&fileActions, fSTDOUT[1]);
-				posix_spawn_file_actions_addclose(&fileActions, fSTDIN[1]);
-				posix_spawn_file_actions_addclose(&fileActions, fSTDERR[1]);
-			
-				let spawnRes = posix_spawnp(&procPid, argumets[0], &fileActions, nil, cArgs, cEnv)
-			
-				switch spawnRes {
-				case EINVAL:
-				#if swift(>=3)
-					
-					logger.writeLog(level: Logger.LogLevels.ERROR, message: "The value specified by file_actions or attrp is invalid.")
-				#elseif swift(>=2.2) && os(OSX)
-					
-					logger.writeLog(Logger.LogLevels.ERROR, message: "The value specified by file_actions or attrp is invalid.")
-				#endif
-					break
-				case E2BIG:
-				#if swift(>=3)
-					
-					logger.writeLog(level: Logger.LogLevels.ERROR, message: "The number of bytes in the new process's argument list is larger than the system-imposed limit.")
-				#elseif swift(>=2.2) && os(OSX)
-					
-					logger.writeLog(Logger.LogLevels.ERROR, message: "The number of bytes in the new process's argument list is larger than the system-imposed limit.")
-				#endif
-					break
-				case EACCES:
-				#if swift(>=3)
-					
-					logger.writeLog(level: Logger.LogLevels.ERROR, message: "The new process file mode denies execute permission.")
-				#elseif swift(>=2.2) && os(OSX)
-					
-					logger.writeLog(Logger.LogLevels.ERROR, message: "The new process file mode denies execute permission.")
-				#endif
-					break
-				case EFAULT:
-				#if swift(>=3)
-					
-					logger.writeLog(level: Logger.LogLevels.ERROR, message: "Path, argv, or envp point to an illegal address.")
-				#elseif swift(>=2.2) && os(OSX)
-					
-					logger.writeLog(Logger.LogLevels.ERROR, message: "Path, argv, or envp point to an illegal address.")
-				#endif
-					break
-				case EIO:
-				#if swift(>=3)
-					
-					logger.writeLog(level: Logger.LogLevels.ERROR, message: " An I/O error occurred while reading from the file system.")
-				#elseif swift(>=2.2) && os(OSX)
-					
-					logger.writeLog(Logger.LogLevels.ERROR, message: " An I/O error occurred while reading from the file system.")
-				#endif
-					break
-				case ELOOP:
-				#if swift(>=3)
-					
-					logger.writeLog(level: Logger.LogLevels.ERROR, message: "Too many symbolic links were encountered in translating the pathname.  This is taken to be indicative of a looping symbolic link.")
-				#elseif swift(>=2.2) && os(OSX)
-					
-					logger.writeLog(Logger.LogLevels.ERROR, message: "Too many symbolic links were encountered in translating the pathname.  This is taken to be indicative of a looping symbolic link.")
-				#endif
-					break
-				case ENAMETOOLONG:
-				#if swift(>=3)
-					
-					logger.writeLog(level: Logger.LogLevels.ERROR, message: "A component of a pathname exceeded {NAME_MAX} characters, or an entire path name exceeded {PATH_MAX} characters.")
-				#elseif swift(>=2.2) && os(OSX)
-					
-					logger.writeLog(Logger.LogLevels.ERROR, message: "A component of a pathname exceeded {NAME_MAX} characters, or an entire path name exceeded {PATH_MAX} characters.")
-				#endif
-					break
-				case ENOEXEC, ENOENT:
-				#if swift(>=3)
-					
-					logger.writeLog(level: Logger.LogLevels.ERROR, message: "The new process file does not exist.")
-				#elseif swift(>=2.2) && os(OSX)
-					
-					logger.writeLog(Logger.LogLevels.ERROR, message: "The new process file does not exist.")
-				#endif
-					break
-				case ENOMEM:
-				#if swift(>=3)
-					
-					logger.writeLog(level: Logger.LogLevels.ERROR, message: "The new process requires more virtual memory than is allowed by the imposed maximum")
-				#elseif swift(>=2.2) && os(OSX)
-					
-					logger.writeLog(Logger.LogLevels.ERROR, message: "The new process requires more virtual memory than is allowed by the imposed maximum")
-				#endif
-					break
-				case ENOTDIR:
-				#if swift(>=3)
-					
-					logger.writeLog(level: Logger.LogLevels.ERROR, message: "A component of the path prefix is not a directory.")
-				#elseif swift(>=2.2) && os(OSX)
-					
-					logger.writeLog(Logger.LogLevels.ERROR, message: "A component of the path prefix is not a directory.")
-				#endif
-					break
-				case ETXTBSY:
-				#if swift(>=3)
-					
-					logger.writeLog(level: Logger.LogLevels.ERROR, message: "The new process file is a pure procedure (shared text) file that is currently open for writing or reading by some process.")
-				#elseif swift(>=2.2) && os(OSX)
-					
-					logger.writeLog(Logger.LogLevels.ERROR, message: "The new process file is a pure procedure (shared text) file that is currently open for writing or reading by some process.")
-				#endif
-					break
-				default:
-					break
-				}
-			
-				#if os(Linux)
-					_ = Glibc.close(fSTDIN[0])
-					_ = Glibc.close(fSTDOUT[1])
-					_ = Glibc.close(fSTDERR[1])
-					if spawnRes != 0 {
-						_ = Glibc.close(fSTDIN[1])
-						_ = Glibc.close(fSTDOUT[0])
-						_ = Glibc.close(fSTDERR[0])
-						throw AppWorkerError.DaemonizeFailed
-					}
-				#else
-					_ = Darwin.close(fSTDIN[0])
-					_ = Darwin.close(fSTDOUT[1])
-					_ = Darwin.close(fSTDERR[1])
-					if spawnRes != 0 {
-						_ = Darwin.close(fSTDIN[1])
-						_ = Darwin.close(fSTDOUT[0])
-						_ = Darwin.close(fSTDERR[0])
-						throw AppWorkerError.DaemonizeFailed
-					}
-				#endif
 				
 			#if swift(>=3)
 				
@@ -679,5 +458,17 @@ internal final class AppWorker {
 			logger.writeLog(Logger.LogLevels.WARNINGS, message: "Pid file does not exists!")
 		}
 	#endif
+	}
+	
+	func runExtension(extensionName: String) {
+		
+		for currentHandler in self.currentHandlers {
+			
+			if(currentHandler.getClassName() == extensionName) {
+				
+				currentHandler.forAsyncTask()
+				break
+			}
+		}
 	}
 }

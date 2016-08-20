@@ -24,6 +24,7 @@
 		DE2ECF461D51D27300129548 /* IODirectory.c in Sources */ = {isa = PBXBuildFile; fileRef = DE2ECF381D51D25B00129548 /* IODirectory.c */; };
 		DE2ECF471D51D27800129548 /* IORunnerInstaller.c in Sources */ = {isa = PBXBuildFile; fileRef = DE2ECF3C1D51D25B00129548 /* IORunnerInstaller.c */; };
 		DE3D9A1F1D3964040047785B /* IOIni.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = "_____Product_ini" /* IOIni.framework */; };
+		DE7AF3531D67AC6200605905 /* SpawnProcess.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE7AF3521D67AC6200605905 /* SpawnProcess.swift */; };
 		DE7D5BB61D427B7F00888821 /* Error.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE7D5BB21D427B7F00888821 /* Error.swift */; };
 		DE7D5BB81D427B7F00888821 /* parseINI.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE7D5BB51D427B7F00888821 /* parseINI.swift */; };
 		DE7D5BC01D4280DD00888821 /* AppHandlers.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE7D5BB91D4280D000888821 /* AppHandlers.swift */; };
@@ -45,6 +46,11 @@
 		DED6771A1D5B50D200B6F836 /* CursesHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = DED677191D5B50D200B6F836 /* CursesHelper.swift */; };
 		DEE47AFE1D3A6A1500D55F92 /* TestHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEE47AFC1D3A6A1100D55F92 /* TestHandler.swift */; };
 		DEE47AFF1D3A7D8000D55F92 /* IOIni.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = "_____Product_ini" /* IOIni.framework */; };
+		DEEC71701D68F3460009D3E4 /* BouncyHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEFBEA9E1D620F80008BA2D8 /* BouncyHandler.swift */; };
+		DEEC71721D68F3460009D3E4 /* IOIni.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = "_____Product_ini" /* IOIni.framework */; };
+		DEEC71731D68F3460009D3E4 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DE8F5DF21D2A4A9400BE7C35 /* Foundation.framework */; };
+		DEEC71741D68F3460009D3E4 /* IORunnerExtension.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DE9F8EFC1D353BFB006F9B9D /* IORunnerExtension.framework */; };
+		DEEC717B1D68F35D0009D3E4 /* MysqlHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEEC716B1D68F33C0009D3E4 /* MysqlHandler.swift */; };
 		DEED6B451D5E73B20030CC1E /* InstallData.s in Sources */ = {isa = PBXBuildFile; fileRef = DEED6B441D5E73B20030CC1E /* InstallData.s */; };
 		DEF667111D3A4EB700A56CA2 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DE8F5DF21D2A4A9400BE7C35 /* Foundation.framework */; };
 		DEFBEA0C1D61D0BA008BA2D8 /* IOIni.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = "_____Product_ini" /* IOIni.framework */; };
@@ -109,7 +115,6 @@
 		DE2177111D3D0A4B000C21B1 /* IORunnerInstaller */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = IORunnerInstaller; sourceTree = BUILT_PRODUCTS_DIR; };
 		DE21771B1D3D0D4B000C21B1 /* BackgroundWidget.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = BackgroundWidget.swift; path = IOGUI/BackgroundWidget.swift; sourceTree = "<group>"; };
 		DE239E961D5C5D5800A31DF7 /* CreateExtensionConfigs.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = CreateExtensionConfigs.sh; sourceTree = "<group>"; };
-		DE239E971D5C623500A31DF7 /* Service.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = Service.sh; sourceTree = "<group>"; };
 		DE28D8501D61CB2200C357DA /* Config.ini */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Config.ini; path = Extensions/TestHandler/Config.ini; sourceTree = "<group>"; };
 		DE28D8511D61CB2200C357DA /* Makefile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.make; name = Makefile; path = Extensions/TestHandler/Makefile; sourceTree = "<group>"; };
 		DE2E82481D46571A004953A9 /* AppExit.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AppExit.swift; path = IORunnerBin/AppExit.swift; sourceTree = SOURCE_ROOT; };
@@ -138,6 +143,7 @@
 		DE43E63A1D391FC000886A0B /* PopupWidget.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PopupWidget.swift; path = IOGUI/PopupWidget.swift; sourceTree = "<group>"; };
 		DE5ECB631D423F3600C06781 /* Project.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = Project.xcconfig; path = IORunner.xcodeproj/Configs/Project.xcconfig; sourceTree = "<group>"; };
 		DE654D6E1D4699A10046066C /* Makefile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.make; name = Makefile; path = IORunnerInstaller/Makefile; sourceTree = SOURCE_ROOT; };
+		DE7AF3521D67AC6200605905 /* SpawnProcess.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SpawnProcess.swift; path = IORunnerExtension/SpawnProcess.swift; sourceTree = SOURCE_ROOT; };
 		DE7D5BB21D427B7F00888821 /* Error.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Error.swift; path = IOIni/Error.swift; sourceTree = "<group>"; };
 		DE7D5BB31D427B7F00888821 /* Makefile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.make; name = Makefile; path = IOIni/Makefile; sourceTree = "<group>"; };
 		DE7D5BB41D427B7F00888821 /* module.modulemap */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = "sourcecode.module-map"; name = module.modulemap; path = IOIni/module.modulemap; sourceTree = "<group>"; };
@@ -161,6 +167,10 @@
 		DEC3E5CC1D357FA500FB1662 /* GUITypes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = GUITypes.swift; path = IOGUI/GUITypes.swift; sourceTree = "<group>"; };
 		DED677191D5B50D200B6F836 /* CursesHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CursesHelper.swift; path = IOGUI/CursesHelper.swift; sourceTree = "<group>"; };
 		DEE47AFC1D3A6A1100D55F92 /* TestHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TestHandler.swift; path = Extensions/TestHandler/TestHandler.swift; sourceTree = "<group>"; };
+		DEEC71691D68F33C0009D3E4 /* Config.ini */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Config.ini; sourceTree = "<group>"; };
+		DEEC716A1D68F33C0009D3E4 /* Makefile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
+		DEEC716B1D68F33C0009D3E4 /* MysqlHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MysqlHandler.swift; sourceTree = "<group>"; };
+		DEEC717A1D68F3460009D3E4 /* libMysqlHandler.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libMysqlHandler.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
 		DEED6B441D5E73B20030CC1E /* InstallData.s */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.asm; name = InstallData.s; path = IORunnerInstaller/InstallData.s; sourceTree = SOURCE_ROOT; };
 		DEFBEA031D61D0A5008BA2D8 /* Config.ini */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Config.ini; sourceTree = "<group>"; };
 		DEFBEA041D61D0A5008BA2D8 /* Makefile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
@@ -227,6 +237,16 @@
 			buildActionMask = 2147483647;
 			files = (
 				DE1338D61D358581002E109B /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		DEEC71711D68F3460009D3E4 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				DEEC71721D68F3460009D3E4 /* IOIni.framework in Frameworks */,
+				DEEC71731D68F3460009D3E4 /* Foundation.framework in Frameworks */,
+				DEEC71741D68F3460009D3E4 /* IORunnerExtension.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -389,6 +409,7 @@
 				DE7D5BBC1D4280D000888821 /* module.modulemap */,
 				DE7D5BB91D4280D000888821 /* AppHandlers.swift */,
 				DE7D5BBA1D4280D000888821 /* Logger.swift */,
+				DE7AF3521D67AC6200605905 /* SpawnProcess.swift */,
 			);
 			name = IORunnerExtension;
 			path = ProcessCheckerExtension;
@@ -416,6 +437,7 @@
 		DEE47AFA1D3A69F700D55F92 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
+				DEEC71681D68F33C0009D3E4 /* MysqlHandler */,
 				DEFBEA9D1D620F80008BA2D8 /* BouncyHandler */,
 				DEFBEA891D620461008BA2D8 /* SSHHandler */,
 				DEFBEA611D61FCF2008BA2D8 /* PostfixHandler */,
@@ -436,6 +458,17 @@
 				DEE47AFC1D3A6A1100D55F92 /* TestHandler.swift */,
 			);
 			name = TestHandler;
+			sourceTree = "<group>";
+		};
+		DEEC71681D68F33C0009D3E4 /* MysqlHandler */ = {
+			isa = PBXGroup;
+			children = (
+				DEEC71691D68F33C0009D3E4 /* Config.ini */,
+				DEEC716A1D68F33C0009D3E4 /* Makefile */,
+				DEEC716B1D68F33C0009D3E4 /* MysqlHandler.swift */,
+			);
+			name = MysqlHandler;
+			path = Extensions/MysqlHandler;
 			sourceTree = "<group>";
 		};
 		DEFBEA021D61D0A5008BA2D8 /* NginxHandler */ = {
@@ -533,7 +566,6 @@
 				DE8F5DF11D2A4A9400BE7C35 /* Frameworks */,
 				DE239E961D5C5D5800A31DF7 /* CreateExtensionConfigs.sh */,
 				DEC14BF41D5BC46F00F03DCF /* CreateExtension.sh */,
-				DE239E971D5C623500A31DF7 /* Service.sh */,
 			);
 			sourceTree = "<group>";
 		};
@@ -553,6 +585,7 @@
 				DEFBEA601D61FCE4008BA2D8 /* libPostfixHandler.dylib */,
 				DEFBEA881D620446008BA2D8 /* libSSHHandler.dylib */,
 				DEFBEA9C1D620F77008BA2D8 /* libBouncyHandler.dylib */,
+				DEEC717A1D68F3460009D3E4 /* libMysqlHandler.dylib */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -591,6 +624,13 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		DEC3E5A91D3579CA00FB1662 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		DEEC71751D68F3460009D3E4 /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -640,6 +680,13 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		DEFBEA971D620F77008BA2D8 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		DEFE3EBF1D683743007D73E8 /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -717,6 +764,24 @@
 			productName = CNCURSES;
 			productReference = DEC3E5AC1D3579CA00FB1662 /* IOGUI.framework */;
 			productType = "com.apple.product-type.framework";
+		};
+		DEEC716E1D68F3460009D3E4 /* MysqlHandler */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = DEEC71771D68F3460009D3E4 /* Build configuration list for PBXNativeTarget "MysqlHandler" */;
+			buildPhases = (
+				DEEC716F1D68F3460009D3E4 /* Sources */,
+				DEEC71711D68F3460009D3E4 /* Frameworks */,
+				DEEC71751D68F3460009D3E4 /* Headers */,
+				DEEC71761D68F3460009D3E4 /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = MysqlHandler;
+			productName = TestHandler;
+			productReference = DEEC717A1D68F3460009D3E4 /* libMysqlHandler.dylib */;
+			productType = "com.apple.product-type.library.dynamic";
 		};
 		DEFBEA081D61D0BA008BA2D8 /* NginxHandler */ = {
 			isa = PBXNativeTarget;
@@ -869,6 +934,7 @@
 			buildPhases = (
 				CompilePhase_ini /* Sources */,
 				"___LinkPhase_ini" /* Frameworks */,
+				DEFE3EBF1D683743007D73E8 /* Headers */,
 			);
 			buildRules = (
 			);
@@ -943,6 +1009,7 @@
 				DEFBEA541D61FCE4008BA2D8 /* PostfixHandler */,
 				DEFBEA7C1D620446008BA2D8 /* SSHHandler */,
 				DEFBEA901D620F77008BA2D8 /* BouncyHandler */,
+				DEEC716E1D68F3460009D3E4 /* MysqlHandler */,
 			);
 		};
 /* End PBXProject section */
@@ -959,6 +1026,20 @@
 
 /* Begin PBXShellScriptBuildPhase section */
 		DE892F1E1D354A03000EB9D9 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\nLIBRARY_NAME=\"${EXECUTABLE_PREFIX}${PRODUCT_NAME}.${EXECUTABLE_EXTENSION}\"\nLIBRARY_SOURCE_PATH=\"${CONFIGURATION_BUILD_DIR}/${LIBRARY_NAME}\"\nLIBRARY_DESTINATION_DIR=\"/usr/local/IORunner/extensions/available\"\n\ncp $LIBRARY_SOURCE_PATH $LIBRARY_DESTINATION_DIR";
+			showEnvVarsInLog = 0;
+		};
+		DEEC71761D68F3460009D3E4 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -1115,6 +1196,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DE7AF3531D67AC6200605905 /* SpawnProcess.swift in Sources */,
 				DE7D5BC01D4280DD00888821 /* AppHandlers.swift in Sources */,
 				DE7D5BC11D4280E100888821 /* Logger.swift in Sources */,
 			);
@@ -1141,6 +1223,15 @@
 				DEB843401D45309F00E1AE5B /* BackgroundWidget.swift in Sources */,
 				DED6771A1D5B50D200B6F836 /* CursesHelper.swift in Sources */,
 				DE7D5BC51D42860900888821 /* TitleAndFooterWidget.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		DEEC716F1D68F3460009D3E4 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				DEEC71701D68F3460009D3E4 /* BouncyHandler.swift in Sources */,
+				DEEC717B1D68F35D0009D3E4 /* MysqlHandler.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1483,7 +1574,6 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.ilkerozcan.IOIni;
 				PRODUCT_MODULE_NAME = "$(TARGET_NAME:c99extidentifier)";
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
-				SWIFT_OBJC_INTERFACE_HEADER_NAME = "";
 				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
@@ -1759,6 +1849,108 @@
 				USE_HEADERMAP = NO;
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
+			};
+			name = Debug;
+		};
+		DEEC71781D68F3460009D3E4 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = DE5ECB631D423F3600C06781 /* Project.xcconfig */;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD)";
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				EXECUTABLE_PREFIX = lib;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = s;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = "";
+				SWIFT_INCLUDE_PATHS = "";
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+			};
+			name = Release;
+		};
+		DEEC71791D68F3460009D3E4 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = DE5ECB631D423F3600C06781 /* Project.xcconfig */;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD)";
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				EXECUTABLE_PREFIX = lib;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = NO;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = "";
+				SWIFT_INCLUDE_PATHS = "";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
 			name = Debug;
 		};
@@ -2522,7 +2714,6 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.ilkerozcan.IOIni;
 				PRODUCT_MODULE_NAME = "$(TARGET_NAME:c99extidentifier)";
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
-				SWIFT_OBJC_INTERFACE_HEADER_NAME = "";
 				SWIFT_VERSION = 3.0;
 			};
 			name = Release;
@@ -2571,6 +2762,15 @@
 			buildConfigurations = (
 				DEC3E5B21D3579CA00FB1662 /* Release */,
 				DEC3E5B31D3579CA00FB1662 /* Debug */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		DEEC71771D68F3460009D3E4 /* Build configuration list for PBXNativeTarget "MysqlHandler" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				DEEC71781D68F3460009D3E4 /* Release */,
+				DEEC71791D68F3460009D3E4 /* Debug */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

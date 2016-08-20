@@ -22,16 +22,18 @@ internal struct DynamicLoader {
 	
 	private var logger: Logger
 	private var extensionsDir: String
+	private var configFilePath: String
 	private var appConfig: Config
 	private var extensionsAbsoluteDir: String!
 	private var enabledExtensionsDir: String!
 	private var extensions: [(String, String, String)]!
 	private var loadedLibs: [AppHandlers]!
 	
-	init(logger: Logger, extensionsDir: String, appConfig: Config) {
+	init(logger: Logger, extensionsDir: String, configFilePath: String, appConfig: Config) {
 		
 		self.logger = logger
 		self.extensionsDir = extensionsDir
+		self.configFilePath = configFilePath
 		self.appConfig = appConfig
 		
 	#if swift(>=3)
@@ -300,7 +302,7 @@ internal struct DynamicLoader {
 				currentModuleConfig = libraryConfig
 			}
 			
-			let currentHandler = libClass.init(logger: self.logger, moduleConfig: currentModuleConfig)
+			let currentHandler = libClass.init(logger: self.logger, configFilePath: self.configFilePath, moduleConfig: currentModuleConfig)
 			retval.append(currentHandler)
 		}
 		

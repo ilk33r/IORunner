@@ -1,6 +1,6 @@
 //
-//  NginxHandler.swift
-//  IORunner/Extensions/NginxHandler
+//  MysqlHandler.swift
+//  IORunner/Extensions/MysqlHandler
 //
 //  Created by ilker özcan on 10/08/16.
 //
@@ -10,7 +10,7 @@ import Foundation
 import IOIni
 import IORunnerExtension
 
-public class NginxHandler: AppHandlers {
+public class MysqlHandler: AppHandlers {
 
 	private var processStatus: [Int] = [Int]()
 	private var checkingFrequency: Int = 60
@@ -24,11 +24,11 @@ public class NginxHandler: AppHandlers {
 	private var asyncTaskPid: pid_t?
 	
 	public required init(logger: Logger, configFilePath: String, moduleConfig: Section?) {
-
+		
 		super.init(logger: logger, configFilePath: configFilePath, moduleConfig: moduleConfig)
 		
 		if let currentProcessFrequency = moduleConfig?["ProcessFrequency"] {
-		
+			
 			if let frequencyInt = Int(currentProcessFrequency) {
 				
 				self.checkingFrequency = frequencyInt
@@ -43,7 +43,7 @@ public class NginxHandler: AppHandlers {
 			}
 		}
 	}
-
+	
 	public override func getClassName() -> String {
 		
 		return String(self)
@@ -51,12 +51,12 @@ public class NginxHandler: AppHandlers {
 	
 	public override func forStart() {
 		
-		self.logger.writeLog(level: Logger.LogLevels.WARNINGS, message: "NGINX extension registered!")
+		self.logger.writeLog(level: Logger.LogLevels.WARNINGS, message: "MYSQL extension registered!")
 		self.lastCheckDate = Date()
 	}
 	
 	public override func inLoop() {
-	
+		
 		if(lastCheckDate != nil) {
 			
 			let currentDate = Int(Date().timeIntervalSince1970)
@@ -64,9 +64,9 @@ public class NginxHandler: AppHandlers {
 			
 			if(lastCheckDif >= self.checkingFrequency) {
 				
-				if(!self.checkNginxProcess()) {
-				
-					self.restartNginx()
+				if(!self.checkMysqlProcess()) {
+					
+					self.restartMysql()
 				}
 			}
 		}else{
@@ -96,11 +96,11 @@ public class NginxHandler: AppHandlers {
 			}
 			
 			let taskIsRunning: Bool
-		#if os(Linux)
-			taskIsRunning = self.lastTask!.running
-		#else
-			taskIsRunning = self.lastTask!.isRunning
-		#endif
+			#if os(Linux)
+				taskIsRunning = self.lastTask!.running
+			#else
+				taskIsRunning = self.lastTask!.isRunning
+			#endif
 			if(!taskIsRunning) {
 				
 				self.taskStatus = 2
@@ -121,11 +121,11 @@ public class NginxHandler: AppHandlers {
 			}
 			
 			let lastTaskIsRunning: Bool
-		#if os(Linux)
-			lastTaskIsRunning = self.lastTask!.running
-		#else
-			lastTaskIsRunning = self.lastTask!.isRunning
-		#endif
+			#if os(Linux)
+				lastTaskIsRunning = self.lastTask!.running
+			#else
+				lastTaskIsRunning = self.lastTask!.isRunning
+			#endif
 			
 			if(!lastTaskIsRunning) {
 				
@@ -134,7 +134,7 @@ public class NginxHandler: AppHandlers {
 		}
 		
 		if(self.taskStatus != 0) {
-		
+			
 			var loopStatus = true
 			repeat {
 				
@@ -161,11 +161,11 @@ public class NginxHandler: AppHandlers {
 			} while (loopStatus)
 		}
 	}
-
-	private func checkNginxProcess() -> Bool {
+	
+	private func checkMysqlProcess() -> Bool {
 		
 		if let currentProcessName = moduleConfig?["ProcessName"] {
-
+			
 			self.processStatus = self.checkProcess(processName: currentProcessName)
 			self.lastCheckDate = Date()
 			if(self.processStatus.count > 0) {
@@ -173,7 +173,7 @@ public class NginxHandler: AppHandlers {
 				return true
 			}else{
 				
-				self.logger.writeLog(level: Logger.LogLevels.ERROR, message: "Warning Process NGINX does not working!")
+				self.logger.writeLog(level: Logger.LogLevels.ERROR, message: "Warning Process MYSQL does not working!")
 				return false
 			}
 		}
@@ -181,12 +181,12 @@ public class NginxHandler: AppHandlers {
 		return true
 	}
 	
-	private func restartNginx() {
-
-		self.logger.writeLog(level: Logger.LogLevels.WARNINGS, message: "Restarting NGINX")
+	private func restartMysql() {
+		
+		self.logger.writeLog(level: Logger.LogLevels.WARNINGS, message: "Restarting MYSQL")
 		
 		if(self.asyncTaskPid == nil) {
-		
+			
 			self.asyncTaskPid = self.startAsyncTask(command: "self", extraEnv: nil, extensionName: self.getClassName())
 		}else{
 			
@@ -195,9 +195,10 @@ public class NginxHandler: AppHandlers {
 				
 				self.logger.writeLog(level: Logger.LogLevels.WARNINGS, message: "Async task already started but does not work!")
 				self.asyncTaskPid = nil
-				self.restartNginx()
+				self.restartMysql()
 			}
 		}
 	}
 }
+
 

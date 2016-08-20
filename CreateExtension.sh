@@ -22,9 +22,13 @@ CREATE_EXT_SKELL_FILE() {
 	echo "" >> $1
 	echo "public class ${3}: AppHandlers {" >> $1
 	echo "" >> $1
-	echo "	public required init(logger: Logger, moduleConfig: Section?) {" >> $1
+	echo "	public required init(logger: Logger, configFilePath: String, moduleConfig: Section?) {" >> $1
 	echo "" >> $1
-	echo "		super.init(logger: logger, moduleConfig: moduleConfig)" >> $1
+	echo "		super.init(logger: logger, configFilePath: configFilePath, moduleConfig: moduleConfig)" >> $1
+	echo "	}" >> $1
+	echo "" >> $1
+	echo "	public override func getClassName() -> String {" >> $1
+	echo "		return String(self)" >> $1
 	echo "	}" >> $1
 	echo "" >> $1
 	echo "	public override func forStart() {" >> $1
@@ -36,9 +40,12 @@ CREATE_EXT_SKELL_FILE() {
 	echo "	public override func inLoop() {" >> $1
 	echo "	}" >> $1
 	echo "" >> $1
+	echo "	public override func forAsyncTask() {" >> $1
+	echo "	}" >> $1
+	echo "" >> $1
 	echo "}" >> $1
 	echo "" >> $1
-
+	echo "" >> $1
 }
 
 CREATE_EXT_MAKE_FILE() {

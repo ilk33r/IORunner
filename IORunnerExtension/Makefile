@@ -6,7 +6,7 @@ $(MODULE_2_NAME)_SWIFTC_FLAGS = $(DEBUG) $($(OS)_EXTRA_FLAGS) \
 	
 # -enable-objc-interop
 
-$(MODULE_2_NAME)_Src = $(MODULE_2_NAME)/Logger.swift $(MODULE_2_NAME)/AppHandlers.swift
+$(MODULE_2_NAME)_Src = $(MODULE_2_NAME)/Logger.swift $(MODULE_2_NAME)/AppHandlers.swift $(MODULE_2_NAME)/SpawnProcess.swift
 $(MODULE_2_NAME)_Obj = $(addsuffix .o, $(basename $($(MODULE_2_NAME)_Src)))
 $(MODULE_2_NAME)_Modules = $(addprefix $(MODULE_CACHE_PATH)/, $(addsuffix .swiftmodule, $(basename $($(MODULE_2_NAME)_Src))))
 

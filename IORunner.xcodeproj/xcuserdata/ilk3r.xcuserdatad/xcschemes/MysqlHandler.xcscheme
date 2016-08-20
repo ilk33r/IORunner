@@ -14,9 +14,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "______Target_BouncyProcessChecker"
-               BuildableName = "IORunner"
-               BlueprintName = "IORunner"
+               BlueprintIdentifier = "DEEC716E1D68F3460009D3E4"
+               BuildableName = "libMysqlHandler.dylib"
+               BlueprintName = "MysqlHandler"
                ReferencedContainer = "container:IORunner.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -29,15 +29,6 @@
       shouldUseLaunchSchemeArgsEnv = "YES">
       <Testables>
       </Testables>
-      <MacroExpansion>
-         <BuildableReference
-            BuildableIdentifier = "primary"
-            BlueprintIdentifier = "______Target_BouncyProcessChecker"
-            BuildableName = "IORunner"
-            BlueprintName = "IORunner"
-            ReferencedContainer = "container:IORunner.xcodeproj">
-         </BuildableReference>
-      </MacroExpansion>
       <AdditionalOptions>
       </AdditionalOptions>
    </TestAction>
@@ -51,38 +42,15 @@
       debugDocumentVersioning = "YES"
       debugServiceExtension = "internal"
       allowLocationSimulation = "YES">
-      <BuildableProductRunnable
-         runnableDebuggingMode = "0">
+      <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "______Target_BouncyProcessChecker"
-            BuildableName = "IORunner"
-            BlueprintName = "IORunner"
+            BlueprintIdentifier = "DEEC716E1D68F3460009D3E4"
+            BuildableName = "libMysqlHandler.dylib"
+            BlueprintName = "MysqlHandler"
             ReferencedContainer = "container:IORunner.xcodeproj">
          </BuildableReference>
-      </BuildableProductRunnable>
-      <CommandLineArguments>
-         <CommandLineArgument
-            argument = "--config"
-            isEnabled = "YES">
-         </CommandLineArgument>
-         <CommandLineArgument
-            argument = "/usr/local/IORunner/etc/Config.ini"
-            isEnabled = "YES">
-         </CommandLineArgument>
-         <CommandLineArgument
-            argument = "--debug"
-            isEnabled = "YES">
-         </CommandLineArgument>
-         <CommandLineArgument
-            argument = "--signal"
-            isEnabled = "YES">
-         </CommandLineArgument>
-         <CommandLineArgument
-            argument = "start"
-            isEnabled = "YES">
-         </CommandLineArgument>
-      </CommandLineArguments>
+      </MacroExpansion>
       <AdditionalOptions>
       </AdditionalOptions>
    </LaunchAction>
@@ -92,16 +60,15 @@
       savedToolIdentifier = ""
       useCustomWorkingDirectory = "NO"
       debugDocumentVersioning = "YES">
-      <BuildableProductRunnable
-         runnableDebuggingMode = "0">
+      <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "______Target_BouncyProcessChecker"
-            BuildableName = "IORunner"
-            BlueprintName = "IORunner"
+            BlueprintIdentifier = "DEEC716E1D68F3460009D3E4"
+            BuildableName = "libMysqlHandler.dylib"
+            BlueprintName = "MysqlHandler"
             ReferencedContainer = "container:IORunner.xcodeproj">
          </BuildableReference>
-      </BuildableProductRunnable>
+      </MacroExpansion>
    </ProfileAction>
    <AnalyzeAction
       buildConfiguration = "Debug">

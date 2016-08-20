@@ -545,11 +545,7 @@ public struct GUIWidgets {
 	public mutating func waitPopup(waitForSecond: UInt) {
 		
 	#if swift(>=3)
-	#if os(Linux)
-		let loopStartDate: UInt = UInt(NSDate().timeIntervalSince1970)
-	#else
 		let loopStartDate: UInt = UInt(Date().timeIntervalSince1970)
-	#endif
 	#else
 		
 		let loopStartDate: UInt = UInt(NSDate().timeIntervalSince1970)
@@ -557,13 +553,8 @@ public struct GUIWidgets {
 		repeat {
 		
 		#if swift(>=3)
-		#if os(Linux)
-			let currentDate: UInt = UInt(NSDate().timeIntervalSince1970)
-		#else
 			let currentDate: UInt = UInt(Date().timeIntervalSince1970)
-		#endif
 		#else
-			
 			let currentDate: UInt = UInt(NSDate().timeIntervalSince1970)
 		#endif
 			let dateDif = currentDate - loopStartDate

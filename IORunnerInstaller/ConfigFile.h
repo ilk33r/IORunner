@@ -115,7 +115,7 @@
 #		define RUNNER_DARWIN_SERVICE_PATH "/Library/LaunchDaemons/"
 #	endif
 
-#elif (defined BUILD_OS_Linux)
+#elif defined BUILD_OS_Linux
 
 #	ifndef RUNNER_LINUX_SERVICE
 #		define RUNNER_LINUX_SERVICE "#! /bin/sh\n"\
@@ -133,7 +133,7 @@
 									"BASE_PATH=\"%s\"\n"\
 									"APP_PACKAGE_NAME=\"" APP_PACKAGE_NAME "\"\n"\
 									"\n"\
-									"SCRIPT=\"${BASE_PATH}/bin/${APP_PACKAGE_NAME}"\"\n"\
+									"SCRIPT=\"${BASE_PATH}/bin/${APP_PACKAGE_NAME}\"\n"\
 									"RUNAS=root\n"\
 									"\n"\
 									"PIDFILE=\"${BASE_PATH}/var/run/${APP_PACKAGE_NAME}.pid\"\n"\
@@ -185,7 +185,7 @@
 									"	local SURE\n"\
 									"	read SURE\n"\
 									"\n"\
-									"	if [ \"$SURE˜" = \"yes\" ]; then\n"\
+									"	if [ \"$SURE\" = \"yes\" ]; then\n"\
 									"		stop\n"\
 									"		update-rc.d $APP_PACKAGE_NAME defaults\n"\
 									"	fi\n"\

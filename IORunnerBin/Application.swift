@@ -121,7 +121,7 @@ internal final class Application {
 			currentPidFile = "./" + Constants.APP_PACKAGE_NAME + ".pid"
 		}
 		
-		appExtensions = DynamicLoader(logger: logger, extensionsDir: currentExtensionDir, appConfig: appConfig)
+		appExtensions = DynamicLoader(logger: logger, extensionsDir: currentExtensionDir, configFilePath: appArguments.config!, appConfig: appConfig)
 		worker = AppWorker(handlers: appExtensions.getLoadedHandlers(), pidFile: currentPidFile, logger: logger, appArguments: appArguments)
 		
 		if(appArguments.debug || appArguments.textMode) {
@@ -203,6 +203,21 @@ internal final class Application {
 					if(envSignal == "child-start") {
 						
 						startHandlers(isChildProcess: true)
+						
+					}else if(envSignal == "ext-start") {
+					
+						if let extName = environments["IO_RUNNER_EX"] {
+						
+							worker.runExtension(extensionName: extName)
+						}
+						
+					#if swift(>=3)
+							
+						AppExit.Exit(parent: false, status: AppExit.EXIT_STATUS.SUCCESS)
+					#elseif swift(>=2.2) && os(OSX)
+							
+						AppExit.Exit(false, status: AppExit.EXIT_STATUS.SUCCESS)
+					#endif
 					}
 				}else{
 				
@@ -214,7 +229,23 @@ internal final class Application {
 				if let envSignal = environments["IO_RUNNER_SN"] {
 			
 					if(envSignal == "child-start") {
+				
 						startHandlers(true)
+				
+					}else if(envSignal == "ext-start") {
+				
+						if let extName = environments["IO_RUNNER_EX"] {
+				
+							worker.runExtension(extensionName: extName)
+						}
+				
+					#if swift(>=3)
+				
+						AppExit.Exit(parent: false, status: AppExit.EXIT_STATUS.SUCCESS)
+					#elseif swift(>=2.2) && os(OSX)
+				
+						AppExit.Exit(false, status: AppExit.EXIT_STATUS.SUCCESS)
+					#endif
 					}
 				}else{
 					logger.writeLog(Logger.LogLevels.MINIMAL, message: "Application enviroments could not readed!")
@@ -633,10 +664,12 @@ internal final class Application {
 					#endif
 					
 					buildString += "\n\tSwift Version\t: "
-					#if swift(>=2.2)
-						buildString += ">= 2.2"
+					#if swift(>=3.0)
+						buildString += ">= 3.0"
+					#elseif swift(>=2.2)
+						buildString += "= 2.2"
 					#elseif swift(>=2.0)
-						buildString += ">= 2.0"
+						buildString += "= 2.0"
 					#else
 						buildString += "Unkown"
 					#endif

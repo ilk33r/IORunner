@@ -17,15 +17,16 @@ import IOIni
 public class AppHandlers {
 	
 	public var logger: Logger
+	public var configFilePath: String
 	public var moduleConfig: Section?
 	
-	public required init(logger: Logger, moduleConfig: Section?) {
+	public required init(logger: Logger, configFilePath: String, moduleConfig: Section?) {
 		
 		self.logger = logger
+		self.configFilePath = configFilePath
 		self.moduleConfig = moduleConfig
 	}
 	
-#if swift(>=3)
 	public func checkProcess(processName: String) -> [Int] {
 		
 		var retval = [Int]()
@@ -44,6 +45,7 @@ public class AppHandlers {
 		let pipe = Pipe()
 		task.standardOutput = pipe
 		task.launch()
+		task.waitUntilExit()
 		
 		let data = pipe.fileHandleForReading.readDataToEndOfFile()
 		let output = String(data: data, encoding: String.Encoding.utf8)
@@ -65,8 +67,8 @@ public class AppHandlers {
 		return retval
 	}
 	
-	public func executeTask(command: String) {
-		
+	public func executeTask(command: String) -> Task? {
+
 		let commandWithArgs = command.characters.split(separator: " ")
 				
 		if(commandWithArgs.count > 0) {
@@ -85,12 +87,90 @@ public class AppHandlers {
 						
 				loopIdx += 1
 			}
-					
+			
+			#if os(Linux)
+				let environments = ProcessInfo.processInfo().environment
+			#else
+				let environments = ProcessInfo().environment
+			#endif
+			task.environment = environments
+			task.arguments = taskArgs
+			
+			//let pipe = Pipe()
+			//task.standardOutput = pipe
 			task.launch()
+			
+			/*
+			let data = pipe.fileHandleForReading.readDataToEndOfFile()
+			if let output = String(data: data, encoding: String.Encoding.utf8) {
+				
+				self.logger.writeLog(level: Logger.LogLevels.WARNINGS, message: output)
+			}*/
+			
+			//task.waitUntilExit()
+			return task
 		}
+		
+		return nil
 	}
 	
-#endif
+	public func startAsyncTask(command: String, extraEnv: [(String, String)]?, extensionName: String?) -> pid_t? {
+		
+		
+		var processConfig = ProcessConfigData()
+		var procPid: pid_t? = nil
+		
+		if(command == "self") {
+			
+			processConfig.ProcessArgs = [Process.arguments[0], "--config", self.configFilePath, "--onlyusearguments", "--signal", "environ"]
+			
+			var extEnvArr: [(String, String)]
+			if(extraEnv == nil) {
+				
+				extEnvArr = [(String, String)]()
+			}else{
+				extEnvArr = extraEnv!
+			}
+			
+			if(extensionName != nil) {
+				
+				extEnvArr.append(("IO_RUNNER_SN", "ext-start"))
+				extEnvArr.append(("IO_RUNNER_EX", extensionName!))
+			}
+			
+			processConfig.Environments = extEnvArr
+			
+		}else{
+			
+			let commandWithArgs = command.characters.split(separator: " ").map({String.init($0)})
+			
+			if(commandWithArgs.count > 0) {
+				
+				processConfig.ProcessArgs = commandWithArgs
+				
+				if extraEnv != nil {
+					
+					processConfig.Environments = extraEnv
+				}
+				
+			}
+		}
+		
+		do {
+			
+			procPid = try SpawnCurrentProcess(logger: self.logger, configData: processConfig)
+		} catch _ {
+			procPid = nil
+		}
+		
+		
+		return procPid
+	}
+	
+	public func getClassName() -> String {
+		
+		abort()
+	}
 	
 	public func forStart() -> Void {
 		// pass
@@ -101,6 +181,10 @@ public class AppHandlers {
 	}
 	
 	public func forStop() -> Void {
+		// pass
+	}
+	
+	public func forAsyncTask() -> Void {
 		// pass
 	}
 }
