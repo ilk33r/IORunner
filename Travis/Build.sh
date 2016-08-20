@@ -10,5 +10,4 @@
 if [[ $TRAVIS_OS_NAME == 'linux' ]]; then
 
 	export PATH=$PATH:$PWD/swift/$SWIFT_VERSION-ubuntu14.04/usr/bin
-	echo $PATH
 fi

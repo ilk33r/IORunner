@@ -1,7 +1,7 @@
 # Makefile for IORunner
 
 BUILD := release
-SOURCE_ROOT_DIR=$(shell pwd)
+SOURCE_ROOT_DIR=$(shell PWD)
 BUILD_ROOT_DIR=$(SOURCE_ROOT_DIR)/Build
 MODULE_CACHE_PATH=$(BUILD_ROOT_DIR)/ModuleCache
 
