@@ -2,20 +2,10 @@ os:
   - linux
   - osx
 language: generic
-matrix:
-  include:
-    - os: linux
-      dist: trusty
-      sudo: required
-      env:
-        - SWIFT_BUILD=Ubuntu14
-        - SWIFT_VERSION=swift-3.0-PREVIEW-4
-    - os: linux
-      dist: wily
-      sudo: required
-      env:
-        - SWIFT_BUILD=Ubuntu14
-        - SWIFT_VERSION=swift-3.0-PREVIEW-4
+env:
+  - SWIFT_VERSION=swift-3.0-PREVIEW-4
+sudo: required
+dist: trusty
 osx_image: xcode8
 install:
   - ./Travis/BeforeInstall.sh
