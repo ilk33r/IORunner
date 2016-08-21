@@ -17,4 +17,8 @@ if [[ $TRAVIS_OS_NAME == 'linux' ]]; then
 	CLANG_DIR=$(dirname $CLANG_PATH)
 
 	sudo ln -sf /usr/lib/llvm-3.4/lib/LLVMgold.so $CLANG_DIR/../lib/LLVMgold.so
+
+	sudo apt-get -qq update
+	sudo apt-get install -y libbsd0
+	sudo apt-get install -y libbsd-dev
 fi
