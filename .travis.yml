@@ -10,5 +10,4 @@ osx_image: xcode8
 install:
   - ./Travis/BeforeInstall.sh
 script:
-  - ./Travis/Build.sh
   - make dist
