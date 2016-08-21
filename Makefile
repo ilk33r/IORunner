@@ -9,6 +9,7 @@ OS = $(shell uname)
 SWIFT = swift
 Darwin_CLANG = clang++
 SWIFT_LINUX_PATH=$(shell which swiftc)
+@echo $SWIFT_LINUX_PATH
 Linux_CLANG = clang++ $(shell dirname $(shell dirname $(SWIFT_LINUX_PATH)))/lib/swift/linux/x86_64/swift_begin.o
 CLANG = $($(OS)_CLANG)
 MODULE_NAME = IORunner
