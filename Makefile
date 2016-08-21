@@ -1,14 +1,15 @@
 # Makefile for IORunner
 
 BUILD := release
-SOURCE_ROOT_DIR=$(PWD)
+SOURCE_ROOT_DIR=$(shell pwd)
 BUILD_ROOT_DIR=$(SOURCE_ROOT_DIR)/Build
 MODULE_CACHE_PATH=$(BUILD_ROOT_DIR)/ModuleCache
 
 OS = $(shell uname)
 SWIFT = swift
 Darwin_CLANG = clang++
-Linux_CLANG = clang++ $(shell dirname $(shell dirname $(shell which swiftc)))/lib/swift/linux/x86_64/swift_begin.o
+SWIFT_LINUX_PATH=$(shell which swiftc)
+Linux_CLANG = clang++ $(shell dirname $(shell dirname $(SWIFT_LINUX_PATH)))/lib/swift/linux/x86_64/swift_begin.o
 CLANG = $($(OS)_CLANG)
 MODULE_NAME = IORunner
 DEBUG.release = -gnone -O -whole-module-optimization
