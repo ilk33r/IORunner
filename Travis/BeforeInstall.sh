@@ -14,5 +14,4 @@ if [[ $TRAVIS_OS_NAME == 'linux' ]]; then
 	export PATH="$PWD/swift/$SWIFT_VERSION-ubuntu14.04/usr/bin:$PATH"
 
 	sudo ln -sf /usr/lib/llvm-3.4/lib/LLVMgold.so /usr/lib/LLVMgold.so
-	sudo echo /usr/lib/llvm-3.4/lib >> /etc/ld.so.conf
 fi
