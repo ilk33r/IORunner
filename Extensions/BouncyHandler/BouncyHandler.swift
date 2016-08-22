@@ -12,6 +12,7 @@ import IORunnerExtension
 
 public class BouncyHandler: AppHandlers {
 
+#if swift(>=3)
 	private var processStatus: [Int] = [Int]()
 	private var checkingFrequency: Int = 60
 	
@@ -520,5 +521,12 @@ public class BouncyHandler: AppHandlers {
 		}
 	}
 
+#elseif swift(>=2.2) && os(OSX)
+	public required init(logger: Logger, configFilePath: String, moduleConfig: Section?) {
+		
+		super.init(logger: logger, configFilePath: configFilePath, moduleConfig: moduleConfig)
+		self.logger.writeLog(Logger.LogLevels.ERROR, message: "BOUNCY extension only works swift >= 3 build.")
+	}
+#endif
 }
 

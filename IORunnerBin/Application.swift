@@ -228,7 +228,11 @@ internal final class Application {
 				
 						if let extName = environments["IO_RUNNER_EX"] {
 				
+						#if swift(>=3)
 							worker.runExtension(extensionName: extName)
+						#elseif swift(>=2.2) && os(OSX)
+							worker.runExtension(extName)
+						#endif
 						}
 					}
 				}else{

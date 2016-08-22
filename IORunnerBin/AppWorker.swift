@@ -111,7 +111,11 @@ internal final class AppWorker {
 				var procPid: pid_t! = 0
 				do {
 					
+				#if swift(>=3)
 					procPid = try SpawnCurrentProcess(logger: self.logger, configData: processConfig)
+				#elseif swift(>=2.2) && os(OSX)
+					procPid = try SpawnCurrentProcess(self.logger, configData: processConfig)
+				#endif
 				} catch _ {
 					throw AppWorkerError.DaemonizeFailed
 				}

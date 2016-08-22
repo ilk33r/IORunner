@@ -12,6 +12,7 @@ import IORunnerExtension
 
 public class OpendkimHandler: AppHandlers {
 
+#if swift(>=3)
 	private var processStatus: [Int] = [Int]()
 	private var checkingFrequency: Int = 60
 	private var taskTimeout: Int = 60
@@ -212,5 +213,13 @@ public class OpendkimHandler: AppHandlers {
 			}
 		}
 	}
+	
+#elseif swift(>=2.2) && os(OSX)
+	public required init(logger: Logger, configFilePath: String, moduleConfig: Section?) {
+		
+		super.init(logger: logger, configFilePath: configFilePath, moduleConfig: moduleConfig)
+		self.logger.writeLog(Logger.LogLevels.ERROR, message: "OPENDKIM extension only works swift >= 3 build.")
+	}
+#endif
 }
 
