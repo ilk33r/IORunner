@@ -119,6 +119,10 @@ static void generateBashScript(IOString *installDir, IOString *binDir) {
 			printf("\t[FAIL]\n\nAn error occured for creating shortcut file.\nInstall complete with errors!\n");
 		}
 	}else{
+		
+		char modeD[] = "0775";
+		IO_UNUSED chmod(destinationPath->value ,strtol(modeD, 0, 8));
+		
 		printf("\t[OK]\n\nInstall complete.\n");
 	}
 	

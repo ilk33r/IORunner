@@ -14,15 +14,22 @@ import Darwin
 
 var sharedHandler: SignalHandler?
 
+typealias SignalAction = sigaction
+
 internal final class SignalHandler {
 
-	enum Signal {
-		case Interrupt
-		case Quit
-		case TTIN
-		case TTOU
-		case Terminate
-		case Child
+	enum Signal: Int32 {
+		case Hup = 1
+		case Interrupt = 2
+		case Quit = 3
+		case Abort = 6
+		case Kill = 9
+		case TTIN = 21
+		case TTOU = 22
+		case Terminate = 15
+		case Child = 20
+		case Usr1 = 30
+		case Usr2 = 31
 	}
 
 	class func registerSignals() {
@@ -82,4 +89,16 @@ internal final class SignalHandler {
 
 		return result
 	}
+	
+	/*
+	func trapSignal(handler: sig_t, flags: Int32, signal: Signal) {
+	
+		var signalAction = SignalAction(__sigaction_u: unsafeBitCast(handler, to: __sigaction_u.self), sa_mask: 0, sa_flags: flags)
+		sigaction(signal.rawValue, &signalAction, nil)
+	}
+	
+	func suspend() {
+		sigsuspend(nil)
+	}
+	*/
 }

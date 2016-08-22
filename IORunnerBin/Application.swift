@@ -210,14 +210,6 @@ internal final class Application {
 						
 							worker.runExtension(extensionName: extName)
 						}
-						
-					#if swift(>=3)
-							
-						AppExit.Exit(parent: false, status: AppExit.EXIT_STATUS.SUCCESS)
-					#elseif swift(>=2.2) && os(OSX)
-							
-						AppExit.Exit(false, status: AppExit.EXIT_STATUS.SUCCESS)
-					#endif
 					}
 				}else{
 				
@@ -238,14 +230,6 @@ internal final class Application {
 				
 							worker.runExtension(extensionName: extName)
 						}
-				
-					#if swift(>=3)
-				
-						AppExit.Exit(parent: false, status: AppExit.EXIT_STATUS.SUCCESS)
-					#elseif swift(>=2.2) && os(OSX)
-				
-						AppExit.Exit(false, status: AppExit.EXIT_STATUS.SUCCESS)
-					#endif
 					}
 				}else{
 					logger.writeLog(Logger.LogLevels.MINIMAL, message: "Application enviroments could not readed!")

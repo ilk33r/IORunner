@@ -22,6 +22,7 @@ public class SSHHandler: AppHandlers {
 	private var lastCheckDate: Date?
 	private var lastTaskStartDate = 0
 	private var asyncTaskPid: pid_t?
+	private var asyncTaskStartTime: UInt = 0
 	
 	public required init(logger: Logger, configFilePath: String, moduleConfig: Section?) {
 		
@@ -68,6 +69,11 @@ public class SSHHandler: AppHandlers {
 					
 					self.restartSSH()
 				}
+				
+				if(self.asyncTaskPid != nil) {
+					
+					self.waitAsyncTask()
+				}
 			}
 		}else{
 			
@@ -111,7 +117,6 @@ public class SSHHandler: AppHandlers {
 					self.lastTask = self.executeTask(command: processStartCommand)
 				}
 			}
-			
 		}else if(self.taskStatus == 2) {
 			
 			guard self.lastTask != nil else {
@@ -135,30 +140,18 @@ public class SSHHandler: AppHandlers {
 		
 		if(self.taskStatus != 0) {
 			
-			var loopStatus = true
-			repeat {
+			let curDate = Int(Date().timeIntervalSince1970)
+			let startDif = curDate - self.lastTaskStartDate
+			
+			if(startDif > taskTimeout) {
 				
-				let curDate = Int(Date().timeIntervalSince1970)
-				let startDif = curDate - self.lastTaskStartDate
-				
-				if(startDif > taskTimeout) {
-					
-					self.taskStatus = 0
-					loopStatus = false
-					break
-				}
+				self.taskStatus = 0
+			}else{
 				
 				usleep(300000)
-				
-				if(self.taskStatus == 0) {
-					
-					loopStatus = false
-				}else{
-					
-					self.forAsyncTask()
-				}
-				
-			} while (loopStatus)
+				self.forAsyncTask()
+			}
+			
 		}
 	}
 	
@@ -187,16 +180,37 @@ public class SSHHandler: AppHandlers {
 		
 		if(self.asyncTaskPid == nil) {
 			
+			self.asyncTaskStartTime = UInt(Date().timeIntervalSince1970)
 			self.asyncTaskPid = self.startAsyncTask(command: "self", extraEnv: nil, extensionName: self.getClassName())
 		}else{
 			
-			self.logger.writeLog(level: Logger.LogLevels.WARNINGS, message: "Async task already started")
+			self.logger.writeLog(level: Logger.LogLevels.WARNINGS, message: "SSH Async task already started")
 			if(kill(self.asyncTaskPid!, 0) != 0) {
 				
-				self.logger.writeLog(level: Logger.LogLevels.WARNINGS, message: "Async task already started but does not work!")
+				self.logger.writeLog(level: Logger.LogLevels.WARNINGS, message: "SSH Async task already started but does not work!")
 				self.asyncTaskPid = nil
 				self.restartSSH()
 			}
 		}
-	}}
+	}
+
+	private func waitAsyncTask() {
+		
+		let curDate = UInt(Date().timeIntervalSince1970)
+		let startDif = curDate - self.asyncTaskStartTime
+		
+		if(startDif > UInt(taskTimeout + 30)) {
+			
+			if(kill(self.asyncTaskPid!, 0) == 0) {
+				
+				var pidStatus: Int32 = 0
+				waitpid(self.asyncTaskPid!, &pidStatus, 0)
+				self.asyncTaskPid = nil
+			}else{
+				
+				self.asyncTaskPid = nil
+			}
+		}
+	}
+}
 

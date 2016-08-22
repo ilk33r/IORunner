@@ -95,19 +95,8 @@ public class AppHandlers {
 			#endif
 			task.environment = environments
 			task.arguments = taskArgs
-			
-			//let pipe = Pipe()
-			//task.standardOutput = pipe
 			task.launch()
 			
-			/*
-			let data = pipe.fileHandleForReading.readDataToEndOfFile()
-			if let output = String(data: data, encoding: String.Encoding.utf8) {
-				
-				self.logger.writeLog(level: Logger.LogLevels.WARNINGS, message: output)
-			}*/
-			
-			//task.waitUntilExit()
 			return task
 		}
 		

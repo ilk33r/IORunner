@@ -46,7 +46,6 @@
 		DED6771A1D5B50D200B6F836 /* CursesHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = DED677191D5B50D200B6F836 /* CursesHelper.swift */; };
 		DEE47AFE1D3A6A1500D55F92 /* TestHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEE47AFC1D3A6A1100D55F92 /* TestHandler.swift */; };
 		DEE47AFF1D3A7D8000D55F92 /* IOIni.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = "_____Product_ini" /* IOIni.framework */; };
-		DEEC71701D68F3460009D3E4 /* BouncyHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEFBEA9E1D620F80008BA2D8 /* BouncyHandler.swift */; };
 		DEEC71721D68F3460009D3E4 /* IOIni.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = "_____Product_ini" /* IOIni.framework */; };
 		DEEC71731D68F3460009D3E4 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DE8F5DF21D2A4A9400BE7C35 /* Foundation.framework */; };
 		DEEC71741D68F3460009D3E4 /* IORunnerExtension.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DE9F8EFC1D353BFB006F9B9D /* IORunnerExtension.framework */; };
@@ -156,6 +155,8 @@
 		DE7D5BC31D42854200888821 /* module.modulemap */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = "sourcecode.module-map"; name = module.modulemap; path = IOGUI/module.modulemap; sourceTree = "<group>"; };
 		DE8EC34A1D3D239F00C4F522 /* InputPopupWidget.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = InputPopupWidget.swift; path = IOGUI/InputPopupWidget.swift; sourceTree = "<group>"; };
 		DE8F5DF21D2A4A9400BE7C35 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		DE8F83031D6989C500456BB5 /* Build.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; name = Build.sh; path = Travis/Build.sh; sourceTree = "<group>"; };
+		DE8F83041D698EC300456BB5 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		DE9F8EFC1D353BFB006F9B9D /* IORunnerExtension.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = IORunnerExtension.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		DEA356EC1D34EFB600BE6E8E /* libTestHandler.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libTestHandler.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
 		DEB6EC611D376F2E007A1E30 /* TitleAndFooterWidget.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TitleAndFooterWidget.swift; path = IOGUI/TitleAndFooterWidget.swift; sourceTree = "<group>"; };
@@ -171,6 +172,8 @@
 		DEEC716A1D68F33C0009D3E4 /* Makefile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
 		DEEC716B1D68F33C0009D3E4 /* MysqlHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MysqlHandler.swift; sourceTree = "<group>"; };
 		DEEC717A1D68F3460009D3E4 /* libMysqlHandler.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libMysqlHandler.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
+		DEEC717C1D6902AD0009D3E4 /* .travis.yml */ = {isa = PBXFileReference; lastKnownFileType = text; path = .travis.yml; sourceTree = "<group>"; };
+		DEEC717E1D6909530009D3E4 /* BeforeInstall.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; name = BeforeInstall.sh; path = Travis/BeforeInstall.sh; sourceTree = "<group>"; };
 		DEED6B441D5E73B20030CC1E /* InstallData.s */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.asm; name = InstallData.s; path = IORunnerInstaller/InstallData.s; sourceTree = SOURCE_ROOT; };
 		DEFBEA031D61D0A5008BA2D8 /* Config.ini */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Config.ini; sourceTree = "<group>"; };
 		DEFBEA041D61D0A5008BA2D8 /* Makefile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
@@ -471,6 +474,15 @@
 			path = Extensions/MysqlHandler;
 			sourceTree = "<group>";
 		};
+		DEEC717D1D6909350009D3E4 /* Travis */ = {
+			isa = PBXGroup;
+			children = (
+				DEEC717E1D6909530009D3E4 /* BeforeInstall.sh */,
+				DE8F83031D6989C500456BB5 /* Build.sh */,
+			);
+			name = Travis;
+			sourceTree = "<group>";
+		};
 		DEFBEA021D61D0A5008BA2D8 /* NginxHandler */ = {
 			isa = PBXGroup;
 			children = (
@@ -551,6 +563,7 @@
 		"___RootGroup_" = {
 			isa = PBXGroup;
 			children = (
+				DE8F83041D698EC300456BB5 /* README.md */,
 				DEC14BF11D5BC42D00F03DCF /* Makefile */,
 				DEC14BF21D5BC42D00F03DCF /* LICENSE */,
 				DEFBEA161D61DB16008BA2D8 /* StringFuncs.playground */,
@@ -564,8 +577,10 @@
 				DE2177121D3D0A4B000C21B1 /* IORunnerInstaller */,
 				"____Products_" /* Products */,
 				DE8F5DF11D2A4A9400BE7C35 /* Frameworks */,
+				DEEC717D1D6909350009D3E4 /* Travis */,
 				DE239E961D5C5D5800A31DF7 /* CreateExtensionConfigs.sh */,
 				DEC14BF41D5BC46F00F03DCF /* CreateExtension.sh */,
+				DEEC717C1D6902AD0009D3E4 /* .travis.yml */,
 			);
 			sourceTree = "<group>";
 		};
@@ -1230,7 +1245,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DEEC71701D68F3460009D3E4 /* BouncyHandler.swift in Sources */,
 				DEEC717B1D68F35D0009D3E4 /* MysqlHandler.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

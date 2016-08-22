@@ -14,9 +14,12 @@ public class BouncyHandler: AppHandlers {
 
 	private var processStatus: [Int] = [Int]()
 	private var checkingFrequency: Int = 60
-#if swift(>=3)
+	
+	// 0 waiting, 1 stopping, 2 starting
+	private var taskStatus = 0
 	private var lastCheckDate: Date?
-#endif
+	private var jobServerAsyncTaskPid: pid_t?
+	private var pushServerAsyncTaskPid: pid_t?
 	
 	private struct JobserverCommand {
 		
@@ -154,9 +157,9 @@ public class BouncyHandler: AppHandlers {
 	}
 	private var pushServerSettings: PushserverCommand?
 	
-	public required init(logger: Logger, moduleConfig: Section?) {
+	public required init(logger: Logger, configFilePath: String, moduleConfig: Section?) {
 		
-		super.init(logger: logger, moduleConfig: moduleConfig)
+		super.init(logger: logger, configFilePath: configFilePath, moduleConfig: moduleConfig)
 		
 		if let currentProcessFrequency = moduleConfig?["ProcessFrequency"] {
 			
@@ -165,51 +168,47 @@ public class BouncyHandler: AppHandlers {
 				self.checkingFrequency = frequencyInt
 			}
 		}
-	#if swift(>=3)
+		
 		self.generateJobServerSettings()
 		self.generatePushServerSettings()
-	#endif
+	}
+	
+	public override func getClassName() -> String {
+		
+		return String(self)
 	}
 	
 	public override func forStart() {
 		
-		if(!self.checkJobserverProcess()) {
-			
-			self.restartJobserver()
-		}
-		
-		if(!self.checkPushserverProcess()) {
-			
-			self.restartPushserver()
-		}
+		self.logger.writeLog(level: Logger.LogLevels.WARNINGS, message: "BOUNCY extension registered!")
+		self.lastCheckDate = Date()
 	}
 	
 	public override func inLoop() {
 		
-	#if swift(>=3)
-			
 		if(lastCheckDate != nil) {
-				
+			
 			let currentDate = Int(Date().timeIntervalSince1970)
 			let lastCheckDif = currentDate - Int(lastCheckDate!.timeIntervalSince1970)
-				
+			
 			if(lastCheckDif >= self.checkingFrequency) {
-					
+				
 				if(!self.checkJobserverProcess()) {
 					
-					self.restartJobserver()
+					self.restartJobOrPushserver(serverType: "jobserver")
 				}
 				
 				if(!self.checkPushserverProcess()) {
 					
-					self.restartPushserver()
+					self.restartJobOrPushserver(serverType: "pushserver")
 				}
 			}
+		}else{
+			
+			self.lastCheckDate = Date()
 		}
-	#endif
 	}
 	
-#if swift(>=3)
 	private func generateJobServerSettings() {
 		
 		guard moduleConfig != nil else {
@@ -305,7 +304,132 @@ public class BouncyHandler: AppHandlers {
 		
 		self.pushServerSettings = PushserverCommand(ServerCommand: processCommand!, PidFile: processPidFile!, LogFile: processLogFile!, DBHost: processDBHost!, DBUser: processDBUser!, DBPassword: processDBPassword!, DBName: processDBName!)
 	}
-#endif
+	
+	private func getServerStopCommand() -> (String, [String])? {
+		
+		#if os(Linux)
+			let environments = ProcessInfo.processInfo().environment
+		#else
+			let environments = ProcessInfo().environment
+		#endif
+		
+		if let envType = environments["IO_RUNNER_EX_BOUNCY"] {
+		
+			if(envType == "jobserver") {
+				
+				let procStopArgs: [String] = [ "stop", "-p", self.jobServerSettings!.PidFile ]
+				return (self.jobServerSettings!.Command, procStopArgs)
+				
+			}else if(envType == "pushserver") {
+				
+				let procStopArgs: [String] = [ "stop", "-p", self.pushServerSettings!.PidFile ]
+				return (self.pushServerSettings!.Command, procStopArgs)
+			}
+			
+			return nil
+		}else{
+			return nil
+		}
+	}
+	
+	private func getServerStartCommand() -> (String, [String])? {
+		
+		#if os(Linux)
+			let environments = ProcessInfo.processInfo().environment
+		#else
+			let environments = ProcessInfo().environment
+		#endif
+		
+		if let envType = environments["IO_RUNNER_EX_BOUNCY"] {
+			
+			if(envType == "jobserver") {
+				
+				let procStartArgs: [String] = [
+					"start",
+					"-p",
+					self.jobServerSettings!.PidFile,
+					"-l",
+					self.jobServerSettings!.LogFile,
+					"-j",
+					self.jobServerSettings!.DBFile,
+					"-s",
+					self.jobServerSettings!.SockFile,
+					"-v",
+					self.jobServerSettings!.VideosFile
+				]
+				return (self.jobServerSettings!.Command, procStartArgs)
+				
+			}else if(envType == "pushserver") {
+				
+				let procStartArgs: [String] = [
+					"start",
+					"-l",
+					self.pushServerSettings!.LogFile,
+					"-p",
+					self.pushServerSettings!.PidFile,
+					"-mh",
+					self.pushServerSettings!.DBHost,
+					"-mu",
+					self.pushServerSettings!.DBUser,
+					"-mp",
+					self.pushServerSettings!.DBPassword,
+					"-md",
+					self.pushServerSettings!.DBName
+				]
+				return (self.pushServerSettings!.Command, procStartArgs)
+			}
+			
+			return nil
+		}else{
+			return nil
+		}
+	}
+	
+	public override func forAsyncTask() {
+		
+		if(self.taskStatus == 0) {
+			
+			self.taskStatus = 1
+			
+			if let processStopCommand = getServerStopCommand() {
+				
+				let _ = self.executeTaskWithPipe(command: processStopCommand.0, args: processStopCommand.1)
+			}
+			
+		}else if(self.taskStatus == 1) {
+			
+			self.taskStatus = 2
+				
+			if let processStopCommand = getServerStartCommand() {
+				
+				let _ = self.executeTaskWithPipe(command: processStopCommand.0, args: processStopCommand.1)
+			}
+			
+		}else if(self.taskStatus == 2) {
+			
+			self.taskStatus = 0
+		}
+		
+		if(self.taskStatus != 0) {
+			
+			self.forAsyncTask()
+		}
+	}
+	
+	private func executeTaskWithPipe(command: String, args: [String]) -> String? {
+		
+		let task = Task()
+		task.launchPath = command
+		task.arguments = args
+		let pipe = Pipe()
+		task.standardOutput = pipe
+		task.launch()
+		task.waitUntilExit()
+			
+		let data = pipe.fileHandleForReading.readDataToEndOfFile()
+		let output = String(data: data, encoding: String.Encoding.utf8)
+		return output
+	}
 	
 	private func checkJobserverProcess() -> Bool {
 		
@@ -313,7 +437,6 @@ public class BouncyHandler: AppHandlers {
 			return true
 		}
 		
-	#if swift(>=3)
 		let procArgs: [String] = [ "status", "-p", self.jobServerSettings!.PidFile ]
 		if let response = self.executeTaskWithPipe(command: self.jobServerSettings!.Command, args: procArgs) {
 			
@@ -331,9 +454,6 @@ public class BouncyHandler: AppHandlers {
 		
 		self.logger.writeLog(level: Logger.LogLevels.ERROR, message: "JOB SERVER is not running...")
 		return false
-	#else
-		return true
-	#endif
 	}
 	
 	private func checkPushserverProcess() -> Bool {
@@ -342,7 +462,6 @@ public class BouncyHandler: AppHandlers {
 			return true
 		}
 		
-	#if swift(>=3)
 		let procArgs: [String] = [ "status", "-p", self.pushServerSettings!.PidFile ]
 		if let response = self.executeTaskWithPipe(command: self.pushServerSettings!.Command, args: procArgs) {
 				
@@ -360,93 +479,45 @@ public class BouncyHandler: AppHandlers {
 			
 		self.logger.writeLog(level: Logger.LogLevels.ERROR, message: "PUSH SERVER is not running...")
 		return false
-	#else
-		return true
-	#endif
 	}
 	
-	private func executeTaskWithPipe(command: String, args: [String]) -> String? {
+	private func restartJobOrPushserver(serverType: String) {
 		
-	#if swift(>=3)
-		let task = Task()
-		task.launchPath = command
-		task.arguments = args
-		let pipe = Pipe()
-		task.standardOutput = pipe
-		task.launch()
-		
-		let data = pipe.fileHandleForReading.readDataToEndOfFile()
-		let output = String(data: data, encoding: String.Encoding.utf8)
-		return output
-	#else
-		return nil
-	#endif
-	}
-	
-	private func restartJobserver() {
-		
-	#if swift(>=3)
-		self.logger.writeLog(level: Logger.LogLevels.ERROR, message: "Restarting JOB SERVER ...")
+		if(serverType == "jobserver") {
 			
-		guard self.jobServerSettings != nil else {
-			return
-		}
+			self.logger.writeLog(level: Logger.LogLevels.WARNINGS, message: "Restarting JOB SERVER")
 		
-		let procStopArgs: [String] = [ "stop", "-p", self.jobServerSettings!.PidFile ]
-		if let _ = self.executeTaskWithPipe(command: self.jobServerSettings!.Command, args: procStopArgs) {
+			if(self.jobServerAsyncTaskPid == nil) {
 			
-			let procStartArgs: [String] = [
-				"start",
-				"-p",
-				self.jobServerSettings!.PidFile,
-				"-l",
-				self.jobServerSettings!.LogFile,
-				"-j",
-				self.jobServerSettings!.DBFile,
-				"-s",
-				self.jobServerSettings!.SockFile,
-				"-v",
-				self.jobServerSettings!.VideosFile
-			]
+				self.jobServerAsyncTaskPid = self.startAsyncTask(command: "self", extraEnv: [("IO_RUNNER_EX_BOUNCY", serverType)], extensionName: self.getClassName())
+			}else{
 			
-			let _ = self.executeTaskWithPipe(command: self.jobServerSettings!.Command, args: procStartArgs)
-		}
+				self.logger.writeLog(level: Logger.LogLevels.WARNINGS, message: "Async task already started")
+				if(kill(self.jobServerAsyncTaskPid!, 0) != 0) {
+			
+					self.logger.writeLog(level: Logger.LogLevels.WARNINGS, message: "Async task already started but does not work!")
+					self.jobServerAsyncTaskPid = nil
+					self.restartJobOrPushserver(serverType: serverType)
+				}
+			}
+		}else if(serverType == "pushserver") {
 		
-	#endif
-	}
-	
-	private func restartPushserver() {
-		
-	#if swift(>=3)
-		self.logger.writeLog(level: Logger.LogLevels.ERROR, message: "Restarting PUSH SERVER ...")
+			self.logger.writeLog(level: Logger.LogLevels.WARNINGS, message: "Restarting PUSH SERVER")
 			
-		guard self.pushServerSettings != nil else {
-			return
-		}
-			
-		let procStopArgs: [String] = [ "stop", "-p", self.pushServerSettings!.PidFile ]
-		if let _ = self.executeTaskWithPipe(command: self.pushServerSettings!.Command, args: procStopArgs) {
+			if(self.pushServerAsyncTaskPid == nil) {
 				
-			let procStartArgs: [String] = [
-				"start",
-				"-l",
-				self.pushServerSettings!.LogFile,
-				"-p",
-				self.pushServerSettings!.PidFile,
-				"-mh",
-				self.pushServerSettings!.DBHost,
-				"-mu",
-				self.pushServerSettings!.DBUser,
-				"-mp",
-				self.pushServerSettings!.DBPassword,
-				"-md",
-				self.pushServerSettings!.DBName
-			]
+				self.pushServerAsyncTaskPid = self.startAsyncTask(command: "self", extraEnv: [("IO_RUNNER_EX_BOUNCY", serverType)], extensionName: self.getClassName())
+			}else{
 				
-			let _ = self.executeTaskWithPipe(command: self.pushServerSettings!.Command, args: procStartArgs)
+				self.logger.writeLog(level: Logger.LogLevels.WARNINGS, message: "Async task already started")
+				if(kill(self.pushServerAsyncTaskPid!, 0) != 0) {
+					
+					self.logger.writeLog(level: Logger.LogLevels.WARNINGS, message: "Async task already started but does not work!")
+					self.pushServerAsyncTaskPid = nil
+					self.restartJobOrPushserver(serverType: serverType)
+				}
+			}
 		}
-			
-	#endif
 	}
 
 }

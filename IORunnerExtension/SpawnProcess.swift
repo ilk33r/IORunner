@@ -231,9 +231,29 @@ public func SpawnCurrentProcess(logger: Logger, configData: ProcessConfigData) t
 	posix_spawn_file_actions_addclose(&fileActions, fSTDOUT[1]);
 	posix_spawn_file_actions_addclose(&fileActions, fSTDIN[1]);
 	posix_spawn_file_actions_addclose(&fileActions, fSTDERR[1]);
-				
+	
+	/*
+	var spawnAttr: posix_spawnattr_t?
+#if os(Linux)
+	let attrSize = sizeof(posix_spawnattr_t.self)
+	let attrPoint = UnsafeMutablePointer<posix_spawnattr_t>.allocate(capacity: attrSize)
+	
+	defer {
+		attrPoint.deinitialize(count: attrSize)
+		attrPoint.deallocate(capacity: attrSize)
+	}
+	
+	let _ = posix_spawnattr_init(attrPoint)
+	posix_spawnattr_setflags(attrPoint, Int16(POSIX_SPAWN_SETSIGDEF))
+	let spawnRes = posix_spawnp(&procPid, configData.ProcessArgs![0], &fileActions, attrPoint, cArgs, cEnv)
+#else
+	let _ = posix_spawnattr_init(&spawnAttr)
+	posix_spawnattr_setflags(&spawnAttr, Int16(POSIX_SPAWN_SETSIGDEF))
+	let spawnRes = posix_spawnp(&procPid, configData.ProcessArgs![0], &fileActions, &spawnAttr, cArgs, cEnv)
+#endif
+	*/
 	let spawnRes = posix_spawnp(&procPid, configData.ProcessArgs![0], &fileActions, nil, cArgs, cEnv)
-				
+	
 	switch spawnRes {
 	case EINVAL:
 	#if swift(>=3)
@@ -337,7 +357,15 @@ public func SpawnCurrentProcess(logger: Logger, configData: ProcessConfigData) t
 	default:
 		break
 	}
-				
+	
+	/*
+#if os(Linux)
+	posix_spawnattr_destroy(attrPoint)
+#else
+	posix_spawnattr_destroy(&spawnAttr)
+#endif
+	*/
+	
 #if os(Linux)
 	_ = Glibc.close(fSTDIN[0])
 	_ = Glibc.close(fSTDOUT[1])

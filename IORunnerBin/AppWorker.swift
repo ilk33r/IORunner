@@ -78,7 +78,7 @@ internal final class AppWorker {
 		signalHandler.register(signal: .Quit, handleQUIT)
 		signalHandler.register(signal: .Terminate, handleTerminate)
 		SignalHandler.registerSignals()
-		
+
 		logger.writeLog(level: Logger.LogLevels.WARNINGS, message: "Signals registered")
 	#elseif swift(>=2.2) && os(OSX)
 		
@@ -207,20 +207,6 @@ internal final class AppWorker {
 		currentHandlers.forEach { $0.forStop() }
 		running = false
 	}
-	
-	/*func handleChild() {
-		while true {
-			var stat: Int32 = 0
-			let pid = waitpid(-1, &stat, WNOHANG)
-			if pid == -1 {
-				break
-			}
-			
-			workers.removeValueForKey(pid)
-		}
-		
-		manageWorkers()
-	}*/
 	
 	// MARK: Worker
 	// Kill all workers with given signal
