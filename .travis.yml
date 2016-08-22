@@ -1,0 +1,13 @@
+os:
+  - linux
+  - osx
+language: generic
+env:
+  - SWIFT_VERSION=swift-3.0-PREVIEW-4
+sudo: required
+dist: trusty
+osx_image: xcode8
+install:
+  - ./Travis/BeforeInstall.sh
+script:
+  - ./Travis/Build.sh
