@@ -114,6 +114,9 @@
 		DE1B36E21D5F296600D234A6 /* IOAssets.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = IOAssets.h; path = IORunnerInstaller/IOAssets.h; sourceTree = SOURCE_ROOT; };
 		DE2177111D3D0A4B000C21B1 /* IORunnerInstaller */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = IORunnerInstaller; sourceTree = BUILT_PRODUCTS_DIR; };
 		DE21771B1D3D0D4B000C21B1 /* BackgroundWidget.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = BackgroundWidget.swift; path = IOGUI/BackgroundWidget.swift; sourceTree = "<group>"; };
+		DE25C6091D6C65780013B2C8 /* Deploy.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; name = Deploy.sh; path = Travis/Deploy.sh; sourceTree = "<group>"; };
+		DE25C60A1D6C66570013B2C8 /* CreateRelease.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; name = CreateRelease.sh; path = Travis/CreateRelease.sh; sourceTree = "<group>"; };
+		DE25C60D1D6C748B0013B2C8 /* ReleaseUrlParser.py */ = {isa = PBXFileReference; lastKnownFileType = text.script.python; name = ReleaseUrlParser.py; path = Travis/ReleaseUrlParser.py; sourceTree = "<group>"; };
 		DE28D8501D61CB2200C357DA /* Config.ini */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Config.ini; path = Extensions/TestHandler/Config.ini; sourceTree = "<group>"; };
 		DE28D8511D61CB2200C357DA /* Makefile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.make; name = Makefile; path = Extensions/TestHandler/Makefile; sourceTree = "<group>"; };
 		DE2E82481D46571A004953A9 /* AppExit.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AppExit.swift; path = IORunnerBin/AppExit.swift; sourceTree = SOURCE_ROOT; };
@@ -499,6 +502,9 @@
 			children = (
 				DEEC717E1D6909530009D3E4 /* BeforeInstall.sh */,
 				DE8F83031D6989C500456BB5 /* Build.sh */,
+				DE25C6091D6C65780013B2C8 /* Deploy.sh */,
+				DE25C60A1D6C66570013B2C8 /* CreateRelease.sh */,
+				DE25C60D1D6C748B0013B2C8 /* ReleaseUrlParser.py */,
 			);
 			name = Travis;
 			sourceTree = "<group>";

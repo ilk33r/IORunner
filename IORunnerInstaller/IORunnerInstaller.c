@@ -457,7 +457,7 @@ Bool installApp(const char *installPathArg) {
 				IODirectory *sourceDir = INIT_DIRECTORY(currentDirPath);
 				IOString *tmpDestinationPath = INIT_STRING(installPath->value);
 				tmpDestinationPath->appendByPathComponent(tmpDestinationPath, currentDir->value);
-				COPY_DIR(sourceDir, tmpDestinationPath);
+				MOVE_DIR(sourceDir, tmpDestinationPath);
 				tmpDestinationPath->release(tmpDestinationPath);
 				sourceDir->release(sourceDir);
 			}

@@ -1,13 +1,30 @@
-os:
-  - linux
-  - osx
-language: generic
 env:
-  - SWIFT_VERSION=swift-3.0-PREVIEW-4
-sudo: required
-dist: trusty
-osx_image: xcode7.3
+  global:
+    - SWIFT_VERSION=swift-3.0-PREVIEW-4
+	- GITHUB_TOKEN=36cdac7f58413d838894166a4babd7d31cd8201d
+language: generic
+matrix:
+  include:
+    - os: linux
+      sudo: required
+      dist: trusty
+      env: BUILD_FOR=trusty_swift3
+      after_success:
+        - ./Travis/Deploy.sh
+    - os: linux
+      sudo: required
+      dist: wily
+      env: BUILD_FOR=wily_swift3
+      after_success:
+        - ./Travis/Deploy.sh
+    - os: osx
+      osx_image: xcode7.3
+      env: BUILD_FOR=osx_swift2_2
+      after_success:
+        - ./Travis/Deploy.sh
 install:
   - ./Travis/BeforeInstall.sh
 script:
   - ./Travis/Build.sh
+before_script:
+  - ./Travis/CreateRelease.sh

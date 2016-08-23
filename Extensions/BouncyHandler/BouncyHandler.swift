@@ -6,21 +6,32 @@
 //
 //
 
+#if os(Linux)
+	import Glibc
+#else
+	import Darwin
+#endif
+
 import Foundation
 import IOIni
 import IORunnerExtension
 
 public class BouncyHandler: AppHandlers {
-
+	
 #if swift(>=3)
 	private var processStatus: [Int] = [Int]()
 	private var checkingFrequency: Int = 60
+	private var taskTimeout: Int = 60
 	
 	// 0 waiting, 1 stopping, 2 starting
 	private var taskStatus = 0
+	private var lastTask: Task?
 	private var lastCheckDate: Date?
+	private var lastTaskStartDate = 0
 	private var jobServerAsyncTaskPid: pid_t?
 	private var pushServerAsyncTaskPid: pid_t?
+	private var jobServerAsyncTaskStartTime: UInt = 0
+	private var pushServerAsyncTaskStartTime: UInt = 0
 	
 	private struct JobserverCommand {
 		
@@ -143,7 +154,7 @@ public class BouncyHandler: AppHandlers {
 				return _dbName
 			}
 		}
-
+		
 		init(ServerCommand: String, PidFile: String, LogFile: String,
 		     DBHost: String, DBUser: String, DBPassword: String, DBName: String) {
 			
@@ -170,6 +181,14 @@ public class BouncyHandler: AppHandlers {
 			}
 		}
 		
+		if let currentProcessTimeout = moduleConfig?["ProcessTimeout"] {
+			
+			if let timeoutInt = Int(currentProcessTimeout) {
+				
+				self.taskTimeout = timeoutInt
+			}
+		}
+		
 		self.generateJobServerSettings()
 		self.generatePushServerSettings()
 	}
@@ -177,37 +196,6 @@ public class BouncyHandler: AppHandlers {
 	public override func getClassName() -> String {
 		
 		return String(self)
-	}
-	
-	public override func forStart() {
-		
-		self.logger.writeLog(level: Logger.LogLevels.WARNINGS, message: "BOUNCY extension registered!")
-		self.lastCheckDate = Date()
-	}
-	
-	public override func inLoop() {
-		
-		if(lastCheckDate != nil) {
-			
-			let currentDate = Int(Date().timeIntervalSince1970)
-			let lastCheckDif = currentDate - Int(lastCheckDate!.timeIntervalSince1970)
-			
-			if(lastCheckDif >= self.checkingFrequency) {
-				
-				if(!self.checkJobserverProcess()) {
-					
-					self.restartJobOrPushserver(serverType: "jobserver")
-				}
-				
-				if(!self.checkPushserverProcess()) {
-					
-					self.restartJobOrPushserver(serverType: "pushserver")
-				}
-			}
-		}else{
-			
-			self.lastCheckDate = Date()
-		}
 	}
 	
 	private func generateJobServerSettings() {
@@ -218,13 +206,13 @@ public class BouncyHandler: AppHandlers {
 		
 		let processCommand = moduleConfig!["JobServer"]
 		guard processCommand != nil else {
-				
+			
 			return
 		}
-			
+		
 		let processPidFile = moduleConfig!["JobServerPidFile"]
 		guard processPidFile != nil else {
-				
+			
 			return
 		}
 		
@@ -306,22 +294,67 @@ public class BouncyHandler: AppHandlers {
 		self.pushServerSettings = PushserverCommand(ServerCommand: processCommand!, PidFile: processPidFile!, LogFile: processLogFile!, DBHost: processDBHost!, DBUser: processDBUser!, DBPassword: processDBPassword!, DBName: processDBName!)
 	}
 	
+	public override func forStart() {
+		
+		self.logger.writeLog(level: Logger.LogLevels.WARNINGS, message: "BOUNCY extension registered!")
+		self.lastCheckDate = Date()
+	}
+	
+	public override func inLoop() {
+		
+		if(lastCheckDate != nil) {
+			
+			let currentDate = Int(Date().timeIntervalSince1970)
+			let lastCheckDif = currentDate - Int(lastCheckDate!.timeIntervalSince1970)
+			
+			if(lastCheckDif >= self.checkingFrequency) {
+				
+				if(!self.checkJobServerProcess()) {
+					
+					self.restartJobServer()
+				}
+				
+				if(self.jobServerAsyncTaskPid != nil) {
+					
+					self.waitJobServerAsyncTask()
+				}
+				
+				/*
+				if(!self.checkPushServerProcess()) {
+					
+					self.restartPushServer()
+				}
+				
+				if(self.pushServerAsyncTaskPid != nil) {
+					
+					self.waitPushServerAsyncTask()
+				}
+				*/
+				
+				self.lastCheckDate = Date()
+			}
+		}else{
+			
+			self.lastCheckDate = Date()
+		}
+	}
+	
 	private func getServerStopCommand() -> (String, [String])? {
 		
-		#if os(Linux)
-			let environments = ProcessInfo.processInfo().environment
-		#else
-			let environments = ProcessInfo().environment
-		#endif
+	#if os(Linux)
+		let environments = ProcessInfo.processInfo().environment
+	#else
+		let environments = ProcessInfo().environment
+	#endif
 		
 		if let envType = environments["IO_RUNNER_EX_BOUNCY"] {
-		
-			if(envType == "jobserver") {
+			
+			if(envType == "JOBSERVER") {
 				
 				let procStopArgs: [String] = [ "stop", "-p", self.jobServerSettings!.PidFile ]
 				return (self.jobServerSettings!.Command, procStopArgs)
 				
-			}else if(envType == "pushserver") {
+			}else if(envType == "PUSHSERVER") {
 				
 				let procStopArgs: [String] = [ "stop", "-p", self.pushServerSettings!.PidFile ]
 				return (self.pushServerSettings!.Command, procStopArgs)
@@ -335,15 +368,15 @@ public class BouncyHandler: AppHandlers {
 	
 	private func getServerStartCommand() -> (String, [String])? {
 		
-		#if os(Linux)
-			let environments = ProcessInfo.processInfo().environment
-		#else
-			let environments = ProcessInfo().environment
-		#endif
+	#if os(Linux)
+		let environments = ProcessInfo.processInfo().environment
+	#else
+		let environments = ProcessInfo().environment
+	#endif
 		
 		if let envType = environments["IO_RUNNER_EX_BOUNCY"] {
 			
-			if(envType == "jobserver") {
+			if(envType == "JOBSERVER") {
 				
 				let procStartArgs: [String] = [
 					"start",
@@ -360,7 +393,7 @@ public class BouncyHandler: AppHandlers {
 				]
 				return (self.jobServerSettings!.Command, procStartArgs)
 				
-			}else if(envType == "pushserver") {
+			}else if(envType == "PUSHSERVER") {
 				
 				let procStartArgs: [String] = [
 					"start",
@@ -391,57 +424,126 @@ public class BouncyHandler: AppHandlers {
 		if(self.taskStatus == 0) {
 			
 			self.taskStatus = 1
+			self.lastTaskStartDate = Int(Date().timeIntervalSince1970)
 			
 			if let processStopCommand = getServerStopCommand() {
 				
-				let _ = self.executeTaskWithPipe(command: processStopCommand.0, args: processStopCommand.1)
+				let _ = self.executeTaskWithPipe(command: processStopCommand.0, args: processStopCommand.1, withAsync: true)
 			}
 			
 		}else if(self.taskStatus == 1) {
 			
-			self.taskStatus = 2
+			guard self.lastTask != nil else {
 				
-			if let processStopCommand = getServerStartCommand() {
-				
-				let _ = self.executeTaskWithPipe(command: processStopCommand.0, args: processStopCommand.1)
+				self.taskStatus = 0
+				return
 			}
 			
+			let taskIsRunning: Bool
+		#if os(Linux)
+			taskIsRunning = self.lastTask!.running
+		#else
+			taskIsRunning = self.lastTask!.isRunning
+		#endif
+			if(!taskIsRunning) {
+				
+				self.taskStatus = 2
+				self.lastTaskStartDate = Int(Date().timeIntervalSince1970)
+				
+				if let processStartCommand = getServerStartCommand() {
+					
+					let _ = executeTaskWithPipe(command: processStartCommand.0, args: processStartCommand.1, withAsync: true)
+				}
+			}
 		}else if(self.taskStatus == 2) {
 			
-			self.taskStatus = 0
+			guard self.lastTask != nil else {
+				
+				self.taskStatus = 0
+				return
+			}
+			
+			let lastTaskIsRunning: Bool
+		#if os(Linux)
+			lastTaskIsRunning = self.lastTask!.running
+		#else
+			lastTaskIsRunning = self.lastTask!.isRunning
+		#endif
+			
+			if(!lastTaskIsRunning) {
+				
+				self.taskStatus = 0
+			}
 		}
 		
 		if(self.taskStatus != 0) {
 			
-			self.forAsyncTask()
+			let curDate = Int(Date().timeIntervalSince1970)
+			let startDif = curDate - self.lastTaskStartDate
+			
+			if(startDif > taskTimeout) {
+				
+				self.taskStatus = 0
+			}else{
+				
+				usleep(300000)
+				self.forAsyncTask()
+			}
 		}
 	}
 	
-	private func executeTaskWithPipe(command: String, args: [String]) -> String? {
+	private func executeTaskWithPipe(command: String, args: [String], withAsync: Bool) -> String? {
 		
 		let task = Task()
 		task.launchPath = command
+	#if os(Linux)
+		let environments = ProcessInfo.processInfo().environment
+	#else
+		let environments = ProcessInfo().environment
+	#endif
+		task.environment = environments
 		task.arguments = args
-		let pipe = Pipe()
-		task.standardOutput = pipe
-		task.launch()
-		task.waitUntilExit()
+		
+		if(withAsync) {
 			
-		let data = pipe.fileHandleForReading.readDataToEndOfFile()
-		let output = String(data: data, encoding: String.Encoding.utf8)
-		return output
+			self.lastTask = task
+		}
+		
+		let pipe: Pipe?
+		
+		if(!withAsync) {
+			pipe = Pipe()
+			task.standardOutput = pipe
+		}else{
+			pipe = nil
+		}
+		
+		task.launch()
+		
+		if(!withAsync) {
+			task.waitUntilExit()
+		
+			let data = pipe!.fileHandleForReading.readDataToEndOfFile()
+			let output = String(data: data, encoding: String.Encoding.utf8)
+			return output
+		}else{
+			return nil
+		}
 	}
 	
-	private func checkJobserverProcess() -> Bool {
+	private func checkJobServerProcess() -> Bool {
 		
 		guard self.jobServerSettings != nil else {
 			return true
 		}
 		
 		let procArgs: [String] = [ "status", "-p", self.jobServerSettings!.PidFile ]
-		if let response = self.executeTaskWithPipe(command: self.jobServerSettings!.Command, args: procArgs) {
+		self.logger.writeLog(level: Logger.LogLevels.ERROR, message: "JOB SERVER status \(self.jobServerSettings!.Command) \(procArgs)...")
+		if let response = self.executeTaskWithPipe(command: self.jobServerSettings!.Command, args: procArgs, withAsync: false) {
 			
-			if let integerResponse = Int(response) {
+			self.logger.writeLog(level: Logger.LogLevels.ERROR, message: "JOB SERVER proc response \(response)...")
+			let strippedResponse = response.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
+			if let integerResponse = Int(strippedResponse) {
 				
 				if(integerResponse == 200) {
 					return true
@@ -456,6 +558,62 @@ public class BouncyHandler: AppHandlers {
 		self.logger.writeLog(level: Logger.LogLevels.ERROR, message: "JOB SERVER is not running...")
 		return false
 	}
+	
+	private func restartJobServer() {
+		
+		self.logger.writeLog(level: Logger.LogLevels.WARNINGS, message: "Restarting JOB SERVER")
+		
+		if(self.jobServerAsyncTaskPid == nil) {
+			
+			self.jobServerAsyncTaskStartTime = UInt(Date().timeIntervalSince1970)
+			self.jobServerAsyncTaskPid = self.startAsyncTask(command: "self", extraEnv: [("IO_RUNNER_EX_BOUNCY", "JOBSERVER")], extensionName: self.getClassName())
+		}else{
+			
+			self.logger.writeLog(level: Logger.LogLevels.WARNINGS, message: "JOB SERVER Async task already started")
+			if(kill(self.jobServerAsyncTaskPid!, 0) != 0) {
+				
+				self.logger.writeLog(level: Logger.LogLevels.WARNINGS, message: "JOB SERVER Async task already started but does not work!")
+				self.jobServerAsyncTaskPid = nil
+				self.restartJobServer()
+			}
+		}
+	}
+	
+	private func waitJobServerAsyncTask() {
+		
+		let curDate = UInt(Date().timeIntervalSince1970)
+		let startDif = curDate - self.jobServerAsyncTaskStartTime
+		
+		if(startDif > UInt(taskTimeout + 30)) {
+			
+			if(kill(self.jobServerAsyncTaskPid!, 0) == 0) {
+				
+				var pidStatus: Int32 = 0
+				waitpid(self.jobServerAsyncTaskPid!, &pidStatus, 0)
+				self.jobServerAsyncTaskPid = nil
+			}else{
+				
+				self.jobServerAsyncTaskPid = nil
+			}
+		}
+	}
+	
+#elseif swift(>=2.2) && os(OSX)
+	public required init(logger: Logger, configFilePath: String, moduleConfig: Section?) {
+	
+		super.init(logger: logger, configFilePath: configFilePath, moduleConfig: moduleConfig)
+		self.logger.writeLog(Logger.LogLevels.ERROR, message: "BOUNCY extension only works swift >= 3 build.")
+	}
+#endif
+}
+
+
+/*
+
+public class BouncyHandler: AppHandlers {
+
+#if swift(>=3)
+
 	
 	private func checkPushserverProcess() -> Bool {
 		
@@ -521,12 +679,5 @@ public class BouncyHandler: AppHandlers {
 		}
 	}
 
-#elseif swift(>=2.2) && os(OSX)
-	public required init(logger: Logger, configFilePath: String, moduleConfig: Section?) {
-		
-		super.init(logger: logger, configFilePath: configFilePath, moduleConfig: moduleConfig)
-		self.logger.writeLog(Logger.LogLevels.ERROR, message: "BOUNCY extension only works swift >= 3 build.")
-	}
-#endif
 }
-
+*/

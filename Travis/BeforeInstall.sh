@@ -10,8 +10,17 @@ if [[ $TRAVIS_OS_NAME == 'linux' ]]; then
 
 	mkdir swift
 
-	curl https://swift.org/builds/swift-3.0-preview-4/ubuntu1404/swift-3.0-PREVIEW-4/swift-3.0-PREVIEW-4-ubuntu14.04.tar.gz -s | tar xz -C swift &> /dev/null
-	export PATH="$PWD/swift/$SWIFT_VERSION-ubuntu14.04/usr/bin:$PATH"
+	if [[ $BUILD_FOR == 'trusty_swift3' ]]; then
+
+		curl https://swift.org/builds/swift-3.0-preview-4/ubuntu1404/swift-3.0-PREVIEW-4/swift-3.0-PREVIEW-4-ubuntu14.04.tar.gz -s | tar xz -C swift &> /dev/null
+		export PATH="$PWD/swift/$SWIFT_VERSION-ubuntu14.04/usr/bin:$PATH"
+
+	elif [[ $BUILD_FOR == 'wily_swift3' ]]; then
+
+		curl https://swift.org/builds/swift-3.0-preview-4/ubuntu1510/swift-3.0-PREVIEW-4/swift-3.0-PREVIEW-4-ubuntu15.10.tar.gz -s | tar xz -C swift &> /dev/null
+		export PATH="$PWD/swift/$SWIFT_VERSION-ubuntu15.10/usr/bin:$PATH"
+
+	fi
 
 	CLANG_PATH=$(which clang)
 	CLANG_DIR=$(dirname $CLANG_PATH)
