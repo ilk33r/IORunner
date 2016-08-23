@@ -49,8 +49,12 @@ $(MODULE_4_NAME)-install:
 
 $(MODULE_4_NAME)-modulecache:
 	@mkdir -p $(MODULE_CACHE_PATH)/$(MODULE_4_NAME)
+	
+$(MODULE_4_NAME)-generateConstants:
+	@$(SOURCE_ROOT_DIR)/Make/CreateConstantsFile.sh $(C_APP_NAME) $(C_APP_VERSION) $(C_APP_VERSION_INT) \
+	$(C_APP_CREDITS) $(C_APP_PACKAGE_NAME) $(C_CpuSleepMsec) $(C_CpuSleepSec) $(C_GuiRefreshRate)
 
-$(MODULE_4_NAME): $(MODULE_4_NAME)-modulecache $(MODULE_4_NAME).bin $(MODULE_4_NAME)-install
+$(MODULE_4_NAME): $(MODULE_4_NAME)-modulecache $(MODULE_4_NAME)-generateConstants $(MODULE_4_NAME).bin $(MODULE_4_NAME)-install
 
 $(MODULE_4_NAME).bin: $($(MODULE_4_NAME)_Obj) $(MODULE_4_NAME).swiftmodule
 	$(CLANG) $($(MODULE_4_NAME)_Obj) $($(MODULE_4_NAME)_LFLAGS) -o $(SOURCE_ROOT_DIR)/$(MODULE_4_NAME)/$(MODULE_4_NAME).bin

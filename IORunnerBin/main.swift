@@ -29,6 +29,16 @@ if let appArguments = ArgumentParser().parseArguments() {
 		
 		AppExit.Exit(true, status: AppExit.EXIT_STATUS.SUCCESS)
 	#endif
+	}else if(appArguments.versionint) {
+		
+		print(Constants.APP_VERSION_INT)
+	#if swift(>=3)
+			
+		AppExit.Exit(parent: true, status: AppExit.EXIT_STATUS.SUCCESS)
+	#elseif swift(>=2.2) && os(OSX)
+			
+		AppExit.Exit(true, status: AppExit.EXIT_STATUS.SUCCESS)
+	#endif
 	}else if(appArguments.buildinfoMode) {
 		print(Arguments.getBuildInfo())
 	#if swift(>=3)

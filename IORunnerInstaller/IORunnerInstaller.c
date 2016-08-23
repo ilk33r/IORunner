@@ -8,6 +8,7 @@
 
 #include "IORunnerInstaller.h"
 #include "ConfigFile.h"
+#include "Update.h"
 #include "IOAssets.h"
 
 #define UNZIP_COMMAND "/usr/bin/unzip -qq -o %s -d %s"
@@ -322,6 +323,235 @@ static void generateService(IOString *installDir, IOString *etcDir) {
 static void generateService(IOString *installDir, IOString *etcDir) {}
 #endif
 
+Bool uninstallApp(IOString *installedPath) {
+	
+	IOString *installedPathStrCopy = INIT_STRING(installedPath->value);
+	IODirectory *installedPathDir = INIT_DIRECTORY(installedPathStrCopy);
+	Bool uninstallResult = deleteDirectory(installedPathDir);
+	
+	if(uninstallResult == TRUE) {
+			
+		unlink(PROCESS_MAIN_COMMAND);
+#		if IS_DARWIN == TRUE
+		unlink(DARWIN_SERVICE_FILE);
+#		elif IS_LINUX == TRUE
+		unlink(LINUX_SERVICE_FILE);
+#		endif
+		printf("Application uninstalled.\nPlease re-run installer.");
+		installedPathDir->release(installedPathDir);
+		return TRUE;
+	}else{
+		printf("An error occured when uninstalling %s\n", APP_NAME);
+		installedPathDir->release(installedPathDir);
+		return FALSE;
+	}
+}
+
+Bool installApp(const char *installPathArg) {
+	
+	struct stat st = {0};
+	
+	if (stat(installPathArg, &st) == -1) {
+		
+		int createInstallDirResult = mkdir(installPathArg, 0775);
+		
+		if(createInstallDirResult) {
+			
+			printf("An error occured for creating directory %s\n", installPathArg);
+			return FALSE;
+		}
+	}
+	
+	IOString *installPath = INIT_STRING(installPathArg);
+	
+	if(installPath->isEqualToString(installPath, "/") || installPath->isEqualToString(installPath, "/usr/local") || installPath->isEqualToString(installPath, "/usr/local/")) {
+		
+		printf("You can not install the application to the %s\nPlease pick different directory like /usr/local/%s\n", installPath->value, APP_PACKAGE_NAME);
+		installPath->release(installPath);
+		return FALSE;
+	}
+	
+	printf("Installing ...");
+	IOString *zipFilePath = INIT_STRING(installPath->value);
+	zipFilePath->appendByPathComponent(zipFilePath, "installData.zip");
+	
+	IOString *buildDirectory = INIT_STRING(installPath->value);
+	buildDirectory->appendByPathComponent(buildDirectory, "Build");
+	struct stat st2 = {0};
+	if(stat(buildDirectory->value, &st2) == 0) {
+		
+		printf("Application already installed!\n");
+		zipFilePath->release(zipFilePath);
+		installPath->release(installPath);
+		buildDirectory->release(buildDirectory);
+		return FALSE;
+	}
+	
+	FILE *zipFile = fopen(zipFilePath->value, "w");
+	if(zipFile == NULL) {
+		
+		printf("An error occured for writing files.\n");
+		zipFilePath->release(zipFilePath);
+		installPath->release(installPath);
+		buildDirectory->release(buildDirectory);
+		return FALSE;
+	}
+	
+	unsigned int i = 0;
+	for(i = 0; i < LDLEN(InstallData); i++) {
+		
+		fputc(LDVAR(InstallData)[i], zipFile);
+	}
+	
+	fclose(zipFile);
+	
+	size_t unzipCommadLen = strlen(UNZIP_COMMAND) + zipFilePath->length + installPath->length + 1;
+	char *unzipCommand = malloc(unzipCommadLen);
+	memset(unzipCommand, 0, unzipCommadLen);
+	sprintf(unzipCommand, UNZIP_COMMAND, zipFilePath->value, installPath->value);
+	int processResult = system(unzipCommand);
+	sleep(4);
+	free(unzipCommand);
+	long writableChmode = strtol("0777", 0, 8);
+	
+	if(processResult == 0) {
+		
+		IODirectory *buildDir = INIT_DIRECTORY(buildDirectory);
+		buildDir->generateContentlist(buildDir);
+		size_t j = 0;
+		for(j = 0; j < buildDir->fileCount; j++) {
+			
+			IOString *currentDir = buildDir->contents->get(buildDir->contents, j);
+			if(currentDir->value == NULL) {
+				continue;
+			}
+			
+			if(currentDir->isEqualToString(currentDir, "..") == TRUE) {
+				continue;
+			}
+			
+			if(currentDir->isEqualToString(currentDir, ".") == TRUE) {
+				continue;
+			}
+			
+			unsigned char isExtensionsDir = currentDir->isEqualToString(currentDir, "extensions");
+			if(isExtensionsDir == TRUE) {
+				
+				IOString *currentDirPath = INIT_STRING(buildDirectory->value);
+				currentDirPath->appendByPathComponent(currentDirPath, currentDir->value);
+				IODirectory *sourceDir = INIT_DIRECTORY(currentDirPath);
+				IOString *tmpDestinationPath = INIT_STRING(installPath->value);
+				tmpDestinationPath->appendByPathComponent(tmpDestinationPath, currentDir->value);
+				IO_UNUSED mkdir(tmpDestinationPath->value, 0775);
+				IO_UNUSED chmod(tmpDestinationPath->value, writableChmode);
+				tmpDestinationPath->appendByPathComponent(tmpDestinationPath, "available");
+				IO_UNUSED mkdir(tmpDestinationPath->value, 0777);
+				IO_UNUSED chmod(tmpDestinationPath->value, writableChmode);
+				MOVE_DIR(sourceDir, tmpDestinationPath);
+				tmpDestinationPath->release(tmpDestinationPath);
+				sourceDir->release(sourceDir);
+				
+			}else{
+				IOString *currentDirPath = INIT_STRING(buildDirectory->value);
+				currentDirPath->appendByPathComponent(currentDirPath, currentDir->value);
+				IODirectory *sourceDir = INIT_DIRECTORY(currentDirPath);
+				IOString *tmpDestinationPath = INIT_STRING(installPath->value);
+				tmpDestinationPath->appendByPathComponent(tmpDestinationPath, currentDir->value);
+				COPY_DIR(sourceDir, tmpDestinationPath);
+				tmpDestinationPath->release(tmpDestinationPath);
+				sourceDir->release(sourceDir);
+			}
+		}
+		
+		IO_UNUSED rmdir(buildDir->path->value);
+		buildDir->release(buildDir);
+		
+		IOString *enabledExtensionsDir = INIT_STRING(installPath->value);
+		enabledExtensionsDir->appendByPathComponent(enabledExtensionsDir, "extensions/enabled");
+		IO_UNUSED mkdir(enabledExtensionsDir->value, 0777);
+		IO_UNUSED chmod(enabledExtensionsDir->value, writableChmode);
+		enabledExtensionsDir->release(enabledExtensionsDir);
+		
+		IOString *etcDir = INIT_STRING(installPath->value);
+		etcDir->appendByPathComponent(etcDir, "etc");
+		IO_UNUSED mkdir(etcDir->value, 0775);
+		
+		IOString *varDir = INIT_STRING(installPath->value);
+		varDir->appendByPathComponent(varDir, "var");
+		IO_UNUSED mkdir(varDir->value, 0777);
+		IO_UNUSED chmod(varDir->value, writableChmode);
+		
+		IOString *logDir = INIT_STRING(installPath->value);
+		logDir->appendByPathComponent(logDir, "var/log");
+		IO_UNUSED mkdir(logDir->value, 0777);
+		IO_UNUSED chmod(logDir->value, writableChmode);
+		
+		IOString *runDir = INIT_STRING(installPath->value);
+		runDir->appendByPathComponent(runDir, "var/run");
+		IO_UNUSED mkdir(runDir->value, 0777);
+		IO_UNUSED chmod(runDir->value, writableChmode);
+		
+		IOString *extensionDir = INIT_STRING(installPath->value);
+		extensionDir->appendByPathComponent(extensionDir, "extensions");
+		
+		IOString *binPath = INIT_STRING(installPath->value);
+		binPath->appendByPathComponent(binPath, "bin");
+		
+		printf("\nGenerating config file ...");
+		generateConfigFile(etcDir, logDir, runDir, extensionDir);
+		printf("\t[OK]\n");
+		printf("Generating shortcut file ...");
+		generateBashScript(installPath, binPath);
+		printf("Generating system service file ...");
+		generateService(installPath, etcDir);
+		
+		IODirectory *etcIODir = INIT_DIRECTORY(etcDir);
+		updateFilePermissions(etcIODir, "0644");
+		
+		IODirectory *binIODir = INIT_DIRECTORY(binPath);
+		updateFilePermissions(binIODir, "0755");
+		
+		IOString *libIOPath = INIT_STRING(installPath->value);
+		libIOPath->appendByPathComponent(libIOPath, "lib");
+		IODirectory *libIODir = INIT_DIRECTORY(libIOPath);
+		updateFilePermissions(libIODir, "0755");
+		
+		IOString *enabledExtensionDir = INIT_STRING(extensionDir->value);
+		enabledExtensionDir->appendByPathComponent(enabledExtensionDir, "available");
+		IODirectory *enabledExtensionIODir = INIT_DIRECTORY(enabledExtensionDir);
+		updateFilePermissions(enabledExtensionIODir, "0755");
+		
+		IOString *frameworksDirPath = INIT_STRING(installPath->value);
+		frameworksDirPath->appendByPathComponent(frameworksDirPath, "frameworks");
+		IODirectory *frameworksDirectory = INIT_DIRECTORY(frameworksDirPath);
+		updateFilePermissions(frameworksDirectory, "0755");
+		
+		extensionDir->release(extensionDir);
+		varDir->release(varDir);
+		logDir->release(logDir);
+		runDir->release(runDir);
+		
+	}else{
+		
+		zipFilePath->release(zipFilePath);
+		installPath->release(installPath);
+		buildDirectory->release(buildDirectory);
+		printf("An error occured when opening zip file. Are you sure zip/unzip installed ?\n");
+		return FALSE;
+	}
+	
+	unlink(zipFilePath->value);
+	zipFilePath->release(zipFilePath);
+	installPath->release(installPath);
+	
+	return TRUE;
+}
+
+Bool updateApp(IOString *installedPath) {
+	
+	return TRUE;
+}
+
 int main(int argc, const char *argv[]) {
 	
 	if(argc < 2) {
@@ -337,241 +567,53 @@ int main(int argc, const char *argv[]) {
 		isInstall = TRUE;
 	}else if(processResponse->length < 2) {
 		
-		processResponse->release(processResponse);
 		isInstall = TRUE;
 	}
 	
 	if(isInstall == TRUE) {
 	
-		struct stat st = {0};
-	
-		if (stat(argv[1], &st) == -1) {
-		
-			int createInstallDirResult = mkdir(argv[1], 0775);
-		
-			if(createInstallDirResult) {
-			
-				printf("An error occured for creating directory %s\n", argv[1]);
-				return 1;
-			}
-		}
-	
-		IOString *installPath = INIT_STRING(argv[1]);
-	
-		if(installPath->isEqualToString(installPath, "/") || installPath->isEqualToString(installPath, "/usr/local") || installPath->isEqualToString(installPath, "/usr/local/")) {
-		
-			printf("You can not install the application to the %s\nPlease pick different directory like /usr/local/%s\n", installPath->value, APP_PACKAGE_NAME);
-			installPath->release(installPath);
-			return -1;
-		}
-		
-		printf("Installing ...");
-		IOString *zipFilePath = INIT_STRING(installPath->value);
-		zipFilePath->appendByPathComponent(zipFilePath, "installData.zip");
-	
-		IOString *buildDirectory = INIT_STRING(installPath->value);
-		buildDirectory->appendByPathComponent(buildDirectory, "Build");
-		struct stat st2 = {0};
-		if(stat(buildDirectory->value, &st2) == 0) {
-		
-			printf("Application already installed!\n");
-			zipFilePath->release(zipFilePath);
-			installPath->release(installPath);
-			buildDirectory->release(buildDirectory);
-			return 1;
-		}
-	
-	
-		FILE *zipFile = fopen(zipFilePath->value, "w");
-		if(zipFile == NULL) {
-		
-			printf("An error occured for writing files.\n");
-			zipFilePath->release(zipFilePath);
-			installPath->release(installPath);
-			buildDirectory->release(buildDirectory);
-			return 1;
-		}
-
-		unsigned int i = 0;
-		for(i = 0; i < LDLEN(InstallData); i++) {
-		
-			fputc(LDVAR(InstallData)[i], zipFile);
-		}
-	
-		fclose(zipFile);
-	
-		size_t unzipCommadLen = strlen(UNZIP_COMMAND) + zipFilePath->length + installPath->length + 1;
-		char *unzipCommand = malloc(unzipCommadLen);
-		memset(unzipCommand, 0, unzipCommadLen);
-		sprintf(unzipCommand, UNZIP_COMMAND, zipFilePath->value, installPath->value);
-		int processResult = system(unzipCommand);
-		sleep(4);
-		free(unzipCommand);
-		long writableChmode = strtol("0777", 0, 8);
-
-		if(processResult == 0) {
-		
-			IODirectory *buildDir = INIT_DIRECTORY(buildDirectory);
-			buildDir->generateContentlist(buildDir);
-			size_t j = 0;
-			for(j = 0; j < buildDir->fileCount; j++) {
-			
-				IOString *currentDir = buildDir->contents->get(buildDir->contents, j);
-				if(currentDir->value == NULL) {
-					continue;
-				}
-			
-				if(currentDir->isEqualToString(currentDir, "..") == TRUE) {
-					continue;
-				}
-			
-				if(currentDir->isEqualToString(currentDir, ".") == TRUE) {
-					continue;
-				}
-				
-				unsigned char isExtensionsDir = currentDir->isEqualToString(currentDir, "extensions");
-				if(isExtensionsDir == TRUE) {
-				
-					IOString *currentDirPath = INIT_STRING(buildDirectory->value);
-					currentDirPath->appendByPathComponent(currentDirPath, currentDir->value);
-					IODirectory *sourceDir = INIT_DIRECTORY(currentDirPath);
-					IOString *tmpDestinationPath = INIT_STRING(installPath->value);
-					tmpDestinationPath->appendByPathComponent(tmpDestinationPath, currentDir->value);
-					IO_UNUSED mkdir(tmpDestinationPath->value, 0775);
-					IO_UNUSED chmod(tmpDestinationPath->value, writableChmode);
-					tmpDestinationPath->appendByPathComponent(tmpDestinationPath, "available");
-					IO_UNUSED mkdir(tmpDestinationPath->value, 0777);
-					IO_UNUSED chmod(tmpDestinationPath->value, writableChmode);
-// MOVE_DIR(sourceDir, tmpDestinationPath);
-COPY_DIR(sourceDir, tmpDestinationPath);
-					tmpDestinationPath->release(tmpDestinationPath);
-					sourceDir->release(sourceDir);
-				
-				}else{
-					IOString *currentDirPath = INIT_STRING(buildDirectory->value);
-					currentDirPath->appendByPathComponent(currentDirPath, currentDir->value);
-					IODirectory *sourceDir = INIT_DIRECTORY(currentDirPath);
-					IOString *tmpDestinationPath = INIT_STRING(installPath->value);
-					tmpDestinationPath->appendByPathComponent(tmpDestinationPath, currentDir->value);
-// MOVE_DIR(sourceDir, tmpDestinationPath);
-COPY_DIR(sourceDir, tmpDestinationPath);
-					tmpDestinationPath->release(tmpDestinationPath);
-					sourceDir->release(sourceDir);
-				}
-			}
-		
-			IO_UNUSED rmdir(buildDir->path->value);
-			buildDir->release(buildDir);
-		
-			IOString *enabledExtensionsDir = INIT_STRING(installPath->value);
-			enabledExtensionsDir->appendByPathComponent(enabledExtensionsDir, "extensions/enabled");
-			IO_UNUSED mkdir(enabledExtensionsDir->value, 0777);
-			IO_UNUSED chmod(enabledExtensionsDir->value, writableChmode);
-			enabledExtensionsDir->release(enabledExtensionsDir);
-		
-			IOString *etcDir = INIT_STRING(installPath->value);
-			etcDir->appendByPathComponent(etcDir, "etc");
-			IO_UNUSED mkdir(etcDir->value, 0775);
-			
-			IOString *varDir = INIT_STRING(installPath->value);
-			varDir->appendByPathComponent(varDir, "var");
-			IO_UNUSED mkdir(varDir->value, 0777);
-			IO_UNUSED chmod(varDir->value, writableChmode);
-		
-			IOString *logDir = INIT_STRING(installPath->value);
-			logDir->appendByPathComponent(logDir, "var/log");
-			IO_UNUSED mkdir(logDir->value, 0777);
-			IO_UNUSED chmod(logDir->value, writableChmode);
-		
-			IOString *runDir = INIT_STRING(installPath->value);
-			runDir->appendByPathComponent(runDir, "var/run");
-			IO_UNUSED mkdir(runDir->value, 0777);
-			IO_UNUSED chmod(runDir->value, writableChmode);
-		
-			IOString *extensionDir = INIT_STRING(installPath->value);
-			extensionDir->appendByPathComponent(extensionDir, "extensions");
-		
-			IOString *binPath = INIT_STRING(installPath->value);
-			binPath->appendByPathComponent(binPath, "bin");
-			
-			printf("\nGenerating config file ...");
-			generateConfigFile(etcDir, logDir, runDir, extensionDir);
-			printf("\t[OK]\n");
-			printf("Generating shortcut file ...");
-			generateBashScript(installPath, binPath);
-			printf("Generating system service file ...");
-			generateService(installPath, etcDir);
-			
-			IODirectory *etcIODir = INIT_DIRECTORY(etcDir);
-			updateFilePermissions(etcIODir, "0644");
-			
-			IODirectory *binIODir = INIT_DIRECTORY(binPath);
-			updateFilePermissions(binIODir, "0755");
-			
-			IOString *libIOPath = INIT_STRING(installPath->value);
-			libIOPath->appendByPathComponent(libIOPath, "lib");
-			IODirectory *libIODir = INIT_DIRECTORY(libIOPath);
-			updateFilePermissions(libIODir, "0755");
-			
-			IOString *enabledExtensionDir = INIT_STRING(extensionDir->value);
-			enabledExtensionDir->appendByPathComponent(enabledExtensionDir, "available");
-			IODirectory *enabledExtensionIODir = INIT_DIRECTORY(enabledExtensionDir);
-			updateFilePermissions(enabledExtensionIODir, "0755");
-			
-			IOString *frameworksDirPath = INIT_STRING(installPath->value);
-			frameworksDirPath->appendByPathComponent(frameworksDirPath, "frameworks");
-			IODirectory *frameworksDirectory = INIT_DIRECTORY(frameworksDirPath);
-			updateFilePermissions(frameworksDirectory, "0755");
-			
-			extensionDir->release(extensionDir);
-			varDir->release(varDir);
-			logDir->release(logDir);
-			runDir->release(runDir);
-		
+		processResponse->release(processResponse);
+		Bool installStatus = installApp(argv[1]);
+		if(installStatus == TRUE) {
+			return 0;
 		}else{
-		
-			zipFilePath->release(zipFilePath);
-			installPath->release(installPath);
-			buildDirectory->release(buildDirectory);
-			printf("An error occured when opening zip file. Are you sure zip/unzip installed ?\n");
 			return 1;
 		}
-	
-		unlink(zipFilePath->value);
-		zipFilePath->release(zipFilePath);
-		installPath->release(installPath);
-	
-		return 0;
 	}else{
 		
 		IOStringBucket *installedPaths = processResponse->split(processResponse, "\n");
+		processResponse->release(processResponse);
 		if(installedPaths->count > 0) {
 			
 			IOString *installedPathStr = installedPaths->get(installedPaths, 0);
-			IOString *installedPathStrCopy = INIT_STRING(installedPathStr->value);
-			installedPaths->release(installedPaths);
-			IODirectory *installedPathDir = INIT_DIRECTORY(installedPathStrCopy);
-			Bool uninstallResult = deleteDirectory(installedPathDir);
-			if(uninstallResult == TRUE) {
+			Bool updateOrUninstall = UPDATE_OR_UNINSTALL(installedPathStr->value);
+			if(updateOrUninstall == TRUE) {
 				
-				unlink(PROCESS_MAIN_COMMAND);
-				#if IS_DARWIN == TRUE
-				unlink(DARWIN_SERVICE_FILE);
-				#elif IS_LINUX == TRUE
-				unlink(LINUX_SERVICE_FILE);
-				#endif
-				printf("Application uninstalled.\nPlease re-run installer.");
+				Bool updateStatus = updateApp(installedPathStr);
+				installedPaths->release(installedPaths);
+				if(updateStatus == TRUE) {
+					return 0;
+				}else{
+					return 1;
+				}
+				
 			}else{
-				printf("An error occured when uninstalling %s\n", APP_NAME);
+				
+				Bool uninstallStatus = uninstallApp(installedPathStr);
+				installedPaths->release(installedPaths);
+				
+				if(uninstallStatus == TRUE) {
+					return 0;
+				}else{
+					return 1;
+				}
 			}
 			
-			installedPathDir->release(installedPathDir);
 		}else{
 			printf("An error occured when uninstalling %s\n", APP_NAME);
+			installedPaths->release(installedPaths);
+			return 1;
 		}
-		
-		processResponse->release(processResponse);
-		return 0;
 	}
 }
 

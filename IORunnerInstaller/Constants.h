@@ -20,6 +20,10 @@
 #	define APP_VERSION "1.0.0"
 #endif
 
+#ifndef APP_VERSION_INT
+#	define APP_VERSION_INT 100
+#endif
+
 #ifndef INSTALLER_PACKAGE_NAME
 #	define INSTALLER_PACKAGE_NAME "IOInstaller"
 #endif

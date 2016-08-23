@@ -2,8 +2,9 @@
 
 $(MODULE_NAME)Installer_CC = clang
 
-$(MODULE_NAME)Installer_Defines = -DBUILD_OS_$(OS)=1 -DAPP_NAME=\"$(MODULE_NAME)\" -DAPP_PACKAGE_NAME=\"$(MODULE_NAME)\" \
-	-DAPP_VERSION=\"1.0.0\" -DINSTALLER_PACKAGE_NAME=\"$(MODULE_NAME)Installer\" -DDARWIN_SERVICE_NAME=\"com.ilkerozcan.iorunner.plist\"
+$(MODULE_NAME)Installer_Defines = -DBUILD_OS_$(OS)=1 -DAPP_NAME=\"$(C_APP_NAME)\" -DAPP_PACKAGE_NAME=\"$(MODULE_NAME)\" \
+	-DAPP_VERSION=\"$(C_APP_VERSION)\" -DAPP_VERSION_INT=$(C_APP_VERSION_INT) -DINSTALLER_PACKAGE_NAME=\"$(MODULE_NAME)Installer\" \
+	-DDARWIN_SERVICE_NAME=\"$(C_DARWIN_SERVICE_NAME)\"
 
 $(MODULE_NAME)Installer_Darwin_Paths = -I$(SOURCE_ROOT_DIR)/$(MODULE_NAME)Installer
 $(MODULE_NAME)Installer_Linux_Paths = -I$(SOURCE_ROOT_DIR)/$(MODULE_NAME)Installer -I/usr/include -L/usr/lib -L/lib/x86_64-linux-gnu -I/usr/include/x86_64-linux-gnu

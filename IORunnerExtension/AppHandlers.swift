@@ -33,16 +33,18 @@ public class AppHandlers {
 		
 	#if swift(>=3)
 		let task = Task()
-	#elseif swift(>=2.2) && os(OSX)
+	#else
 		let task = NSTask()
 	#endif
+		
 		task.launchPath = "/usr/bin/pgrep"
 		
 		var processArguments = [String]()
+		let splittedProcName: [String]
 	#if swift(>=3)
-		let splittedProcName = processName.characters.split(separator: " ").map(String.init)
+		splittedProcName = processName.characters.split(separator: " ").map(String.init)
 	#elseif swift(>=2.2) && os(OSX)
-		let splittedProcName = processName.characters.split(" ").map(String.init)
+		splittedProcName = processName.characters.split(" ").map(String.init)
 	#endif
 		
 		for procArg in splittedProcName {
@@ -50,20 +52,29 @@ public class AppHandlers {
 		}
 		
 		task.arguments = processArguments
+	
 	#if swift(>=3)
-		let pipe = Pipe()
-	#elseif swift(>=2.2) && os(OSX)
-		let pipe = NSPipe()
+		let pipe: Pipe
+	#else
+		let pipe: NSPipe
 	#endif
+		
+	#if swift(>=3)
+		pipe = Pipe()
+	#elseif swift(>=2.2) && os(OSX)
+		pipe = NSPipe()
+	#endif
+		
 		task.standardOutput = pipe
 		task.launch()
 		task.waitUntilExit()
 		
 		let data = pipe.fileHandleForReading.readDataToEndOfFile()
+		let output: String?
 	#if swift(>=3)
-		let output = String(data: data, encoding: String.Encoding.utf8)
+		output = String(data: data, encoding: String.Encoding.utf8)
 	#elseif swift(>=2.2) && os(OSX)
-		let output = String(data: data, encoding: NSUTF8StringEncoding)
+		output = String(data: data, encoding: NSUTF8StringEncoding)
 	#endif
 		
 		if(output != nil) {
@@ -195,10 +206,11 @@ public class AppHandlers {
 			
 		}else{
 			
+			let commandWithArgs: [String]
 		#if swift(>=3)
-			let commandWithArgs = command.characters.split(separator: " ").map({String.init($0)})
+			commandWithArgs = command.characters.split(separator: " ").map({String.init($0)})
 		#elseif swift(>=2.2) && os(OSX)
-			let commandWithArgs = command.characters.split(" ").map({String.init($0)})
+			commandWithArgs = command.characters.split(" ").map({String.init($0)})
 		#endif
 			
 			if(commandWithArgs.count > 0) {

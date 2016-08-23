@@ -15,17 +15,18 @@ import Foundation
 
 internal struct Arguments {
 	
-	// [name] [short name] [variable name] [type] [description] [tab size]
+	// [name] [short name] [variable name] [type] [description] [tab size] [hidden]
 	static let ArgumentNames = [
-		["--config", "-c", "config", "String", "Config file path", "2"],
-		["--debug", "-d", "debug", "Bool", "Debug mode", "3"],
-		["--help", "-h", "help", "Bool", "Display help", "3"],
-		["--version", "-v", "version", "Bool", "Display version", "3"],
-		["--buildinfo", "-bi", "buildinfo", "Bool", "Display build info", "2"],
-		["--configdump", "-cd", "configdump", "Bool", "Display all configuration", "2"],
-		["--onlyusearguments", "-ua", "usetextbased", "Bool", "Only use arguments", "1"],
-		["--signal", "-s", "signalname", "String", "If only using arguments send signal.\n\t\t\t\t\t(start|stop|restart|force-stop)", "2"],
-		["--keepalive", "-ka", "keepalive", "Bool", "Do not exit after create the child process\n", "2"]
+		["--config", "-c", "config", "String", "Config file path", "2", "0"],
+		["--debug", "-d", "debug", "Bool", "Debug mode", "3", "0"],
+		["--help", "-h", "help", "Bool", "Display help", "3", "0"],
+		["--version", "-v", "version", "Bool", "Display version", "3", "0"],
+		["--buildinfo", "-bi", "buildinfo", "Bool", "Display build info", "2", "0"],
+		["--configdump", "-cd", "configdump", "Bool", "Display all configuration", "2", "0"],
+		["--onlyusearguments", "-ua", "usetextbased", "Bool", "Only use arguments", "1", "0"],
+		["--signal", "-s", "signalname", "String", "If only using arguments send signal.\n\t\t\t\t\t(start|stop|restart|force-stop)", "2", "0"],
+		["--keepalive", "-ka", "keepalive", "Bool", "Do not exit after create the child process\n", "2", "1"],
+		["--verint", "-vi", "versionint", "Bool", "Display version integer\n", "2", "1"],
 	]
 	
 	#if os(OSX)
@@ -52,6 +53,7 @@ internal struct Arguments {
 	var textMode: Bool = false
 	var signalName: String?
 	var keepalive: Bool = false
+	var versionint: Bool = false
 	
 	init(appPath: String) {
 		
@@ -101,6 +103,8 @@ internal struct Arguments {
 		case "keepalive":
 			self.keepalive = true
 			break
+		case "versionint":
+			self.versionint = true
 		default:
 			break
 		}
@@ -122,6 +126,14 @@ internal struct Arguments {
 		for i in 0..<Arguments.ArgumentNames.count {
 			
 			let currentArgData = Arguments.ArgumentNames[i]
+			
+			if let argIsHidden = Int(currentArgData[6]) {
+				
+				if(argIsHidden == 1) {
+					continue
+				}
+			}
+			
 			let tabSize: Int
 			if let currentTabSize = Int(currentArgData[5]) {
 				tabSize = currentTabSize

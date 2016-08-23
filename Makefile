@@ -11,13 +11,24 @@ Darwin_CLANG = clang++
 SWIFT_LINUX_PATH=$(shell which swiftc)
 Linux_CLANG = clang++ $(shell dirname $(shell dirname $(SWIFT_LINUX_PATH)))/lib/swift/linux/x86_64/swift_begin.o
 CLANG = $($(OS)_CLANG)
+
+C_APP_NAME = "IO Runner"
+C_APP_VERSION = "1.0.0"
+C_APP_VERSION_INT = 100
+C_DARWIN_SERVICE_NAME = "com.ilkerozcan.iorunner.plist"
+C_APP_CREDITS = "Copyright (c) 2016 Ilker Özcan"
+C_APP_PACKAGE_NAME = "IORunner"
+C_CpuSleepMsec = 0.3
+C_CpuSleepSec = 300000
+C_GuiRefreshRate = 30000
 MODULE_NAME = IORunner
+
 DEBUG.release = -gnone -O -whole-module-optimization
 DEBUG.debug = -g -Onone
 DEBUG := $(DEBUG.$(BUILD))
 
 XCODE = $(shell xcode-select -p)
-SDK = $(XCODE)/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk
+SDK = $(shell xcrun --show-sdk-path)
 
 LSB_OS = $(shell lsb_release -si)
 LSB_VER = $(shell lsb_release -sr)
@@ -129,7 +140,7 @@ dist-create-zip:
 	fi
 	$(eval CONFIG_FILE_EXISTS := $(shell [ -e Build/$(MODULE_NAME)InstallConfig ] && echo 1 || echo 0 ))
 	@if [ $(CONFIG_FILE_EXISTS) = 0 ]; then\
-		eval $(SOURCE_ROOT_DIR)/CreateExtensionConfigs.sh; \
+		eval $(SOURCE_ROOT_DIR)/Make/CreateExtensionConfigs.sh; \
 	fi
 	
 dist: $(MODULE_NAME) extensions dist-create-zip $(MODULE_NAME)Installer
@@ -146,8 +157,8 @@ source-dist: dist-clean
 	@cp $(SOURCE_ROOT_DIR)/Makefile $(BUILD_ROOT_DIR)/$(MODULE_NAME)
 	@cp $(SOURCE_ROOT_DIR)/LICENSE $(BUILD_ROOT_DIR)/$(MODULE_NAME)
 	@cp -r $(SOURCE_ROOT_DIR)/$(MODULE_NAME).xcodeproj $(BUILD_ROOT_DIR)/$(MODULE_NAME)
-	@cp -r $(SOURCE_ROOT_DIR)/CreateExtension.sh $(BUILD_ROOT_DIR)/$(MODULE_NAME)
-	@cp -r $(SOURCE_ROOT_DIR)/CreateExtensionConfigs.sh $(BUILD_ROOT_DIR)/$(MODULE_NAME)
+	@cp -r $(SOURCE_ROOT_DIR)/Bin $(BUILD_ROOT_DIR)/$(MODULE_NAME)
+	@cp -r $(SOURCE_ROOT_DIR)/Make $(BUILD_ROOT_DIR)/$(MODULE_NAME)
 	@mv $(BUILD_ROOT_DIR)/$(MODULE_NAME) $(SOURCE_ROOT_DIR)/$(MODULE_NAME)-Src
 	@find $(SOURCE_ROOT_DIR)/$(MODULE_NAME)-Src -name ".*" -exec rm -rf {} \;
 	@tar -cvzf $(BUILD_ROOT_DIR)/$(MODULE_NAME)-Source.tar.gz $(MODULE_NAME)-Src
