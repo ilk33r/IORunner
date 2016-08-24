@@ -319,7 +319,6 @@ public class BouncyHandler: AppHandlers {
 					self.waitJobServerAsyncTask()
 				}
 				
-				/*
 				if(!self.checkPushServerProcess()) {
 					
 					self.restartPushServer()
@@ -329,7 +328,6 @@ public class BouncyHandler: AppHandlers {
 					
 					self.waitPushServerAsyncTask()
 				}
-				*/
 				
 				self.lastCheckDate = Date()
 			}
@@ -538,10 +536,8 @@ public class BouncyHandler: AppHandlers {
 		}
 		
 		let procArgs: [String] = [ "status", "-p", self.jobServerSettings!.PidFile ]
-		self.logger.writeLog(level: Logger.LogLevels.ERROR, message: "JOB SERVER status \(self.jobServerSettings!.Command) \(procArgs)...")
 		if let response = self.executeTaskWithPipe(command: self.jobServerSettings!.Command, args: procArgs, withAsync: false) {
 			
-			self.logger.writeLog(level: Logger.LogLevels.ERROR, message: "JOB SERVER proc response \(response)...")
 			let strippedResponse = response.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
 			if let integerResponse = Int(strippedResponse) {
 				
@@ -555,7 +551,31 @@ public class BouncyHandler: AppHandlers {
 			}
 		}
 		
-		self.logger.writeLog(level: Logger.LogLevels.ERROR, message: "JOB SERVER is not running...")
+		return false
+	}
+	
+	private func checkPushServerProcess() -> Bool {
+		
+		guard self.pushServerSettings != nil else {
+			return true
+		}
+		
+		let procArgs: [String] = [ "status", "-p", self.pushServerSettings!.PidFile ]
+		if let response = self.executeTaskWithPipe(command: self.pushServerSettings!.Command, args: procArgs, withAsync: false) {
+			
+			let strippedResponse = response.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
+			if let integerResponse = Int(strippedResponse) {
+				
+				if(integerResponse == 200) {
+					return true
+				}else{
+					
+					self.logger.writeLog(level: Logger.LogLevels.ERROR, message: "PUSH SERVER is not running...")
+					return false
+				}
+			}
+		}
+		
 		return false
 	}
 	
@@ -579,6 +599,26 @@ public class BouncyHandler: AppHandlers {
 		}
 	}
 	
+	private func restartPushServer() {
+		
+		self.logger.writeLog(level: Logger.LogLevels.WARNINGS, message: "Restarting PUSH SERVER")
+		
+		if(self.pushServerAsyncTaskPid == nil) {
+			
+			self.pushServerAsyncTaskStartTime = UInt(Date().timeIntervalSince1970)
+			self.pushServerAsyncTaskPid = self.startAsyncTask(command: "self", extraEnv: [("IO_RUNNER_EX_BOUNCY", "PUSHSERVER")], extensionName: self.getClassName())
+		}else{
+			
+			self.logger.writeLog(level: Logger.LogLevels.WARNINGS, message: "PUSH SERVER Async task already started")
+			if(kill(self.pushServerAsyncTaskPid!, 0) != 0) {
+				
+				self.logger.writeLog(level: Logger.LogLevels.WARNINGS, message: "PUSH SERVER Async task already started but does not work!")
+				self.pushServerAsyncTaskPid = nil
+				self.restartPushServer()
+			}
+		}
+	}
+	
 	private func waitJobServerAsyncTask() {
 		
 		let curDate = UInt(Date().timeIntervalSince1970)
@@ -598,6 +638,25 @@ public class BouncyHandler: AppHandlers {
 		}
 	}
 	
+	private func waitPushServerAsyncTask() {
+		
+		let curDate = UInt(Date().timeIntervalSince1970)
+		let startDif = curDate - self.pushServerAsyncTaskStartTime
+		
+		if(startDif > UInt(taskTimeout + 30)) {
+			
+			if(kill(self.pushServerAsyncTaskPid!, 0) == 0) {
+				
+				var pidStatus: Int32 = 0
+				waitpid(self.pushServerAsyncTaskPid!, &pidStatus, 0)
+				self.pushServerAsyncTaskPid = nil
+			}else{
+				
+				self.pushServerAsyncTaskPid = nil
+			}
+		}
+	}
+	
 #elseif swift(>=2.2) && os(OSX)
 	public required init(logger: Logger, configFilePath: String, moduleConfig: Section?) {
 	
@@ -606,78 +665,3 @@ public class BouncyHandler: AppHandlers {
 	}
 #endif
 }
-
-
-/*
-
-public class BouncyHandler: AppHandlers {
-
-#if swift(>=3)
-
-	
-	private func checkPushserverProcess() -> Bool {
-		
-		guard self.pushServerSettings != nil else {
-			return true
-		}
-		
-		let procArgs: [String] = [ "status", "-p", self.pushServerSettings!.PidFile ]
-		if let response = self.executeTaskWithPipe(command: self.pushServerSettings!.Command, args: procArgs) {
-				
-			if let integerResponse = Int(response) {
-					
-				if(integerResponse == 200) {
-					return true
-				}else{
-						
-					self.logger.writeLog(level: Logger.LogLevels.ERROR, message: "PUSH SERVER is not running...")
-					return false
-				}
-			}
-		}
-			
-		self.logger.writeLog(level: Logger.LogLevels.ERROR, message: "PUSH SERVER is not running...")
-		return false
-	}
-	
-	private func restartJobOrPushserver(serverType: String) {
-		
-		if(serverType == "jobserver") {
-			
-			self.logger.writeLog(level: Logger.LogLevels.WARNINGS, message: "Restarting JOB SERVER")
-		
-			if(self.jobServerAsyncTaskPid == nil) {
-			
-				self.jobServerAsyncTaskPid = self.startAsyncTask(command: "self", extraEnv: [("IO_RUNNER_EX_BOUNCY", serverType)], extensionName: self.getClassName())
-			}else{
-			
-				self.logger.writeLog(level: Logger.LogLevels.WARNINGS, message: "Async task already started")
-				if(kill(self.jobServerAsyncTaskPid!, 0) != 0) {
-			
-					self.logger.writeLog(level: Logger.LogLevels.WARNINGS, message: "Async task already started but does not work!")
-					self.jobServerAsyncTaskPid = nil
-					self.restartJobOrPushserver(serverType: serverType)
-				}
-			}
-		}else if(serverType == "pushserver") {
-		
-			self.logger.writeLog(level: Logger.LogLevels.WARNINGS, message: "Restarting PUSH SERVER")
-			
-			if(self.pushServerAsyncTaskPid == nil) {
-				
-				self.pushServerAsyncTaskPid = self.startAsyncTask(command: "self", extraEnv: [("IO_RUNNER_EX_BOUNCY", serverType)], extensionName: self.getClassName())
-			}else{
-				
-				self.logger.writeLog(level: Logger.LogLevels.WARNINGS, message: "Async task already started")
-				if(kill(self.pushServerAsyncTaskPid!, 0) != 0) {
-					
-					self.logger.writeLog(level: Logger.LogLevels.WARNINGS, message: "Async task already started but does not work!")
-					self.pushServerAsyncTaskPid = nil
-					self.restartJobOrPushserver(serverType: serverType)
-				}
-			}
-		}
-	}
-
-}
-*/
