@@ -1,7 +1,7 @@
 env:
   global:
     - SWIFT_VERSION=swift-3.0-PREVIEW-4
-    - GITHUB_TOKEN=36cdac7f58413d838894166a4babd7d31cd8201d
+    - GITHUB_TOKEN=3fbe94550c66635e12f875b59308d4f17fd380cf
 language: generic
 matrix:
   include:
