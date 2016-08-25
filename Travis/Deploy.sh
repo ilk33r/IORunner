@@ -8,7 +8,7 @@
 
 RELEASE_NAME=""
 
-if [[ $TRAVIS_TAG != '' ]]; then
+if [[ $TRAVIS_TAG == '' ]]; then
 
 	if [[ $TRAVIS_OS_NAME == 'linux' ]]; then
 
