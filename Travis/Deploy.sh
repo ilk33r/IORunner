@@ -28,10 +28,12 @@ if [[ $TRAVIS_TAG != '' ]]; then
 	cp ./Build/IORunnerInstaller ./Build/${RELEASE_NAME}
 	zip ./Build/${RELEASE_NAME}.zip ./Build/${RELEASE_NAME}
 
-	curl -H "Authorization: token ${GITHUB_TOKEN}" \
--H "Accept: application/vnd.github.manifold-preview" \
+curl \
+-H "Accept: application/json" \
 -H "Content-Type: application/zip" \
+-H "X-IO-Travis-CommitID: ${TRAVIS_COMMIT}" \
+-H "X-IO-Travis-FileName: ${RELEASE_NAME}.zip" \
 --data-binary @./Build/${RELEASE_NAME}.zip \
-"https://uploads.github.com/repos/ilk33r/IORunner/releases/${TRAVIS_TAG}/assets?name=${RELEASE_NAME}.zip"
+"http://ilkerozcan.com.tr/iorunner/uploadbuild/"
 
 fi
