@@ -14,15 +14,15 @@ if [[ $TRAVIS_TAG == '' ]]; then
 
 		if [[ $BUILD_FOR == 'trusty_swift3' ]]; then
 
-			RELEASE_NAME="IORunnerInstaller_${TRAVIS_TAG}_ubuntu_trusty_swift_3"
+			RELEASE_NAME="IORunnerInstaller_${APP_VERSION}_ubuntu_trusty_swift_3"
 
 		elif [[ $BUILD_FOR == 'wily_swift3' ]]; then
 
-			RELEASE_NAME="IORunnerInstaller_${TRAVIS_TAG}_ubuntu_wily_swift_3"
+			RELEASE_NAME="IORunnerInstaller_${APP_VERSION}_ubuntu_wily_swift_3"
 
 		fi
 	else
-		RELEASE_NAME="IORunnerInstaller_${TRAVIS_TAG}_Darwin_swift_2.2"
+		RELEASE_NAME="IORunnerInstaller_${APP_VERSION}_Darwin_swift_2.2"
 	fi
 
 	cp ./Build/IORunnerInstaller ./Build/${RELEASE_NAME}

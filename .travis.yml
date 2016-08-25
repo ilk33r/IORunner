@@ -1,6 +1,7 @@
 env:
   global:
     - SWIFT_VERSION=swift-3.0-PREVIEW-4
+    - APP_VERSION=1.0.1
 language: generic
 matrix:
   include:
