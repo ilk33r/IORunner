@@ -3,15 +3,17 @@
 #    - SWIFT_VERSION=swift-3.0-PREVIEW-4
 #    - APP_VERSION=1.0.1
 language: generic
-sudo: required
-services:
-  - docker
-cache:
-  directories:
-    - docker
 matrix:
   include:
-    - env: DOCKER_IMAGE=trusty TRAVIS_IMAGE=Docker
+    - os: linux
+      sudo: required
+      dist: trusty
+      services:
+        - docker
+      env: DOCKER_IMAGE=trusty TRAVIS_IMAGE=Docker
+      cache:
+        directories:
+          - docker
       before_install:
         - ./Travis/run_docker.sh
     #- os: linux
