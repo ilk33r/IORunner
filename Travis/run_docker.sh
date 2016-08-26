@@ -14,7 +14,7 @@ if [[ -f docker/iorunner_${DOCKER_IMAGE}.tar ]]; then
 	docker import docker/iorunner_${DOCKER_IMAGE}.tar ilk3r/iorunner:${DOCKER_IMAGE}
 else
 	docker pull ilk3r/iorunner:${DOCKER_IMAGE}
-	docker run -t -i --name iorunner_${DOCKER_IMAGE} ilk3r/iorunner::${DOCKER_IMAGE} /bin/bash -c exit
+	docker run -t -i --name iorunner_${DOCKER_IMAGE} ilk3r/iorunner:${DOCKER_IMAGE} /bin/bash -c exit
 	docker export -o docker/iorunner_${DOCKER_IMAGE}.tar iorunner_${DOCKER_IMAGE}
 fi
 

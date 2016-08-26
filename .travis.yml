@@ -16,6 +16,9 @@ matrix:
           - docker
       before_install:
         - ./Travis/run_docker.sh
+      after_success:
+        - ./Travis/Deploy.sh
+		- exit
     #- os: linux
     #  sudo: required
     #  dist: trusty
@@ -33,5 +36,3 @@ matrix:
 #  - ./Travis/BeforeInstall.sh
 script:
   - ./Travis/Build.sh
-after_success:
-  - ./Travis/Deploy.sh
