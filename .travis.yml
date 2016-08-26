@@ -10,10 +10,9 @@ cache:
     - docker
 matrix:
   include:
-	  - env:
-		  - DOCKER_IMAGE=trusty TRAVIS_IMAGE=Docker
-	    before_install:
-		  - ./Travis/run_docker.sh
+    - env: DOCKER_IMAGE=trusty TRAVIS_IMAGE=Docker
+      before_install:
+        - ./Travis/run_docker.sh
     #- os: linux
     #  sudo: required
     #  dist: trusty
