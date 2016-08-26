@@ -25,7 +25,11 @@ public struct GUIMenuChoices {
 	}
 }
 
+#if swift(>=3) && os(OSX)
+public typealias MenuChoicesSelectionDelegate = (_ selectedChoiceIdx: Int) -> ()
+#else
 public typealias MenuChoicesSelectionDelegate = (selectedChoiceIdx: Int) -> ()
+#endif
 
 public struct MenuWidget {
 	
@@ -222,7 +226,11 @@ public struct MenuWidget {
 	
 	func choiceSelected() {
 		
+	#if swift(>=3) && os(OSX)
+		selectionDelegate(selectedChoiceCode)
+	#else
 		selectionDelegate(selectedChoiceIdx: selectedChoiceCode)
+	#endif
 	}
 	
 	mutating func keyEvent(keyCode: Int32) {

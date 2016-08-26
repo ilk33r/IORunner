@@ -10,7 +10,7 @@ matrix:
       dist: trusty
       services:
         - docker
-      env: DOCKER_IMAGE=trusty TRAVIS_IMAGE=Docker
+      env: DOCKER_IMAGE=trusty TRAVIS_IMAGE=Docker DOCKER_OS_RELEASE=Ubuntu_Trusty
       cache:
         directories:
           - docker

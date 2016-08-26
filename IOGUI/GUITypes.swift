@@ -46,7 +46,11 @@ public enum MainGuiActions {
 	case BACK
 }
 
+#if swift(>=3) && os(OSX)
+public typealias MainGuiDelegate = (_ action: MainGuiActions) -> ()
+#else
 public typealias MainGuiDelegate = (action: MainGuiActions) -> ()
+#endif
 
 public struct GUIWidgets {
 	
@@ -504,7 +508,11 @@ public struct GUIWidgets {
 				self.sendKeyEventToWidget(currentKey)
 			#endif
 			}else{
+			#if swift(>=3) && os(OSX)
+				self.delegate(MainGuiActions.EXIT)
+			#else
 				self.delegate(action: MainGuiActions.EXIT)
+			#endif
 			}
 			
 		}else if(currentKey == Int32(UnicodeScalar("b").value) || currentKey == Int32(UnicodeScalar("B").value)) {
@@ -519,7 +527,11 @@ public struct GUIWidgets {
 				self.sendKeyEventToWidget(currentKey)
 			#endif
 			}else{
+			#if swift(>=3) && os(OSX)
+				self.delegate(MainGuiActions.BACK)
+			#else
 				self.delegate(action: MainGuiActions.BACK)
+			#endif
 			}
 
 		}else{

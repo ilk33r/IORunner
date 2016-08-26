@@ -32,7 +32,10 @@ if [[ -f ./Build/IORunnerInstaller ]]; then
 
 	fi
 
-	exit(0)
+	echo "" >&1
+	echo "Deployment success!" >&1
+	exit 0
 else
-	exit(1)
+	echo "Deployment failed!" >&2
+	exit 1
 fi
