@@ -36,17 +36,10 @@ public final class Logger {
 	}
 
 #if swift(>=3)
-#if os(Linux)
 	public enum LoggerError: Error {
 		case FileSizeTooSmall
 		case FileIsNotWritable
 	}
-#else
-	public enum LoggerError: ErrorProtocol {
-		case FileSizeTooSmall
-		case FileIsNotWritable
-	}
-#endif
 #elseif swift(>=2.2) && os(OSX)
 	
 	public enum LoggerError: ErrorType {
@@ -117,12 +110,20 @@ public final class Logger {
 	public func setupLogger() throws {
 		
 	#if swift(>=3)
-		
+	
+	#if os(Linux)
 		if(!FileManager.default().isWritableFile(atPath: getLogFileFolder())) {
 			
 			throw LoggerError.FileIsNotWritable
 		}
-		
+	#else
+		if(!FileManager.default.isWritableFile(atPath: getLogFileFolder())) {
+			
+			throw LoggerError.FileIsNotWritable
+		}
+	#endif
+	
+	#if os(Linux)
 		if(FileManager.default().fileExists(atPath: logFilePath)) {
 			
 			if(FileManager.default().isWritableFile(atPath: logFilePath)) {
@@ -130,11 +131,7 @@ public final class Logger {
 				logFileDescriptor = FileHandle(forWritingAtPath: logFilePath)
 				
 				if(logFileDescriptor != nil) {
-				#if os(Linux)
 					let _ = logFileDescriptor?.seekToEndOfFile()
-				#else
-					logFileDescriptor?.seekToEndOfFile()
-				#endif
 					currentLogFileSize = (logFileDescriptor?.offsetInFile)!
 				}
 			}else{
@@ -143,15 +140,32 @@ public final class Logger {
 			
 		}else{
 			
-		#if os(Linux)
 			let _ = FileManager.default().createFile(atPath: logFilePath, contents: nil, attributes: nil)
-		#else
-			FileManager.default().createFile(atPath: logFilePath, contents: nil, attributes: nil)
-		#endif
 			logFileDescriptor = FileHandle(forWritingAtPath: logFilePath)
 			currentLogFileSize = 0
 		}
-		
+	#else
+		if(FileManager.default.fileExists(atPath: logFilePath)) {
+			
+			if(FileManager.default.isWritableFile(atPath: logFilePath)) {
+				
+				logFileDescriptor = FileHandle(forWritingAtPath: logFilePath)
+				
+				if(logFileDescriptor != nil) {
+					logFileDescriptor?.seekToEndOfFile()
+					currentLogFileSize = (logFileDescriptor?.offsetInFile)!
+				}
+			}else{
+				throw LoggerError.FileIsNotWritable
+			}
+			
+		}else{
+			
+			FileManager.default.createFile(atPath: logFilePath, contents: nil, attributes: nil)
+			logFileDescriptor = FileHandle(forWritingAtPath: logFilePath)
+			currentLogFileSize = 0
+		}
+	#endif
 	#else
 			
 		if(!NSFileManager.defaultManager().isWritableFileAtPath(getLogFileFolder())) {
@@ -242,7 +256,7 @@ public final class Logger {
 		let logFileFolder = getLogFileFolder()
 
 	#if swift(>=3)
-		
+	#if os(Linux)
 		
 		if(FileManager.default().isWritableFile(atPath: logFileFolder)) {
 
@@ -272,16 +286,46 @@ public final class Logger {
 				lastLogNumber += 1
 				let newLogFile = logFilePath + ".\(lastLogNumber)"
 				let _ = try? FileManager.default().moveItem(atPath: logFilePath, toPath: newLogFile)
-			#if os(Linux)
 				let _ = FileManager.default().createFile(atPath: logFilePath, contents: nil, attributes: nil)
-			#else
-				FileManager.default().createFile(atPath: logFilePath, contents: nil, attributes: nil)
-			#endif
 				logFileDescriptor = FileHandle(forWritingAtPath: logFilePath)
 				currentLogFileSize = 0
 			}
 		}
-
+	#else
+		if(FileManager.default.isWritableFile(atPath: logFileFolder)) {
+			
+			if let dirFiles = try? FileManager.default.contentsOfDirectory(atPath: logFileFolder) {
+				
+				var lastLogNumber = 0
+				for currentFile in dirFiles {
+					
+					let splittedFileNamePath = currentFile.characters.split(separator: ".").map(String.init)
+					if(splittedFileNamePath.count >= 3) {
+						
+						let fileNumberIdx = splittedFileNamePath.count - 1
+						let fileExtensionIdx = splittedFileNamePath.count - 2
+						
+						if(splittedFileNamePath[fileExtensionIdx] == "log") {
+							
+							if let logNumberInt = Int(splittedFileNamePath[fileNumberIdx]) {
+								
+								if(lastLogNumber < logNumberInt) {
+									lastLogNumber = logNumberInt
+								}
+							}
+						}
+					}
+				}
+				
+				lastLogNumber += 1
+				let newLogFile = logFilePath + ".\(lastLogNumber)"
+				let _ = try? FileManager.default.moveItem(atPath: logFilePath, toPath: newLogFile)
+				FileManager.default.createFile(atPath: logFilePath, contents: nil, attributes: nil)
+				logFileDescriptor = FileHandle(forWritingAtPath: logFilePath)
+				currentLogFileSize = 0
+			}
+		}
+	#endif
 	#else
 			
 		if(NSFileManager.defaultManager().isWritableFileAtPath(logFileFolder)) {

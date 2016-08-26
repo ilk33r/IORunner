@@ -8,7 +8,7 @@
 
 if [[ $TRAVIS_IMAGE == 'Docker' ]]; then
 
-	docker run ilk3r/iorunner:trusty /bin/bash -c "cd /root/ilk33r/IORunner/; git pull; make dist; ./Travis/Deploy.sh"
+	docker run ilk3r/iorunner:trusty /bin/bash -c "cd /root/ilk33r/IORunner/; git pull; echo \$OS_RELEASE; echo \$PATH;  make dist; ./Travis/Deploy.sh"
 else
 	make dist
 fi

@@ -17,5 +17,3 @@ else
 	docker run --name iorunner_${DOCKER_IMAGE} ilk3r/iorunner:${DOCKER_IMAGE} /bin/true
 	docker export -o docker/iorunner_${DOCKER_IMAGE}.tar iorunner_${DOCKER_IMAGE}
 fi
-
-docker run ilk3r/iorunner:trusty /bin/bash

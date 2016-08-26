@@ -32,7 +32,11 @@ public class AppHandlers {
 		var retval = [Int]()
 		
 	#if swift(>=3)
+	#if os(Linux)
 		let task = Task()
+	#else
+		let task = Process()
+	#endif
 	#else
 		let task = NSTask()
 	#endif
@@ -108,6 +112,7 @@ public class AppHandlers {
 	}
 	
 #if swift(>=3)
+#if os(Linux)
 	public func executeTask(command: String) -> Task? {
 
 		let commandWithArgs = command.characters.split(separator: " ")
@@ -128,12 +133,8 @@ public class AppHandlers {
 						
 				loopIdx += 1
 			}
-			
-			#if os(Linux)
-				let environments = ProcessInfo.processInfo().environment
-			#else
-				let environments = ProcessInfo().environment
-			#endif
+	
+			let environments = ProcessInfo.processInfo().environment
 			task.environment = environments
 			task.arguments = taskArgs
 			task.launch()
@@ -143,6 +144,39 @@ public class AppHandlers {
 		
 		return nil
 	}
+#else
+	public func executeTask(command: String) -> Process? {
+		
+		let commandWithArgs = command.characters.split(separator: " ")
+		
+		if(commandWithArgs.count > 0) {
+			
+			let task = Process()
+			task.launchPath = String(commandWithArgs[0])
+			
+			var taskArgs = [String]()
+			var loopIdx = 0
+			for argument in commandWithArgs {
+				
+				if(loopIdx > 0) {
+					
+					taskArgs.append(String(argument))
+				}
+				
+				loopIdx += 1
+			}
+			
+			let environments = ProcessInfo.processInfo.environment
+			task.environment = environments
+			task.arguments = taskArgs
+			task.launch()
+			
+			return task
+		}
+		
+		return nil
+	}
+#endif
 #elseif swift(>=2.2) && os(OSX)
 	public func executeTask(command: String) -> NSTask? {
 		
@@ -186,7 +220,11 @@ public class AppHandlers {
 		
 		if(command == "self") {
 			
+		#if swift(>=3) && os(OSX)
+			processConfig.ProcessArgs = [ProcessInfo.processInfo.arguments[0], "--config", self.configFilePath, "--onlyusearguments", "--signal", "environ"]
+		#else
 			processConfig.ProcessArgs = [Process.arguments[0], "--config", self.configFilePath, "--onlyusearguments", "--signal", "environ"]
+		#endif
 			
 			var extEnvArr: [(String, String)]
 			if(extraEnv == nil) {

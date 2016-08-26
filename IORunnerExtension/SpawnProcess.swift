@@ -16,15 +16,9 @@ import Foundation
 public typealias maybeCChar = UnsafeMutablePointer<CChar>
 
 #if swift(>=3)
-#if os(Linux)
 	enum SpawnProcessError: Error {
 		case DaemonizeFailed
 	}
-	#else
-	enum SpawnProcessError: ErrorProtocol {
-		case DaemonizeFailed
-	}
-#endif
 #elseif swift(>=2.2) && os(OSX)
 	
 	enum SpawnProcessError: ErrorType {
@@ -109,19 +103,11 @@ public func SpawnCurrentProcess(logger: Logger, configData: ProcessConfigData) t
 	
 #if swift(>=3)
 
-#if os(Linux)
 	let cArgs = UnsafeMutablePointer<maybeCChar?>.allocate(capacity: allocateLen)
 	defer {
 		cArgs.deinitialize(count: allocateLen)
 		cArgs.deallocate(capacity: allocateLen)
 	}
-#else
-	let cArgs = UnsafeMutablePointer<maybeCChar?>(allocatingCapacity: allocateLen)
-	defer {
-		cArgs.deinitialize(count: allocateLen)
-		cArgs.deallocateCapacity(allocateLen)
-	}
-#endif
 	
 #else
 
@@ -141,12 +127,11 @@ public func SpawnCurrentProcess(logger: Logger, configData: ProcessConfigData) t
 	}
 	
 #if swift(>=3)
-					
-	cArgs[currentIdx] = UnsafeMutablePointer<CChar>(nil)
-					
 #if os(Linux)
+	cArgs[currentIdx] = UnsafeMutablePointer<CChar>(nil)
 	var environments = ProcessInfo.processInfo().environment
 #else
+	cArgs[currentIdx] = UnsafeMutablePointer<CChar>(mutating: nil)
 	var environments = ProcessInfo().environment
 #endif
 	
@@ -159,22 +144,17 @@ public func SpawnCurrentProcess(logger: Logger, configData: ProcessConfigData) t
 		}
 	}
 	
-#if os(Linux)
 	let cEnv = UnsafeMutablePointer<maybeCChar?>.allocate(capacity: environments.count + 1)
 						
 	defer {
 		cEnv.deinitialize(count: environments.count + 1)
 		cEnv.deallocate(capacity: environments.count + 1)
 	}
-#else
-	let cEnv = UnsafeMutablePointer<maybeCChar?>(allocatingCapacity: environments.count + 1)
-						
-	defer {
-		cEnv.deinitialize(count: environments.count + 1)
-		cEnv.deallocateCapacity(environments.count + 1)
-	}
-#endif
+#if os(Linux)
 	cEnv[environments.count] = UnsafeMutablePointer<CChar>(nil)
+#else
+	cEnv[environments.count] = UnsafeMutablePointer<CChar>(mutating: nil)
+#endif
 #else
 					
 	cArgs[currentIdx] = UnsafeMutablePointer<CChar>(nil)
@@ -209,15 +189,21 @@ public func SpawnCurrentProcess(logger: Logger, configData: ProcessConfigData) t
 	var fSTDIN: [Int32] = [0, 0]
 	var fSTDOUT: [Int32] = [0, 0]
 	var fSTDERR: [Int32] = [0, 0]
-				
+
+#if swift(>=3) && os(OSX)
+	pipe(UnsafeMutablePointer<Int32>(mutating: fSTDIN))
+	pipe(UnsafeMutablePointer<Int32>(mutating: fSTDOUT))
+	pipe(UnsafeMutablePointer<Int32>(mutating: fSTDERR))
+#else
 	pipe(UnsafeMutablePointer<Int32>(fSTDIN))
 	pipe(UnsafeMutablePointer<Int32>(fSTDOUT))
 	pipe(UnsafeMutablePointer<Int32>(fSTDERR))
+#endif
 
 #if os(Linux)
 	var fileActions = posix_spawn_file_actions_t()
 #else
-	var fileActions = posix_spawn_file_actions_t(nil)
+	var fileActions = posix_spawn_file_actions_t(mutating: nil)
 #endif
 				
 	posix_spawn_file_actions_init(&fileActions);
