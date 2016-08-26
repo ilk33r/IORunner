@@ -10,17 +10,9 @@ RELEASE_NAME=""
 
 if [[ $TRAVIS_TAG == '' ]]; then
 
-	if [[ $TRAVIS_OS_NAME == 'linux' ]]; then
+	if [[ $TRAVIS_IMAGE == 'Docker' ]]; then
 
-		if [[ $BUILD_FOR == 'trusty_swift3' ]]; then
-
-			RELEASE_NAME="IORunnerInstaller_${APP_VERSION}_ubuntu_trusty_swift_3"
-
-		elif [[ $BUILD_FOR == 'wily_swift3' ]]; then
-
-			RELEASE_NAME="IORunnerInstaller_${APP_VERSION}_ubuntu_wily_swift_3"
-
-		fi
+		RELEASE_NAME="IORunnerInstaller_${APP_VERSION}_${OS_RELEASE}_swift_3"
 	else
 		RELEASE_NAME="IORunnerInstaller_${APP_VERSION}_Darwin_swift_2.2"
 	fi

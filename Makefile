@@ -13,7 +13,7 @@ Linux_CLANG = clang++ $(shell dirname $(shell dirname $(SWIFT_LINUX_PATH)))/lib/
 CLANG = $($(OS)_CLANG)
 
 C_APP_NAME = "IO Runner"
-C_APP_VERSION = "1.0.0"
+C_APP_VERSION = "1.0.1"
 C_APP_VERSION_INT = 100
 C_DARWIN_SERVICE_NAME = "com.ilkerozcan.iorunner.plist"
 C_APP_CREDITS = "Copyright (c) 2016 Ilker Özcan"
@@ -85,6 +85,7 @@ install-debug:
 debug: prepare-debug $(MODULE_NAME) extensions install-debug
 
 modulecache:
+	@export APP_VERSION=$(C_APP_VERSION)
 	@mkdir -p $(BUILD_ROOT_DIR)
 	@mkdir -p $(BUILD_ROOT_DIR)/lib
 	@mkdir -p $(BUILD_ROOT_DIR)/lib/x86_64
