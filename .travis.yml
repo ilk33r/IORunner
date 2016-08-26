@@ -18,7 +18,7 @@ matrix:
         - ./Travis/run_docker.sh
       after_success:
         - ./Travis/Deploy.sh
-		- exit
+        - exit
     #- os: linux
     #  sudo: required
     #  dist: trusty
