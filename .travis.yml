@@ -15,10 +15,7 @@ matrix:
         directories:
           - docker
       before_install:
-        - ./Travis/run_docker.sh
-      after_success:
-        - ./Travis/Deploy.sh
-        - exit
+        - ./Travis/DownloadDocker.sh
     #- os: linux
     #  sudo: required
     #  dist: trusty

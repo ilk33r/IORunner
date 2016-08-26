@@ -8,10 +8,7 @@
 
 if [[ $TRAVIS_IMAGE == 'Docker' ]]; then
 
-	cd /root/ilk33r/IORunner/
-	git pull
-	make dist
+	docker run ilk3r/iorunner:trusty /bin/bash -c "cd /root/ilk33r/IORunner/; git pull; make dist; ./Travis/Deploy.sh"
 else
-	which swiftc
 	make dist
 fi
