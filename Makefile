@@ -85,7 +85,6 @@ install-debug:
 debug: prepare-debug $(MODULE_NAME) extensions install-debug
 
 modulecache:
-	export APP_VERSION=$(C_APP_VERSION)
 	@mkdir -p $(BUILD_ROOT_DIR)
 	@mkdir -p $(BUILD_ROOT_DIR)/lib
 	@mkdir -p $(BUILD_ROOT_DIR)/lib/x86_64
@@ -146,6 +145,9 @@ dist-create-zip:
 	
 dist: $(MODULE_NAME) extensions dist-create-zip $(MODULE_NAME)Installer
 	
+deploy: 
+	./Travis/Deploy.sh $(C_APP_VERSION)
+	
 source-dist: dist-clean
 	@mkdir -p $(BUILD_ROOT_DIR)
 	@mkdir -p $(BUILD_ROOT_DIR)/$(MODULE_NAME)
@@ -167,7 +169,7 @@ source-dist: dist-clean
 	@rm -f $(SOURCE_ROOT_DIR)/Config.ini*
 	@rm -rf $(BUILD_ROOT_DIR)/lldb-ext*
 	
-.PHONY: all extensions clean dist-clean dist source-dist debug
+.PHONY: all extensions clean dist-clean dist source-dist debug deploy
 
 
 	
