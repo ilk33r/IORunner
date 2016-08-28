@@ -745,10 +745,10 @@ internal final class Application {
 	#if swift(>=3)
 		
 		var loopStartDate: UInt = UInt(Date().timeIntervalSince1970)
-		let runLoop = RunLoop.current
 		
 	#if os(Linux)
 
+		let runLoop = RunLoop.current()
 		repeat {
 			
 			let _ = signalHandler.process()
@@ -771,6 +771,7 @@ internal final class Application {
 		} while (inGuiLoop)
 	#else
 		
+		let runLoop = RunLoop.current
 		repeat {
 			let _ = signalHandler.process()
 			self.mainGUI.onGUI()
