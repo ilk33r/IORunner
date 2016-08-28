@@ -1,4 +1,7 @@
 language: generic
+branches:
+  except:
+    - master
 matrix:
   include:
     - os: linux
