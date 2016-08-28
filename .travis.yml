@@ -6,23 +6,17 @@ matrix:
       dist: trusty
       services:
         - docker
-      env: DOCKER_IMAGE=trusty_v1.0.1 TRAVIS_IMAGE=Docker DOCKER_OS_RELEASE=Ubuntu_Trusty
+      env: DOCKER_IMAGE=trusty_v1.0.1 TRAVIS_IMAGE=Docker DOCKER_OS_RELEASE=Ubuntu_Trusty TEST_BRANCH=trusty
       cache:
         directories:
           - docker
       before_install:
         - ./Travis/DownloadDocker.sh
-      branches:
-        only:
-          - trusty
     - os: osx
       osx_image: xcode7.3
-      env: TRAVIS_IMAGE=OSX SWIFT_VERSION=2.2
-      branches:
-        only:
-          - osx
+      env: TRAVIS_IMAGE=OSX SWIFT_VERSION=2.2 TEST_BRANCH=xcode_7.3
     - os: osx
       osx_image: xcode8
-      env: TRAVIS_IMAGE=OSX SWIFT_VERSION=3
+      env: TRAVIS_IMAGE=OSX SWIFT_VERSION=3 TEST_BRANCH=xcode_8
 script:
   - ./Travis/Build.sh
