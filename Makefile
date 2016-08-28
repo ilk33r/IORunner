@@ -85,7 +85,7 @@ install-debug:
 debug: prepare-debug $(MODULE_NAME) extensions install-debug
 
 modulecache:
-	@export APP_VERSION=$(C_APP_VERSION)
+	export APP_VERSION=$(C_APP_VERSION)
 	@mkdir -p $(BUILD_ROOT_DIR)
 	@mkdir -p $(BUILD_ROOT_DIR)/lib
 	@mkdir -p $(BUILD_ROOT_DIR)/lib/x86_64
