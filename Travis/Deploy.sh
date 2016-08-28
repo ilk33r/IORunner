@@ -16,7 +16,7 @@ if [[ -f ./Build/IORunnerInstaller ]]; then
 
 			RELEASE_NAME="IORunnerInstaller_${APP_VERSION}_${OS_RELEASE}_swift_3"
 		else
-			RELEASE_NAME="IORunnerInstaller_${APP_VERSION}_Darwin_swift_2.2"
+			RELEASE_NAME="IORunnerInstaller_${APP_VERSION}_Darwin_swift_${SWIFT_VERSION}"
 		fi
 
 		cp ./Build/IORunnerInstaller ./Build/${RELEASE_NAME}

@@ -1,7 +1,3 @@
-#env:
-#  global:
-#    - SWIFT_VERSION=swift-3.0-PREVIEW-4
-#    - APP_VERSION=1.0.1
 language: generic
 matrix:
   include:
@@ -10,26 +6,20 @@ matrix:
       dist: trusty
       services:
         - docker
-      env: DOCKER_IMAGE=trusty TRAVIS_IMAGE=Docker DOCKER_OS_RELEASE=Ubuntu_Trusty
+      env: DOCKER_IMAGE=trusty_v1.0.1 TRAVIS_IMAGE=Docker DOCKER_OS_RELEASE=Ubuntu_Trusty
       cache:
         directories:
           - docker
       before_install:
         - ./Travis/DownloadDocker.sh
-    #- os: linux
-    #  sudo: required
-    #  dist: trusty
-    #  env: BUILD_FOR=trusty_swift3
-    #- os: linux
-    #  sudo: required
-    #  dist: wily
-    #  env: BUILD_FOR=wily_swift3
-    #  after_success:
-    #    - ./Travis/Deploy.sh
-    #- os: osx
-    #  osx_image: xcode7.3
-    #  env: BUILD_FOR=osx_swift2_2
-#install:
-#  - ./Travis/BeforeInstall.sh
+      branches:
+        only:
+          - trusty
+    - os: osx
+      osx_image: xcode7.3
+      env: TRAVIS_IMAGE=OSX SWIFT_VERSION=2.2
+    - os: osx
+      osx_image: xcode8
+      env: TRAVIS_IMAGE=OSX SWIFT_VERSION=3
 script:
   - ./Travis/Build.sh
