@@ -14,11 +14,12 @@ if [[ -f ./Build/IORunnerInstaller ]]; then
 
 		if [[ $TRAVIS_IMAGE == 'Docker' ]]; then
 
-			RELEASE_NAME="IORunnerInstaller_${APP_VERSION}_${OS_RELEASE}_swift_3"
+			RELEASE_NAME="IORunnerInstaller_${APP_VERSION}_${DOCKER_OS_RELEASE}_swift_3"
 		else
 			RELEASE_NAME="IORunnerInstaller_${APP_VERSION}_Darwin_swift_${SWIFT_VERSION}"
 		fi
 
+		echo "Release Name = $RELEASE_NAME"
 		cp ./Build/IORunnerInstaller ./Build/${RELEASE_NAME}
 		zip ./Build/${RELEASE_NAME}.zip ./Build/${RELEASE_NAME}
 
