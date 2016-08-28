@@ -19,7 +19,11 @@ public class DovecotHandler: AppHandlers {
 	
 	// 0 waiting, 1 stopping, 2 starting
 	private var taskStatus = 0
+#if os(Linux)
 	private var lastTask: Task?
+#else
+	private var lastTask: Process?
+#endif
 	private var lastCheckDate: Date?
 	private var lastTaskStartDate = 0
 	private var asyncTaskPid: pid_t?
@@ -48,7 +52,7 @@ public class DovecotHandler: AppHandlers {
 
 	public override func getClassName() -> String {
 		
-		return String(self)
+		return String(describing: self)
 	}
 	
 	public override func forStart() {

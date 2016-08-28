@@ -13,13 +13,3 @@ _InstallData_Data:
 1:
 _InstallData_Size:
 	.int 1b - _InstallData_Data
-
-
-//    .global blob
-//		.global blob_size
-//		.section .rodata
-//blob:
-//	.incbin "blob.bin"
-//1:
-//blob_size:
-	//.int 1b - blob

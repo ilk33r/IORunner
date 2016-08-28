@@ -356,7 +356,7 @@ public struct PopupWidget {
 				wattrset(self.buttonWindows[0], COLOR_PAIR(WidgetUIColor.Progress.rawValue))
 			#if swift(>=3)
 				
-				let spaceString = String(repeating: Character(" "), count: Int((percentStringStartPos - progressPercentWidth)))
+				let spaceString = String(repeating: " ", count: Int((percentStringStartPos - progressPercentWidth)))
 			#else
 				
 				let spaceString = String(count: Int((percentStringStartPos - progressPercentWidth)), repeatedValue: Character(" "))
@@ -434,7 +434,11 @@ public struct PopupWidget {
 		
 		if(keyCode == KEY_ENTER || keyCode == 13) {
 			
+		#if swift(>=3)
+			popupDelegate(currentSelectedButtonIdx)
+		#else
 			popupDelegate(selectedChoiceIdx: currentSelectedButtonIdx)
+		#endif
 		}else if(keyCode == KEY_LEFT) {
 			
 			if(popuptype == .CONFIRM) {

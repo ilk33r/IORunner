@@ -27,7 +27,7 @@ public struct GUIModulesChoices {
 	}
 }
 
-#if swift(>=3) && os(OSX)
+#if swift(>=3)
 public typealias ModuleChoicesSelectionDelegate = (_ selectedChoiceIdx: Int, _ isActive: Bool) -> ()
 #else
 public typealias ModuleChoicesSelectionDelegate = (selectedChoiceIdx: Int, isActive: Bool) -> ()
@@ -438,7 +438,7 @@ public struct ModulesWidget {
 	
 	func choiceSelected() {
 		
-	#if swift(>=3) && os(OSX)
+	#if swift(>=3)
 		if(cursorIsLeftSide) {
 			
 			selectionDelegate(selectedLeftChoiceCode, true)

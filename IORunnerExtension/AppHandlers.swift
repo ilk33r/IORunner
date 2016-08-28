@@ -14,11 +14,11 @@
 import Foundation
 import IOIni
 
-public class AppHandlers {
+open class AppHandlers {
 	
-	public var logger: Logger
-	public var configFilePath: String
-	public var moduleConfig: Section?
+	open var logger: Logger
+	open var configFilePath: String
+	open var moduleConfig: Section?
 	
 	public required init(logger: Logger, configFilePath: String, moduleConfig: Section?) {
 		
@@ -220,8 +220,13 @@ public class AppHandlers {
 		
 		if(command == "self") {
 			
-		#if swift(>=3) && os(OSX)
-			processConfig.ProcessArgs = [ProcessInfo.processInfo.arguments[0], "--config", self.configFilePath, "--onlyusearguments", "--signal", "environ"]
+		#if swift(>=3)
+		#if os(OSX)
+			let arg0 = ProcessInfo.processInfo.arguments[0]
+		#else
+			let arg0 = ProcessInfo.processInfo().arguments[0]
+		#endif
+			processConfig.ProcessArgs = [arg0, "--config", self.configFilePath, "--onlyusearguments", "--signal", "environ"]
 		#else
 			processConfig.ProcessArgs = [Process.arguments[0], "--config", self.configFilePath, "--onlyusearguments", "--signal", "environ"]
 		#endif
@@ -278,24 +283,24 @@ public class AppHandlers {
 		return procPid
 	}
 	
-	public func getClassName() -> String {
+	open func getClassName() -> String {
 		
 		abort()
 	}
 	
-	public func forStart() -> Void {
+	open func forStart() -> Void {
 		// pass
 	}
 	
-	public func inLoop() -> Void {
+	open func inLoop() -> Void {
 		// pass
 	}
 	
-	public func forStop() -> Void {
+	open func forStop() -> Void {
 		// pass
 	}
 	
-	public func forAsyncTask() -> Void {
+	open func forAsyncTask() -> Void {
 		// pass
 	}
 }

@@ -9,7 +9,7 @@
   },
   "DVTSourceControlWorkspaceBlueprintIdentifierKey" : "8C23EFED-356B-48B8-9DF7-5CBF57835C8C",
   "DVTSourceControlWorkspaceBlueprintWorkingCopyPathsKey" : {
-    "68DF92866B842AD9C42D88BDDA2A37375039A4F9" : "IOProcessChecker\/",
+    "68DF92866B842AD9C42D88BDDA2A37375039A4F9" : "IORunner\/",
     "141327B13CF6F03AE8A8020DD61847B96EC5D0D6" : "IOProcessChecker\/ini\/"
   },
   "DVTSourceControlWorkspaceBlueprintNameKey" : "IORunner",

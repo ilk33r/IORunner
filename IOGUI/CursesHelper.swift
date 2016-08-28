@@ -20,7 +20,7 @@ import Foundation
 				
 				if(character <= 127) {
 					
-					responseString += String(UnicodeScalar(character))
+					responseString += String(describing: UnicodeScalar(character))
 				}else if(character == 228 || character == 230 || character == 509) {
 					
 					//ä æ ǽ
@@ -242,8 +242,8 @@ import Foundation
 			paddingSize = 0
 		}
 		
-		let stringStartPadding = String(repeating: Character(" "), count: textStartSpace)
-		let stringEndPadding = String(repeating: Character(" "), count: paddingSize)
+		let stringStartPadding = String(repeating: " ", count: textStartSpace)
+		let stringEndPadding = String(repeating: " ", count: paddingSize)
 		let resultString = "\(stringStartPadding)\(asciiString)\(stringEndPadding)"
 		waddstr(window, resultString)
 	}
@@ -281,8 +281,8 @@ import Foundation
 			paddingSize = 0
 		}
 		
-		let stringStartPadding = String(repeating: Character(" "), count: textStartSpace)
-		let stringEndPadding = String(repeating: Character(" "), count: paddingSize)
+		let stringStartPadding = String(repeating: " ", count: textStartSpace)
+		let stringEndPadding = String(repeating: " ", count: paddingSize)
 		let resultString = "\(stringStartPadding)\(asciiString)\(stringEndPadding)"
 		waddstr(window, resultString)
 	}

@@ -127,12 +127,11 @@ public func SpawnCurrentProcess(logger: Logger, configData: ProcessConfigData) t
 	}
 	
 #if swift(>=3)
+	cArgs[currentIdx] = UnsafeMutablePointer<CChar>(mutating: nil)
 #if os(Linux)
-	cArgs[currentIdx] = UnsafeMutablePointer<CChar>(nil)
 	var environments = ProcessInfo.processInfo().environment
 #else
-	cArgs[currentIdx] = UnsafeMutablePointer<CChar>(mutating: nil)
-	var environments = ProcessInfo().environment
+	var environments = ProcessInfo.processInfo.environment
 #endif
 	
 	if let extraEnv = configData.Environments {
@@ -150,13 +149,10 @@ public func SpawnCurrentProcess(logger: Logger, configData: ProcessConfigData) t
 		cEnv.deinitialize(count: environments.count + 1)
 		cEnv.deallocate(capacity: environments.count + 1)
 	}
-#if os(Linux)
-	cEnv[environments.count] = UnsafeMutablePointer<CChar>(nil)
-#else
 	cEnv[environments.count] = UnsafeMutablePointer<CChar>(mutating: nil)
-#endif
 #else
-					
+	
+	// MARK: swift 2.2
 	cArgs[currentIdx] = UnsafeMutablePointer<CChar>(nil)
 					
 	var environments = NSProcessInfo().environment
@@ -190,15 +186,9 @@ public func SpawnCurrentProcess(logger: Logger, configData: ProcessConfigData) t
 	var fSTDOUT: [Int32] = [0, 0]
 	var fSTDERR: [Int32] = [0, 0]
 
-#if swift(>=3) && os(OSX)
 	pipe(UnsafeMutablePointer<Int32>(mutating: fSTDIN))
 	pipe(UnsafeMutablePointer<Int32>(mutating: fSTDOUT))
 	pipe(UnsafeMutablePointer<Int32>(mutating: fSTDERR))
-#else
-	pipe(UnsafeMutablePointer<Int32>(fSTDIN))
-	pipe(UnsafeMutablePointer<Int32>(fSTDOUT))
-	pipe(UnsafeMutablePointer<Int32>(fSTDERR))
-#endif
 
 #if os(Linux)
 	var fileActions = posix_spawn_file_actions_t()
@@ -218,26 +208,6 @@ public func SpawnCurrentProcess(logger: Logger, configData: ProcessConfigData) t
 	posix_spawn_file_actions_addclose(&fileActions, fSTDIN[1]);
 	posix_spawn_file_actions_addclose(&fileActions, fSTDERR[1]);
 	
-	/*
-	var spawnAttr: posix_spawnattr_t?
-#if os(Linux)
-	let attrSize = sizeof(posix_spawnattr_t.self)
-	let attrPoint = UnsafeMutablePointer<posix_spawnattr_t>.allocate(capacity: attrSize)
-	
-	defer {
-		attrPoint.deinitialize(count: attrSize)
-		attrPoint.deallocate(capacity: attrSize)
-	}
-	
-	let _ = posix_spawnattr_init(attrPoint)
-	posix_spawnattr_setflags(attrPoint, Int16(POSIX_SPAWN_SETSIGDEF))
-	let spawnRes = posix_spawnp(&procPid, configData.ProcessArgs![0], &fileActions, attrPoint, cArgs, cEnv)
-#else
-	let _ = posix_spawnattr_init(&spawnAttr)
-	posix_spawnattr_setflags(&spawnAttr, Int16(POSIX_SPAWN_SETSIGDEF))
-	let spawnRes = posix_spawnp(&procPid, configData.ProcessArgs![0], &fileActions, &spawnAttr, cArgs, cEnv)
-#endif
-	*/
 	let spawnRes = posix_spawnp(&procPid, configData.ProcessArgs![0], &fileActions, nil, cArgs, cEnv)
 	
 	switch spawnRes {
@@ -343,14 +313,6 @@ public func SpawnCurrentProcess(logger: Logger, configData: ProcessConfigData) t
 	default:
 		break
 	}
-	
-	/*
-#if os(Linux)
-	posix_spawnattr_destroy(attrPoint)
-#else
-	posix_spawnattr_destroy(&spawnAttr)
-#endif
-	*/
 	
 #if os(Linux)
 	_ = Glibc.close(fSTDIN[0])

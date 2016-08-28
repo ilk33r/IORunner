@@ -196,7 +196,7 @@ internal final class Application {
 			#if os(Linux)
 				let environments = ProcessInfo.processInfo().environment
 			#else
-				let environments = ProcessInfo().environment
+				let environments = ProcessInfo.processInfo.environment
 			#endif
 				if let envSignal = environments["IO_RUNNER_SN"] {
 					
@@ -745,7 +745,7 @@ internal final class Application {
 	#if swift(>=3)
 		
 		var loopStartDate: UInt = UInt(Date().timeIntervalSince1970)
-		let runLoop = RunLoop.current()
+		let runLoop = RunLoop.current
 		
 	#if os(Linux)
 

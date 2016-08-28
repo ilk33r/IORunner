@@ -58,7 +58,7 @@ if let appArguments = ArgumentParser().parseArguments() {
 	}
 	
 #if swift(>=3)
-	let configFileExists = FileManager.default().fileExists(atPath: currentConfigFile)
+	let configFileExists = FileManager.default.fileExists(atPath: currentConfigFile)
 	if(configFileExists) {
 			
 		do {

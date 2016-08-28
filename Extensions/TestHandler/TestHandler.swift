@@ -10,7 +10,7 @@ import Foundation
 import IOIni
 import IORunnerExtension
 
-public class TestHandler: AppHandlers {
+class TestHandler: AppHandlers {
 	
 #if swift(>=3.0)
 	
@@ -37,7 +37,7 @@ public class TestHandler: AppHandlers {
 	
 	public override func getClassName() -> String {
 		
-		return String(self)
+		return String(describing: self)
 	}
 	
 	public override func forStart() {

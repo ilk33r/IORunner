@@ -25,7 +25,11 @@ public class BouncyHandler: AppHandlers {
 	
 	// 0 waiting, 1 stopping, 2 starting
 	private var taskStatus = 0
+#if os(Linux)
 	private var lastTask: Task?
+#else
+	private var lastTask: Process?
+#endif
 	private var lastCheckDate: Date?
 	private var lastTaskStartDate = 0
 	private var jobServerAsyncTaskPid: pid_t?
@@ -195,7 +199,7 @@ public class BouncyHandler: AppHandlers {
 	
 	public override func getClassName() -> String {
 		
-		return String(self)
+		return String(describing: self)
 	}
 	
 	private func generateJobServerSettings() {
@@ -491,8 +495,12 @@ public class BouncyHandler: AppHandlers {
 	}
 	
 	private func executeTaskWithPipe(command: String, args: [String], withAsync: Bool) -> String? {
-		
+	
+	#if os(Linux)
 		let task = Task()
+	#else
+		let task = Process()
+	#endif
 		task.launchPath = command
 	#if os(Linux)
 		let environments = ProcessInfo.processInfo().environment

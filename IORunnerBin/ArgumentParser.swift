@@ -6,6 +6,8 @@
 //
 //
 
+import Foundation
+
 internal class ArgumentParser {
 
 	var argumentScheme: Arguments?
@@ -20,10 +22,16 @@ internal class ArgumentParser {
 		var nextArgType: String!
 		var nextArgName: String!
 		
-		for i in 0..<Process.arguments.count {
+	#if os(Linux)
+		let processArgs = ProcessInfo.processInfo().arguments
+	#else
+		let processArgs = ProcessInfo.processInfo.arguments
+	#endif
+		
+		for i in 0..<processArgs.count {
 			
 			if(i == 0) {
-				self.argumentScheme = Arguments(appPath: Process.arguments[i])
+				self.argumentScheme = Arguments(appPath: processArgs[i])
 			}else{
 				
 				if(nextArgIsValue) {
@@ -33,7 +41,7 @@ internal class ArgumentParser {
 					case "String":
 					#if swift(>=3)
 						
-						self.argumentScheme?.setStringValue(key: nextArgName, value: Process.arguments[i])
+						self.argumentScheme?.setStringValue(key: nextArgName, value: processArgs[i])
 					#elseif swift(>=2.2) && os(OSX)
 						
 						self.argumentScheme?.setStringValue(nextArgName, value: Process.arguments[i])
@@ -50,7 +58,7 @@ internal class ArgumentParser {
 				
 				#if swift(>=3)
 					
-					let argIdx = findArgument(currentArgument: Process.arguments[i])
+					let argIdx = findArgument(currentArgument: processArgs[i])
 				#else
 					
 					let argIdx = findArgument(Process.arguments[i])

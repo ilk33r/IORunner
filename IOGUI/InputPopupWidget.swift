@@ -13,7 +13,7 @@
 #endif
 import Foundation
 
-#if swift(>=3) && os(OSX)
+#if swift(>=3)
 public typealias InputPopupDelegate = (_ selectedChoiceIdx: Int, _ inputData: String) -> ()
 #else
 public typealias InputPopupDelegate = (selectedChoiceIdx: Int, inputData: String) -> ()
@@ -325,7 +325,7 @@ public struct InputPopupWidget {
 		
 		if(keyCode == KEY_ENTER || keyCode == 13) {
 			
-		#if swift(>=3) && os(OSX)
+		#if swift(>=3)
 			popupDelegate(currentSelectedButtonIdx, currentInputValue)
 		#else
 			popupDelegate(selectedChoiceIdx: currentSelectedButtonIdx, inputData: currentInputValue)
@@ -378,7 +378,7 @@ public struct InputPopupWidget {
 			
 		}else if(keyCode > 31 && keyCode < 58){
 			
-		#if swift(>=3) && os(OSX)
+		#if swift(>=3)
 			let c = Character(UnicodeScalar(Int(keyCode))!)
 		#else
 			let c = Character(UnicodeScalar(Int(keyCode)))
@@ -387,7 +387,7 @@ public struct InputPopupWidget {
 			refreshInputArea()
 		}else if(keyCode > 64 && keyCode < 91){
 			
-		#if swift(>=3) && os(OSX)
+		#if swift(>=3)
 			let c = Character(UnicodeScalar(Int(keyCode))!)
 		#else
 			let c = Character(UnicodeScalar(Int(keyCode)))
@@ -396,7 +396,7 @@ public struct InputPopupWidget {
 			refreshInputArea()
 		}else if(keyCode > 96 && keyCode < 123){
 			
-		#if swift(>=3) && os(OSX)
+		#if swift(>=3)
 			let c = Character(UnicodeScalar(Int(keyCode))!)
 		#else
 			let c = Character(UnicodeScalar(Int(keyCode)))
@@ -463,21 +463,12 @@ public struct InputPopupWidget {
 					let dirList: [String]
 				#if swift(>=3)
 					
-				#if os(Linux)
-					if(newPath.characters.count == 0) {
-						
-						dirList = try FileManager.default().contentsOfDirectory(atPath: "/")
-					}else{
-						dirList = try FileManager.default().contentsOfDirectory(atPath: newPath)
-					}
-				#else
 					if(newPath.characters.count == 0) {
 						
 						dirList = try FileManager.default.contentsOfDirectory(atPath: "/")
 					}else{
 						dirList = try FileManager.default.contentsOfDirectory(atPath: newPath)
 					}
-				#endif
 				#elseif swift(>=2.2) && os(OSX)
 					
 					if(newPath.characters.count == 0) {

@@ -83,6 +83,13 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		DE77A6C01D72C3D100355DE6 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = __RootObject_ /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = DE9F8EFB1D353BFB006F9B9D;
+			remoteInfo = IORunnerExtension;
+		};
 		DE9F8F161D353C33006F9B9D /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = __RootObject_ /* Project object */;
@@ -115,7 +122,6 @@
 		DE2177111D3D0A4B000C21B1 /* IORunnerInstaller */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = IORunnerInstaller; sourceTree = BUILT_PRODUCTS_DIR; };
 		DE21771B1D3D0D4B000C21B1 /* BackgroundWidget.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = BackgroundWidget.swift; path = IOGUI/BackgroundWidget.swift; sourceTree = "<group>"; };
 		DE25C6091D6C65780013B2C8 /* Deploy.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; name = Deploy.sh; path = Travis/Deploy.sh; sourceTree = "<group>"; };
-		DE25C60D1D6C748B0013B2C8 /* ReleaseUrlParser.py */ = {isa = PBXFileReference; lastKnownFileType = text.script.python; name = ReleaseUrlParser.py; path = Travis/ReleaseUrlParser.py; sourceTree = "<group>"; };
 		DE28D8501D61CB2200C357DA /* Config.ini */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Config.ini; path = Extensions/TestHandler/Config.ini; sourceTree = "<group>"; };
 		DE28D8511D61CB2200C357DA /* Makefile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.make; name = Makefile; path = Extensions/TestHandler/Makefile; sourceTree = "<group>"; };
 		DE2E82481D46571A004953A9 /* AppExit.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AppExit.swift; path = IORunnerBin/AppExit.swift; sourceTree = SOURCE_ROOT; };
@@ -139,6 +145,7 @@
 		DE2ECF3D1D51D25B00129548 /* IORunnerInstaller.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = IORunnerInstaller.h; path = IORunnerInstaller/IORunnerInstaller.h; sourceTree = SOURCE_ROOT; };
 		DE2ECF3E1D51D25B00129548 /* IOStringHelper.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = IOStringHelper.c; path = IORunnerInstaller/IOStringHelper.c; sourceTree = SOURCE_ROOT; };
 		DE2ECF3F1D51D25B00129548 /* IOStringHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = IOStringHelper.h; path = IORunnerInstaller/IOStringHelper.h; sourceTree = SOURCE_ROOT; };
+		DE3214261D7059E40099CDAF /* DownloadDocker.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; name = DownloadDocker.sh; path = Travis/DownloadDocker.sh; sourceTree = "<group>"; };
 		DE3379571D36266000D2D6F2 /* MenuWidget.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MenuWidget.swift; path = IOGUI/MenuWidget.swift; sourceTree = "<group>"; };
 		DE39C4371D37A2F300A8C020 /* AppInfoWidget.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AppInfoWidget.swift; path = IOGUI/AppInfoWidget.swift; sourceTree = "<group>"; };
 		DE43E63A1D391FC000886A0B /* PopupWidget.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PopupWidget.swift; path = IOGUI/PopupWidget.swift; sourceTree = "<group>"; };
@@ -502,7 +509,7 @@
 				DEEC717E1D6909530009D3E4 /* BeforeInstall.sh */,
 				DE8F83031D6989C500456BB5 /* Build.sh */,
 				DE25C6091D6C65780013B2C8 /* Deploy.sh */,
-				DE25C60D1D6C748B0013B2C8 /* ReleaseUrlParser.py */,
+				DE3214261D7059E40099CDAF /* DownloadDocker.sh */,
 			);
 			name = Travis;
 			sourceTree = "<group>";
@@ -942,6 +949,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				DE77A6C11D72C3D100355DE6 /* PBXTargetDependency */,
 			);
 			name = BouncyHandler;
 			productName = TestHandler;
@@ -1332,6 +1340,11 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		DE77A6C11D72C3D100355DE6 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = DE9F8EFB1D353BFB006F9B9D /* IORunnerExtension */;
+			targetProxy = DE77A6C01D72C3D100355DE6 /* PBXContainerItemProxy */;
+		};
 		DE9F8F171D353C33006F9B9D /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = DE9F8EFB1D353BFB006F9B9D /* IORunnerExtension */;
@@ -1688,6 +1701,7 @@
 				SDKROOT = "";
 				SWIFT_INCLUDE_PATHS = "";
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				SWIFT_VERSION = 3.0;
 			};
 			name = Release;
 		};
@@ -1742,6 +1756,7 @@
 				SDKROOT = "";
 				SWIFT_INCLUDE_PATHS = "";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
 		};
@@ -1935,6 +1950,7 @@
 				SDKROOT = "";
 				SWIFT_INCLUDE_PATHS = "";
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				SWIFT_VERSION = 3.0;
 			};
 			name = Release;
 		};
@@ -1989,6 +2005,7 @@
 				SDKROOT = "";
 				SWIFT_INCLUDE_PATHS = "";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
 		};
@@ -2037,6 +2054,7 @@
 				SDKROOT = "";
 				SWIFT_INCLUDE_PATHS = "";
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				SWIFT_VERSION = 3.0;
 			};
 			name = Release;
 		};
@@ -2091,6 +2109,7 @@
 				SDKROOT = "";
 				SWIFT_INCLUDE_PATHS = "";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
 		};
@@ -2139,6 +2158,7 @@
 				SDKROOT = "";
 				SWIFT_INCLUDE_PATHS = "";
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				SWIFT_VERSION = 3.0;
 			};
 			name = Release;
 		};
@@ -2193,6 +2213,7 @@
 				SDKROOT = "";
 				SWIFT_INCLUDE_PATHS = "";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
 		};
@@ -2241,6 +2262,7 @@
 				SDKROOT = "";
 				SWIFT_INCLUDE_PATHS = "";
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				SWIFT_VERSION = 3.0;
 			};
 			name = Release;
 		};
@@ -2295,6 +2317,7 @@
 				SDKROOT = "";
 				SWIFT_INCLUDE_PATHS = "";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
 		};
@@ -2343,6 +2366,7 @@
 				SDKROOT = "";
 				SWIFT_INCLUDE_PATHS = "";
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				SWIFT_VERSION = 3.0;
 			};
 			name = Release;
 		};
@@ -2397,6 +2421,7 @@
 				SDKROOT = "";
 				SWIFT_INCLUDE_PATHS = "";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
 		};
@@ -2445,6 +2470,7 @@
 				SDKROOT = "";
 				SWIFT_INCLUDE_PATHS = "";
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				SWIFT_VERSION = 3.0;
 			};
 			name = Release;
 		};
@@ -2499,6 +2525,7 @@
 				SDKROOT = "";
 				SWIFT_INCLUDE_PATHS = "";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
 		};
@@ -2547,6 +2574,7 @@
 				SDKROOT = "";
 				SWIFT_INCLUDE_PATHS = "";
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				SWIFT_VERSION = 3.0;
 			};
 			name = Release;
 		};
@@ -2601,6 +2629,7 @@
 				SDKROOT = "";
 				SWIFT_INCLUDE_PATHS = "";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
 		};
@@ -2649,6 +2678,7 @@
 				SDKROOT = "";
 				SWIFT_INCLUDE_PATHS = "";
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				SWIFT_VERSION = 3.0;
 			};
 			name = Release;
 		};
@@ -2703,6 +2733,7 @@
 				SDKROOT = "";
 				SWIFT_INCLUDE_PATHS = "";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
 		};

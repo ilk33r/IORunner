@@ -28,21 +28,12 @@ internal final class AppWorker {
 	private var childProcessPid: Int32 = -1
 
 #if swift(>=3)
-#if os(Linux)
 	enum AppWorkerError: Error {
 		case StdRedirectFailed
 		case DaemonizeFailed
 		case PidFileIsNotWritable
 		case PidFileExists
 	}
-#else
-	enum AppWorkerError: ErrorProtocol {
-		case StdRedirectFailed
-		case DaemonizeFailed
-		case PidFileIsNotWritable
-		case PidFileExists
-	}
-#endif
 #elseif swift(>=2.2) && os(OSX)
 	
 	enum AppWorkerError: ErrorType {
@@ -105,7 +96,16 @@ internal final class AppWorker {
 			if daemonize {
 				
 				var processConfig = ProcessConfigData()
-				processConfig.ProcessArgs = [Process.arguments[0], "--config", appArguments.config!, "--onlyusearguments", "--signal", "environ"]
+			#if swift(>=3)
+			#if os(Linux)
+				let arg0 = ProcessInfo.processInfo().arguments[0]
+			#else
+				let arg0 = ProcessInfo.processInfo.arguments[0]
+			#endif
+			#else
+				let arg0 = Process.arguments[0]
+			#endif
+				processConfig.ProcessArgs = [arg0, "--config", appArguments.config!, "--onlyusearguments", "--signal", "environ"]
 				processConfig.Environments = [("IO_RUNNER_SN", "child-start")]
 				
 				var procPid: pid_t! = 0
@@ -249,7 +249,7 @@ internal final class AppWorker {
 		
 	#if swift(>=3)
 		
-		let pidFileExists = FileManager.default().fileExists(atPath: pidFile)
+		let pidFileExists = FileManager.default.fileExists(atPath: pidFile)
 		if(pidFileExists) {
 			
 			let pidFileDescriptor = FileHandle(forReadingAtPath: pidFile)
@@ -310,14 +310,14 @@ internal final class AppWorker {
 		
 	#if swift(>=3)
 		
-		let pidFileExists = FileManager.default().fileExists(atPath: pidFile)
+		let pidFileExists = FileManager.default.fileExists(atPath: pidFile)
 		if(pidFileExists) {
 			
 			kill(pid, SIGINT)
 			throw AppWorkerError.PidFileExists
 		}else{
 		
-			let createStatus = FileManager.default().createFile(atPath: pidFile, contents: nil, attributes: nil)
+			let createStatus = FileManager.default.createFile(atPath: pidFile, contents: nil, attributes: nil)
 			if(!createStatus) {
 				
 				kill(pid, SIGINT)
@@ -373,10 +373,10 @@ internal final class AppWorker {
 	#if swift(>=3)
 		
 		logger.writeLog(level: Logger.LogLevels.WARNINGS, message: "Child process will be start \(running)")
-		let runLoop = RunLoop.current()
 		
 	#if os(Linux)
 		
+		let runLoop = RunLoop.current()
 		repeat {
 			let _ = signalHandler.process()
 			currentHandlers.forEach { $0.inLoop() }
@@ -387,6 +387,7 @@ internal final class AppWorker {
 		
 	#else
 		
+		let runLoop = RunLoop.current
 		repeat {
 			let _ = signalHandler.process()
 			currentHandlers.forEach { $0.inLoop() }
@@ -418,11 +419,11 @@ internal final class AppWorker {
 		
 	#if swift(>=3)
 
-		if(FileManager.default().fileExists(atPath: pidFile)) {
+		if(FileManager.default.fileExists(atPath: pidFile)) {
 			
 			do {
 			
-				try FileManager.default().removeItem(atPath: pidFile)
+				try FileManager.default.removeItem(atPath: pidFile)
 			} catch _ {
 				
 				logger.writeLog(level: Logger.LogLevels.ERROR, message: "Could not delete pid file!")

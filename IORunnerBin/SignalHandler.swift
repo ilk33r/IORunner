@@ -72,7 +72,7 @@ internal final class SignalHandler {
 		signalQueue.append(signal)
 	}
 
-	func register(signal: Signal, _ callback: () -> ()) {
+	func register(signal: Signal, _ callback: (() -> ())) {
 		callbacks[signal] = callback
 	}
 

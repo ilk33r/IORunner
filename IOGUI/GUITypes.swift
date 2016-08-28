@@ -46,7 +46,7 @@ public enum MainGuiActions {
 	case BACK
 }
 
-#if swift(>=3) && os(OSX)
+#if swift(>=3)
 public typealias MainGuiDelegate = (_ action: MainGuiActions) -> ()
 #else
 public typealias MainGuiDelegate = (action: MainGuiActions) -> ()
@@ -475,7 +475,7 @@ public struct GUIWidgets {
 				self.sendKeyEventToWidget(keycode: currentKey)
 			}else{
 				
-				self.delegate(action: MainGuiActions.EXIT)
+				self.delegate(MainGuiActions.EXIT)
 			}
 			
 		}else if(currentKey == 98 || currentKey == 66) {
@@ -485,7 +485,7 @@ public struct GUIWidgets {
 				self.sendKeyEventToWidget(keycode: currentKey)
 			}else{
 				
-				self.delegate(action: MainGuiActions.BACK)
+				self.delegate(MainGuiActions.BACK)
 			}
 			
 		}else{
@@ -508,7 +508,7 @@ public struct GUIWidgets {
 				self.sendKeyEventToWidget(currentKey)
 			#endif
 			}else{
-			#if swift(>=3) && os(OSX)
+			#if swift(>=3)
 				self.delegate(MainGuiActions.EXIT)
 			#else
 				self.delegate(action: MainGuiActions.EXIT)
@@ -527,7 +527,7 @@ public struct GUIWidgets {
 				self.sendKeyEventToWidget(currentKey)
 			#endif
 			}else{
-			#if swift(>=3) && os(OSX)
+			#if swift(>=3)
 				self.delegate(MainGuiActions.BACK)
 			#else
 				self.delegate(action: MainGuiActions.BACK)
