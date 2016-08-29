@@ -21,11 +21,16 @@ internal class ArgumentParser {
 		var nextArgIsValue = false
 		var nextArgType: String!
 		var nextArgName: String!
-		
+	
+	#if swift(>=3)
 	#if os(Linux)
 		let processArgs = ProcessInfo.processInfo().arguments
 	#else
 		let processArgs = ProcessInfo.processInfo.arguments
+	#endif
+	#else
+		// MARK: swift 2.2
+		let processArgs = Process.arguments
 	#endif
 		
 		for i in 0..<processArgs.count {
