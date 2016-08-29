@@ -36,8 +36,12 @@ class TestHandler: AppHandlers {
 	}
 	
 	public override func getClassName() -> String {
-		
+	
+	#if swift(>=3)
 		return String(describing: self)
+	#else
+		return String(self)
+	#endif
 	}
 	
 	public override func forStart() {
