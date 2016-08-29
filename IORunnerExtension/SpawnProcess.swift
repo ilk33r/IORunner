@@ -196,10 +196,14 @@ public func SpawnCurrentProcess(logger: Logger, configData: ProcessConfigData) t
 	pipe(UnsafeMutablePointer<Int32>(fSTDERR))
 #endif
 
+#if swift(>=3)
 #if os(Linux)
 	var fileActions = posix_spawn_file_actions_t()
 #else
 	var fileActions = posix_spawn_file_actions_t(mutating: nil)
+#endif
+#else
+	var fileActions = posix_spawn_file_actions_t(nil)
 #endif
 				
 	posix_spawn_file_actions_init(&fileActions);

@@ -15,6 +15,17 @@ matrix:
           - docker
       before_install:
         - ./Travis/DownloadDocker.sh
+    - os: linux
+      sudo: required
+      dist: trusty
+      services:
+        - docker
+      env: DOCKER_IMAGE=wily_v1.0.1 TRAVIS_IMAGE=Docker DOCKER_OS_RELEASE=Ubuntu_Wily TEST_BRANCH=wily
+      cache:
+        directories:
+          - docker
+      before_install:
+        - ./Travis/DownloadDocker.sh
     - os: osx
       osx_image: xcode7.3
       env: TRAVIS_IMAGE=OSX SWIFT_VERSION=2.2 TEST_BRANCH=xcode_7.3
