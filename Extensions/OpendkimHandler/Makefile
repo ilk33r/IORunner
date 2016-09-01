@@ -33,6 +33,10 @@ OpendkimHandler_Linux_LFLAGS = $(OpendkimHandler_SHLIB_PATH) -lswiftCore -lswift
 	-Xlinker -export-dynamic \
 	-Xlinker --exclude-libs -Xlinker ALL \
 	-Xlinker -rpath -Xlinker '$$ORIGIN/../lib' \
+	-Xlinker -rpath -Xlinker '/usr/lib64' \
+	-Xlinker -rpath -Xlinker '/usr/lib' \
+	-Xlinker -rpath -Xlinker '/usr/local/lib64' \
+	-Xlinker -rpath -Xlinker '/usr/local/lib' \
 	$(SWIFT_libs)/x86_64/swift_end.o
 OpendkimHandler_LFLAGS = $(OpendkimHandler_$(OS)_LFLAGS)
 

@@ -33,6 +33,10 @@ BouncyHandler_Linux_LFLAGS = $(BouncyHandler_SHLIB_PATH) -lswiftCore -lswiftGlib
 	-Xlinker -export-dynamic \
 	-Xlinker --exclude-libs -Xlinker ALL \
 	-Xlinker -rpath -Xlinker '$$ORIGIN/../lib' \
+	-Xlinker -rpath -Xlinker '/usr/lib64' \
+	-Xlinker -rpath -Xlinker '/usr/lib' \
+	-Xlinker -rpath -Xlinker '/usr/local/lib64' \
+	-Xlinker -rpath -Xlinker '/usr/local/lib' \
 	$(SWIFT_libs)/x86_64/swift_end.o
 BouncyHandler_LFLAGS = $(BouncyHandler_$(OS)_LFLAGS)
 

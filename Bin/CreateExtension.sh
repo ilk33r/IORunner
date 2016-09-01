@@ -85,6 +85,10 @@ CREATE_EXT_MAKE_FILE() {
 	echo "	-Xlinker -export-dynamic \\" >> $1
 	echo "	-Xlinker --exclude-libs -Xlinker ALL \\" >> $1
 	echo "	-Xlinker -rpath -Xlinker '\$\$ORIGIN/../lib' \\" >> $1
+	echo "	-Xlinker -rpath -Xlinker '/usr/lib64' \\" >> $1
+	echo "	-Xlinker -rpath -Xlinker '/usr/lib' \\" >> $1
+	echo "	-Xlinker -rpath -Xlinker '/usr/local/lib64' \\" >> $1
+	echo "	-Xlinker -rpath -Xlinker '/usr/local/lib' \\" >> $1
 	echo "	\$(SWIFT_libs)/x86_64/swift_end.o" >> $1
 	echo "${2}_LFLAGS = \$(${2}_\$(OS)_LFLAGS)" >> $1
 	echo "" >> $1

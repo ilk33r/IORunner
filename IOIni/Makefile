@@ -32,6 +32,10 @@ $(MODULE_1_NAME)_Linux_LFLAGS = $($(MODULE_1_NAME)_SHLIB_PATH) -lswiftCore -lswi
 	-Xlinker --exclude-libs -Xlinker ALL \
 	-Xlinker -rpath -Xlinker '$$ORIGIN/../lib/x86_64/$(MODULE_1_NAME).swiftmodule' \
 	-Xlinker -rpath -Xlinker '$$ORIGIN/../lib' \
+	-Xlinker -rpath -Xlinker '/usr/lib64' \
+	-Xlinker -rpath -Xlinker '/usr/lib' \
+	-Xlinker -rpath -Xlinker '/usr/local/lib64' \
+	-Xlinker -rpath -Xlinker '/usr/local/lib' \
 	$(SWIFT_libs)/x86_64/swift_end.o
 $(MODULE_1_NAME)_LFLAGS = $($(MODULE_1_NAME)_$(OS)_LFLAGS)
 

@@ -33,6 +33,10 @@ PostfixHandler_Linux_LFLAGS = $(PostfixHandler_SHLIB_PATH) -lswiftCore -lswiftGl
 	-Xlinker -export-dynamic \
 	-Xlinker --exclude-libs -Xlinker ALL \
 	-Xlinker -rpath -Xlinker '$$ORIGIN/../lib' \
+	-Xlinker -rpath -Xlinker '/usr/lib64' \
+	-Xlinker -rpath -Xlinker '/usr/lib' \
+	-Xlinker -rpath -Xlinker '/usr/local/lib64' \
+	-Xlinker -rpath -Xlinker '/usr/local/lib' \
 	$(SWIFT_libs)/x86_64/swift_end.o
 PostfixHandler_LFLAGS = $(PostfixHandler_$(OS)_LFLAGS)
 
