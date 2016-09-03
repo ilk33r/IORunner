@@ -14,7 +14,7 @@ CLANG = $($(OS)_CLANG)
 
 C_APP_NAME = "IO Runner"
 C_APP_VERSION = "1.0.1"
-C_APP_VERSION_INT = 100
+C_APP_VERSION_INT = 101
 C_DARWIN_SERVICE_NAME = "com.ilkerozcan.iorunner.plist"
 C_APP_CREDITS = "Copyright (c) 2016 Ilker Özcan"
 C_APP_PACKAGE_NAME = "IORunner"
@@ -103,14 +103,21 @@ Copy_Darwin_dependencies:
 	@cp -r $(SWIFT_libs)/libswiftIOKit.dylib $(BUILD_ROOT_DIR)/lib
 	@cp -r $(SWIFT_libs)/libswiftObjectiveC.dylib $(BUILD_ROOT_DIR)/lib
 	@cp -r $(SWIFT_libs)/libswiftXPC.dylib $(BUILD_ROOT_DIR)/lib 2>/dev/null || :
+	@cp -r $(SWIFT_libs)/libswiftos.dylib $(BUILD_ROOT_DIR)/lib 2>/dev/null || :
 	
 Copy_Linux_dependencies:
 	@cp -r $(SWIFT_libs)/libswiftCore.so $(BUILD_ROOT_DIR)/lib
 	@cp -r $(SWIFT_libs)/libswiftGlibc.so $(BUILD_ROOT_DIR)/lib
 	@cp -r $(SWIFT_libs)/libFoundation.so $(BUILD_ROOT_DIR)/lib
-	@cp -Hr /usr/lib/x86_64-linux-gnu/libicui18n.so $(BUILD_ROOT_DIR)/lib/libicui18n.so.55
-	@cp -Hr /usr/lib/x86_64-linux-gnu/libicuuc.so $(BUILD_ROOT_DIR)/lib/libicuuc.so.55
-	@cp -Hr /usr/lib/x86_64-linux-gnu/libicudata.so $(BUILD_ROOT_DIR)/lib/libicudata.so.55
+	@cp -Hr /usr/lib/x86_64-linux-gnu/libicui18n.so $(BUILD_ROOT_DIR)/lib/
+	@cp -Hr /usr/lib/x86_64-linux-gnu/libicuuc.so $(BUILD_ROOT_DIR)/lib/
+	@cp -Hr /usr/lib/x86_64-linux-gnu/libicudata.so $(BUILD_ROOT_DIR)/lib/
+	@ln -sf $(BUILD_ROOT_DIR)/lib/libicui18n.so $(BUILD_ROOT_DIR)/lib/libicui18n.so.55
+	@ln -sf $(BUILD_ROOT_DIR)/lib/libicui18n.so $(BUILD_ROOT_DIR)/lib/libicui18n.so.52
+	@ln -sf $(BUILD_ROOT_DIR)/lib/libicuuc.so $(BUILD_ROOT_DIR)/lib/libicuuc.so.55
+	@ln -sf $(BUILD_ROOT_DIR)/lib/libicuuc.so $(BUILD_ROOT_DIR)/lib/libicuuc.so.52
+	@ln -sf $(BUILD_ROOT_DIR)/lib/libicudata.so $(BUILD_ROOT_DIR)/lib/libicudata.so.55
+	@ln -sf $(BUILD_ROOT_DIR)/lib/libicudata.so $(BUILD_ROOT_DIR)/lib/libicudata.so.52
 	
 include $(SOURCE_ROOT_DIR)/$(MODULE_1_NAME)/Makefile $(SOURCE_ROOT_DIR)/$(MODULE_2_NAME)/Makefile $(SOURCE_ROOT_DIR)/$(MODULE_3_NAME)/Makefile \
 	$(SOURCE_ROOT_DIR)/$(MODULE_4_NAME)/Makefile $(SOURCE_ROOT_DIR)/Extensions/Makefile \

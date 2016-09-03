@@ -17,6 +17,7 @@ $(MODULE_NAME)Installer_CC_FLAGS = $($(MODULE_NAME)Installer_$(OS)_CC_FLAGS) $($
 	
 $(MODULE_NAME)Installer_Src = $(MODULE_NAME)Installer/InstallConfig.s $(MODULE_NAME)Installer/InstallData.s \
 	$(MODULE_NAME)Installer/IOStringHelper.c $(MODULE_NAME)Installer/IORunnerInstaller.c \
+	$(MODULE_NAME)Installer/IORunnerUpdater.c \
 	$(MODULE_NAME)Installer/IODirectory.c $(MODULE_NAME)Installer/IOProcessHelper.c
 $(MODULE_NAME)Installer_Obj = $(addsuffix .o, $(basename $($(MODULE_NAME)Installer_Src)))
 

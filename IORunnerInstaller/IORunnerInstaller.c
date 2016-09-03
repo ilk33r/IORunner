@@ -8,7 +8,7 @@
 
 #include "IORunnerInstaller.h"
 #include "ConfigFile.h"
-#include "Update.h"
+#include "IORunnerUpdater.h"
 #include "IOAssets.h"
 
 #define UNZIP_COMMAND "/usr/bin/unzip -qq -o %s -d %s"
@@ -323,7 +323,43 @@ static void generateService(IOString *installDir, IOString *etcDir) {
 static void generateService(IOString *installDir, IOString *etcDir) {}
 #endif
 
-Bool uninstallApp(IOString *installedPath) {
+static Bool askYesNoQuestion(const char *question) {
+	
+	const char *questionConsoleFormat = "%s [Yes/No]: ";
+	size_t questionConsoleLength = snprintf(NULL, 0, questionConsoleFormat, question);
+	char *questionConsole = malloc(questionConsoleLength + 1);
+	memset(questionConsole, 0, questionConsoleLength + 1);
+	sprintf(questionConsole, questionConsoleFormat, question);
+	printf("\n%s", questionConsole);
+	free(questionConsole);
+	char buff[32];
+	memset(&buff, 0, 32);
+	fgets(buff, 32, stdin);
+	
+	if(strncmp(buff, "Y", 1) == 0) {
+		return TRUE;
+	}else if (strncmp(buff, "y", 1) == 0) {
+		return TRUE;
+	}else if (strncmp(buff, "YES", 3) == 0) {
+		return TRUE;
+	}else if (strncmp(buff, "Yes", 3) == 0) {
+		return TRUE;
+	}else if (strncmp(buff, "yes", 3) == 0) {
+		return TRUE;
+	}else if (strncmp(buff, "yEs", 3) == 0) {
+		return TRUE;
+	}else if (strncmp(buff, "yES", 3) == 0) {
+		return TRUE;
+	}else if (strncmp(buff, "yeS", 3) == 0) {
+		return TRUE;
+	}else if (strncmp(buff, "YeS", 3) == 0) {
+		return TRUE;
+	}
+
+	return FALSE;
+}
+
+static Bool uninstallApp(IOString *installedPath) {
 	
 	IOString *installedPathStrCopy = INIT_STRING(installedPath->value);
 	IODirectory *installedPathDir = INIT_DIRECTORY(installedPathStrCopy);
@@ -347,7 +383,42 @@ Bool uninstallApp(IOString *installedPath) {
 	}
 }
 
-Bool installApp(const char *installPathArg) {
+static Bool unzipDataFile(IOString *installPath, IOString *zipFilePath) {
+
+	zipFilePath->appendByPathComponent(zipFilePath, "installData.zip");
+	
+	FILE *zipFile = fopen(zipFilePath->value, "w");
+	if(zipFile == NULL) {
+		
+		printf("An error occured for writing files.\n");
+		return FALSE;
+	}
+	
+	unsigned int i = 0;
+	for(i = 0; i < LDLEN(InstallData); i++) {
+		
+		fputc(LDVAR(InstallData)[i], zipFile);
+	}
+	
+	fclose(zipFile);
+	
+	size_t unzipCommadLen = strlen(UNZIP_COMMAND) + zipFilePath->length + installPath->length + 1;
+	char *unzipCommand = malloc(unzipCommadLen);
+	memset(unzipCommand, 0, unzipCommadLen);
+	sprintf(unzipCommand, UNZIP_COMMAND, zipFilePath->value, installPath->value);
+	int processResult = system(unzipCommand);
+	sleep(4);
+	free(unzipCommand);
+	
+	if(processResult == 0) {
+		return TRUE;
+	}else{
+		printf("An error occured when opening zip file. Are you sure zip/unzip installed ?\n");
+		return FALSE;
+	}
+}
+
+static Bool installApp(const char *installPathArg) {
 	
 	struct stat st = {0};
 	
@@ -372,49 +443,22 @@ Bool installApp(const char *installPathArg) {
 	}
 	
 	printf("Installing ...");
-	IOString *zipFilePath = INIT_STRING(installPath->value);
-	zipFilePath->appendByPathComponent(zipFilePath, "installData.zip");
-	
 	IOString *buildDirectory = INIT_STRING(installPath->value);
 	buildDirectory->appendByPathComponent(buildDirectory, "Build");
 	struct stat st2 = {0};
 	if(stat(buildDirectory->value, &st2) == 0) {
 		
 		printf("Application already installed!\n");
-		zipFilePath->release(zipFilePath);
 		installPath->release(installPath);
 		buildDirectory->release(buildDirectory);
 		return FALSE;
 	}
 	
-	FILE *zipFile = fopen(zipFilePath->value, "w");
-	if(zipFile == NULL) {
+	IOString *zipFilePath = INIT_STRING(installPath->value);
+	
+	if(unzipDataFile(installPath, zipFilePath)) {
 		
-		printf("An error occured for writing files.\n");
-		zipFilePath->release(zipFilePath);
-		installPath->release(installPath);
-		buildDirectory->release(buildDirectory);
-		return FALSE;
-	}
-	
-	unsigned int i = 0;
-	for(i = 0; i < LDLEN(InstallData); i++) {
-		
-		fputc(LDVAR(InstallData)[i], zipFile);
-	}
-	
-	fclose(zipFile);
-	
-	size_t unzipCommadLen = strlen(UNZIP_COMMAND) + zipFilePath->length + installPath->length + 1;
-	char *unzipCommand = malloc(unzipCommadLen);
-	memset(unzipCommand, 0, unzipCommadLen);
-	sprintf(unzipCommand, UNZIP_COMMAND, zipFilePath->value, installPath->value);
-	int processResult = system(unzipCommand);
-	sleep(4);
-	free(unzipCommand);
-	long writableChmode = strtol("0777", 0, 8);
-	
-	if(processResult == 0) {
+		long writableChmode = strtol("0777", 0, 8);
 		
 		IODirectory *buildDir = INIT_DIRECTORY(buildDirectory);
 		buildDir->generateContentlist(buildDir);
@@ -536,7 +580,6 @@ Bool installApp(const char *installPathArg) {
 		zipFilePath->release(zipFilePath);
 		installPath->release(installPath);
 		buildDirectory->release(buildDirectory);
-		printf("An error occured when opening zip file. Are you sure zip/unzip installed ?\n");
 		return FALSE;
 	}
 	
@@ -547,7 +590,134 @@ Bool installApp(const char *installPathArg) {
 	return TRUE;
 }
 
-Bool updateApp(IOString *installedPath) {
+static Bool updateApp(IOString *installedPath, long fromVersion) {
+	
+	IOString *zipFilePath = INIT_STRING(installedPath->value);
+	
+	if(unzipDataFile(installedPath, zipFilePath)) {
+		
+		prepareUpdateData();
+		
+		size_t i = 0;
+		for (i = 0; i < GET_UPDATE_VERSION_COUNT; i++) {
+			
+			IOVersion *version = GET_UPDATE_VERSIONS[i];
+			
+			if(fromVersion >= version->targetVersion) {
+				continue;
+			}
+			
+			size_t j = 0;
+			for (j = 0; j < version->ruleCount; j++) {
+				
+				IOUpdaterRules *rule = version->rules[j];
+				IOString *sourceFile = INIT_STRING(installedPath->value);
+				sourceFile->appendByPathComponent(sourceFile, rule->newFilePath);
+				
+				IOString *destFile = INIT_STRING(installedPath->value);
+				destFile->appendByPathComponent(destFile, rule->fromFilePath);
+				
+				if (rule->ruleTypes == RULE_COPY) {
+					
+					if (rule->isDirectory) {
+						
+						IODirectory *sourceDir = INIT_DIRECTORY(sourceFile);
+						COPY_DIR(sourceDir, destFile);
+						
+						IODirectory *destDir = INIT_DIRECTORY(destFile);
+						updateFilePermissions(destDir, rule->chmod);
+						
+						sourceDir->release(sourceDir);
+						
+					}else{
+						
+						IO_UNUSED copyFile(sourceFile, destFile);
+						
+						long chmodVal = strtol(rule->chmod, 0, 8);
+						IO_UNUSED chmod(destFile->value ,chmodVal);
+						
+						sourceFile->release(sourceFile);
+						destFile->release(destFile);
+					}
+					
+				}else if (rule->ruleTypes == RULE_DELETE) {
+					
+					if (rule->isDirectory) {
+						
+						IODirectory *destDir = INIT_DIRECTORY(destFile);
+						IO_UNUSED deleteDirectory(destDir);
+						destDir->release(destDir);
+						sourceFile->release(sourceFile);
+						
+					}else{
+						
+						unlink(destFile->value);
+						sourceFile->release(sourceFile);
+						destFile->release(destFile);
+					}
+				}else if (rule->ruleTypes == RULE_OVERRIDE) {
+				
+					if (rule->isDirectory) {
+						
+						IODirectory *destDir = INIT_DIRECTORY(destFile);
+						IO_UNUSED deleteDirectory(destDir);
+						
+						IODirectory *sourceDir = INIT_DIRECTORY(sourceFile);
+						COPY_DIR(sourceDir, destFile);
+						updateFilePermissions(destDir, rule->chmod);
+						
+						sourceDir->release(sourceDir);
+						
+					}else{
+						
+						unlink(destFile->value);
+						
+						IO_UNUSED copyFile(sourceFile, destFile);
+						
+						long chmodVal = strtol(rule->chmod, 0, 8);
+						IO_UNUSED chmod(destFile->value ,chmodVal);
+						
+						sourceFile->release(sourceFile);
+						destFile->release(destFile);
+					}
+				}else if(rule->ruleTypes == RULE_CREATE_DIRECTORY) {
+					
+					IO_UNUSED mkdir(sourceFile->value, 0775);
+					sourceFile->release(sourceFile);
+					destFile->release(destFile);
+					
+				}else if (rule->ruleTypes == RULE_APPEND_CONFIG) {
+					
+					FILE *configFileHandle = fopen(sourceFile->value, "a");
+					sourceFile->release(sourceFile);
+					destFile->release(destFile);
+					
+					if(configFileHandle) {
+						
+						fputs(rule->fromFilePath, configFileHandle);
+						fclose(configFileHandle);
+					}
+				}
+			}
+		}
+		
+		releaseUpdateData();
+		
+	}else{
+	
+		printf("An error occured for unzip! \n\n");
+		zipFilePath->release(zipFilePath);
+		return FALSE;
+	}
+
+	unlink(zipFilePath->value);
+	zipFilePath->release(zipFilePath);
+	
+	IOString *unzipDirStr = INIT_STRING(installedPath->value);
+	unzipDirStr->appendByPathComponent(unzipDirStr, "Build");
+	IODirectory *unzippedDir = INIT_DIRECTORY(unzipDirStr);
+	IO_UNUSED deleteDirectory(unzippedDir);
+	unzippedDir->release(unzippedDir);
 	
 	return TRUE;
 }
@@ -572,11 +742,18 @@ int main(int argc, const char *argv[]) {
 	
 	if(isInstall == TRUE) {
 	
-		processResponse->release(processResponse);
-		Bool installStatus = installApp(argv[1]);
-		if(installStatus == TRUE) {
-			return 0;
+		if(askYesNoQuestion("Are you sure want to install this application ?")) {
+			
+			processResponse->release(processResponse);
+			Bool installStatus = installApp(argv[1]);
+			if(installStatus == TRUE) {
+				return 0;
+			}else{
+				return 1;
+			}
 		}else{
+			
+			printf("Install canceled from user.\n\n");
 			return 1;
 		}
 	}else{
@@ -586,31 +763,74 @@ int main(int argc, const char *argv[]) {
 		if(installedPaths->count > 0) {
 			
 			IOString *installedPathStr = installedPaths->get(installedPaths, 0);
-			Bool updateOrUninstall = UPDATE_OR_UNINSTALL(installedPathStr->value);
+			long currentAppVersion = 0;
+			Bool updateOrUninstall = UPDATE_OR_UNINSTALL(installedPathStr->value, &currentAppVersion);
 			if(updateOrUninstall == TRUE) {
 				
-				Bool updateStatus = updateApp(installedPathStr);
-				installedPaths->release(installedPaths);
-				if(updateStatus == TRUE) {
-					return 0;
+				const char *updateQuestionFormat = "A version %d already installed. Are you sure want to the update  to version %d ?";
+				size_t updateQuestionSize = snprintf(NULL, 0, updateQuestionFormat, currentAppVersion, APP_VERSION_INT);
+				char *updateQuestion = malloc(updateQuestionSize + 1);
+				memset(updateQuestion, 0, updateQuestionSize + 1);
+				sprintf(updateQuestion, updateQuestionFormat, currentAppVersion, APP_VERSION_INT);
+				
+				if(askYesNoQuestion(updateQuestion)) {
+					
+					free(updateQuestion);
+					Bool updateStatus = updateApp(installedPathStr, currentAppVersion);
+					printf("Finished update!\n");
+					
+					installedPaths->release(installedPaths);
+					if(updateStatus == TRUE) {
+						printf("Application updated!\n");
+						return 0;
+					}else{
+						printf("An error occured for updating!\n");
+						return 1;
+					}
 				}else{
+					free(updateQuestion);
+					printf("Update canceled from user.\n\n");
 					return 1;
 				}
 				
 			}else{
 				
-				Bool uninstallStatus = uninstallApp(installedPathStr);
-				installedPaths->release(installedPaths);
+				const char *uninstallQuestionFormat = "A newer version %d already installed. Are you sure want to the uninstall this application ?";
+				size_t uninstallQuestionSize = snprintf(NULL, 0, uninstallQuestionFormat, currentAppVersion);
+				char *uninstallQuestion = malloc(uninstallQuestionSize + 1);
+				memset(uninstallQuestion, 0, uninstallQuestionSize + 1);
+				sprintf(uninstallQuestion, uninstallQuestionFormat, currentAppVersion);
 				
-				if(uninstallStatus == TRUE) {
-					return 0;
+				if(askYesNoQuestion(uninstallQuestion)) {
+					
+					free(uninstallQuestion);
+					
+					if(askYesNoQuestion("WARNING! All program data will be deleted! Are you sure ?")) {
+						
+						Bool uninstallStatus = uninstallApp(installedPathStr);
+						installedPaths->release(installedPaths);
+						
+						if(uninstallStatus == TRUE) {
+							printf("Application uninstalled!\n");
+							return 0;
+						}else{
+							printf("An error occured for uninstalling!\n");
+							return 1;
+						}
+					}else{
+						printf("Uninstall canceled from user.\n\n");
+						return 1;
+					}
 				}else{
+					
+					free(uninstallQuestion);
+					printf("Uninstall canceled from user.\n\n");
 					return 1;
 				}
 			}
 			
 		}else{
-			printf("An error occured when uninstalling %s\n", APP_NAME);
+			printf("An error occured when uninstalling %s\n\n", APP_NAME);
 			installedPaths->release(installedPaths);
 			return 1;
 		}

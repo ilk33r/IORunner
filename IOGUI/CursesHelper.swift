@@ -14,13 +14,13 @@ import Foundation
 		func ToAscii() -> String {
 			
 			let allCharacters: [UInt32] = self.unicodeScalars.map{$0.value}
-			var responseString = ""
+			var responseString: String = ""
 			
 			for character in allCharacters {
 				
 				if(character <= 127) {
 					
-					responseString += String(describing: UnicodeScalar(character))
+					responseString += String(describing: UnicodeScalar(character)!)
 				}else if(character == 228 || character == 230 || character == 509) {
 					
 					//ä æ ǽ
@@ -283,7 +283,7 @@ import Foundation
 		
 		let stringStartPadding = String(repeating: " ", count: textStartSpace)
 		let stringEndPadding = String(repeating: " ", count: paddingSize)
-		let resultString = "\(stringStartPadding)\(asciiString)\(stringEndPadding)"
+		let resultString: String = "\(stringStartPadding)\(asciiString)\(stringEndPadding)"
 		waddstr(window, resultString)
 	}
 #else

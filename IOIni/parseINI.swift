@@ -84,7 +84,14 @@ public class parseINI {
 	}
 	
 	public init (withFile filename: String) throws {
-		self.iniString = try String(contentsOfFile: filename)
+		
+		#if os(Linux)
+			let configFileLinuxContent = try NSString(contentsOfFile: filename, encoding: String.Encoding.utf8.rawValue)
+			self.iniString = String(describing: configFileLinuxContent)
+		#else
+			self.iniString = try String(contentsOfFile: filename)
+		#endif
+
 		try self.parseData()
 	}
 	
@@ -128,7 +135,7 @@ public class parseINI {
 					
 					if(currentSettings == nil) {
 						
-						throw ParseError.UnsupportedToken(err: "INI Parse error on line \(currentLine) Section \(currentSection)")
+						throw ParseError.UnsupportedToken(err: "INI Parse error on line \(currentLine + 1) Section \(currentSection)")
 					}else{
 						
 						currentSettings![lastKey!] = lastValue!
@@ -141,7 +148,7 @@ public class parseINI {
 					
 					if(currentSettings == nil) {
 						
-						throw ParseError.UnsupportedToken(err: "INI Parse error on line \(currentLine) Section \(currentSection)")
+						throw ParseError.UnsupportedToken(err: "INI Parse error on line \(currentLine + 1) Section \(currentSection)")
 					}else{
 						currentSettings![lastKey!] = lastValue!
 						lastKey = nil
@@ -205,7 +212,7 @@ public class parseINI {
 				
 					if(self.currentScanning != SCAN_STATUS.INITIAL_STATE && self.currentScanning != SCAN_STATUS.SCANNING_COMMENT) {
 						
-						throw ParseError.InvalidSyntax(err: "INI Syntax error. Line \(currentLine) Section \(currentSection)")
+						throw ParseError.InvalidSyntax(err: "INI Syntax error. Line \(currentLine + 1) Section \(currentSection)")
 					}
 				}
 			}
@@ -224,7 +231,7 @@ public class parseINI {
 					
 					if(self.currentScanning != SCAN_STATUS.INITIAL_STATE && self.currentScanning != SCAN_STATUS.SCANNING_COMMENT) {
 						
-						throw ParseError.InvalidSyntax(err: "INI Syntax error. Line \(currentLine) Section \(currentSection)")
+						throw ParseError.InvalidSyntax(err: "INI Syntax error. Line \(currentLine + 1) Section \(currentSection)")
 					}
 				}
 			}
@@ -264,7 +271,7 @@ public class parseINI {
 					currentSection = 0
 					self.currentScanning = SCAN_STATUS.SCANNED_VALUE
 				}else{
-					throw ParseError.UnsupportedToken(err: "INI Parse error on Line \(currentLine) Section \(currentSection)")
+					throw ParseError.UnsupportedToken(err: "INI Parse error on Line \(currentLine + 1) Section \(currentSection)")
 				}
 			}else if(self.currentScanning == SCAN_STATUS.SCANNING_COMMENT) {
 				
@@ -272,7 +279,7 @@ public class parseINI {
 				currentSection = 0
 				self.currentScanning = SCAN_STATUS.INITIAL_STATE
 			}else{
-				throw ParseError.UnsupportedToken(err: "INI Parse error on Line \(currentLine) Section \(currentSection)")
+				throw ParseError.UnsupportedToken(err: "INI Parse error on Line \(currentLine + 1) Section \(currentSection)")
 			}
 			break
 		case INI_TOKENS.EMPTY_CR.rawValue:
@@ -284,10 +291,10 @@ public class parseINI {
 					currentSection = 0
 					self.currentScanning = SCAN_STATUS.SCANNED_VALUE
 				}else{
-					throw ParseError.UnsupportedToken(err: "INI Parse error on Line \(currentLine) Section \(currentSection)")
+					throw ParseError.UnsupportedToken(err: "INI Parse error on Line \(currentLine + 1) Section \(currentSection)")
 				}
 			}else{
-				throw ParseError.UnsupportedToken(err: "INI Parse error on Line \(currentLine) Section \(currentSection)")
+				throw ParseError.UnsupportedToken(err: "INI Parse error on Line \(currentLine + 1) Section \(currentSection)")
 			}
 			break
 		case INI_TOKENS.EMPTY_TAB.rawValue:
@@ -315,7 +322,7 @@ public class parseINI {
 				
 				self.lastValue! += "\(scannedCharacter)"
 			}else{
-				throw ParseError.UnsupportedToken(err: "INI Parse error on Line \(currentLine) Section \(currentSection)")
+				throw ParseError.UnsupportedToken(err: "INI Parse error on Line \(currentLine + 1) Section \(currentSection)")
 			}
 			break
 		case INI_TOKENS.COMMENT_START.rawValue:
@@ -328,19 +335,24 @@ public class parseINI {
 				self.lastValue! += "\(scannedCharacter)"
 			}else{
 				
-				throw ParseError.UnsupportedToken(err: "INI Parse error on Line \(currentLine) Section \(currentSection)")
+				throw ParseError.UnsupportedToken(err: "INI Parse error on Line \(currentLine + 1) Section \(currentSection)")
 			}
 			break
 		case INI_TOKENS.VALUE_START.rawValue:
 			
-			if(self.lastKey != nil && (self.lastKey?.characters.count)! > 0) {
-				
-				self.lastValue = ""
-				self.currentScanning = SCAN_STATUS.SCANNING_VALUE
+			if(self.currentScanning == SCAN_STATUS.SCANNING_VALUE_WITH_ESCAPE) {
+			
+				self.lastValue! += "\(scannedCharacter)"
 			}else{
+				if(self.lastKey != nil && (self.lastKey?.characters.count)! > 0) {
 				
-				if(self.currentScanning != SCAN_STATUS.SCANNING_COMMENT) {
-					throw ParseError.UnsupportedToken(err: "INI Parse error on Line \(currentLine) Section \(currentSection)")
+					self.lastValue = ""
+					self.currentScanning = SCAN_STATUS.SCANNING_VALUE
+				}else{
+				
+					if(self.currentScanning != SCAN_STATUS.SCANNING_COMMENT) {
+						throw ParseError.UnsupportedToken(err: "INI Parse error on Line \(currentLine + 1) Section \(currentSection)")
+					}
 				}
 			}
 			break
@@ -365,7 +377,7 @@ public class parseINI {
 					self.currentScanning = SCAN_STATUS.SCANNING_KEY
 				}else{
 					
-					throw ParseError.UnsupportedToken(err: "INI Parse error on Line \(currentLine) Section \(currentSection)")
+					throw ParseError.UnsupportedToken(err: "INI Parse error on Line \(currentLine + 1) Section \(currentSection)")
 				}
 			}else if(self.currentScanning == SCAN_STATUS.SCANING_SECTION_NAME) {
 				
@@ -384,7 +396,7 @@ public class parseINI {
 				// pass
 			}else{
 				
-				throw ParseError.UnsupportedToken(err: "INI Parse error on Line \(currentLine) Section \(currentSection)")
+				throw ParseError.UnsupportedToken(err: "INI Parse error on Line \(currentLine + 1) Section \(currentSection)")
 			}
 			
 			break
