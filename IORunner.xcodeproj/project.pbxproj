@@ -9,6 +9,10 @@
 /* Begin PBXBuildFile section */
 		DE1338D61D358581002E109B /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DE8F5DF21D2A4A9400BE7C35 /* Foundation.framework */; };
 		DE1338E21D359886002E109B /* GUITypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEC3E5CC1D357FA500FB1662 /* GUITypes.swift */; };
+		DE1AEF8F1D7ADDCD005821CA /* IOIni.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = "_____Product_ini" /* IOIni.framework */; };
+		DE1AEF901D7ADDCD005821CA /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DE8F5DF21D2A4A9400BE7C35 /* Foundation.framework */; };
+		DE1AEF911D7ADDCD005821CA /* IORunnerExtension.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DE9F8EFC1D353BFB006F9B9D /* IORunnerExtension.framework */; };
+		DE1AEF981D7ADDEB005821CA /* BashScriptHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE7CD3831D7AAE0800630119 /* BashScriptHandler.swift */; };
 		DE1B36E11D5F0CCC00D234A6 /* InstallConfig.s in Sources */ = {isa = PBXBuildFile; fileRef = DE1B36E01D5F0CCB00D234A6 /* InstallConfig.s */; };
 		DE2E825C1D465749004953A9 /* AppExit.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE2E82481D46571A004953A9 /* AppExit.swift */; };
 		DE2E825D1D465749004953A9 /* Application.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE2E82491D46571A004953A9 /* Application.swift */; };
@@ -24,7 +28,9 @@
 		DE2ECF461D51D27300129548 /* IODirectory.c in Sources */ = {isa = PBXBuildFile; fileRef = DE2ECF381D51D25B00129548 /* IODirectory.c */; };
 		DE2ECF471D51D27800129548 /* IORunnerInstaller.c in Sources */ = {isa = PBXBuildFile; fileRef = DE2ECF3C1D51D25B00129548 /* IORunnerInstaller.c */; };
 		DE3D9A1F1D3964040047785B /* IOIni.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = "_____Product_ini" /* IOIni.framework */; };
+		DE412D981D7980DF009B29BB /* IORunnerUpdater.c in Sources */ = {isa = PBXBuildFile; fileRef = DE412D971D7980DF009B29BB /* IORunnerUpdater.c */; };
 		DE7AF3531D67AC6200605905 /* SpawnProcess.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE7AF3521D67AC6200605905 /* SpawnProcess.swift */; };
+		DE7CD3871D7AAE0800630119 /* Makefile in Sources */ = {isa = PBXBuildFile; fileRef = DE7CD3851D7AAE0800630119 /* Makefile */; };
 		DE7D5BB61D427B7F00888821 /* Error.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE7D5BB21D427B7F00888821 /* Error.swift */; };
 		DE7D5BB81D427B7F00888821 /* parseINI.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE7D5BB51D427B7F00888821 /* parseINI.swift */; };
 		DE7D5BC01D4280DD00888821 /* AppHandlers.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE7D5BB91D4280D000888821 /* AppHandlers.swift */; };
@@ -83,6 +89,13 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		DE1AEF8B1D7ADDCD005821CA /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = __RootObject_ /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = DE9F8EFB1D353BFB006F9B9D;
+			remoteInfo = IORunnerExtension;
+		};
 		DE77A6C01D72C3D100355DE6 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = __RootObject_ /* Project object */;
@@ -117,6 +130,7 @@
 		DE0499341D6C1FBE009C1C44 /* Update.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Update.h; path = IORunnerInstaller/Update.h; sourceTree = SOURCE_ROOT; };
 		DE0EBB7E1D3896BC0036B004 /* ModulesWidget.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ModulesWidget.swift; path = IOGUI/ModulesWidget.swift; sourceTree = "<group>"; };
 		DE1338DF1D3597D6002E109B /* IOGUI-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "IOGUI-Bridging-Header.h"; path = "IOGUI/IOGUI-Bridging-Header.h"; sourceTree = "<group>"; };
+		DE1AEF971D7ADDCD005821CA /* libBashScriptHandler.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libBashScriptHandler.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
 		DE1B36E01D5F0CCB00D234A6 /* InstallConfig.s */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.asm; name = InstallConfig.s; path = IORunnerInstaller/InstallConfig.s; sourceTree = SOURCE_ROOT; };
 		DE1B36E21D5F296600D234A6 /* IOAssets.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = IOAssets.h; path = IORunnerInstaller/IOAssets.h; sourceTree = SOURCE_ROOT; };
 		DE2177111D3D0A4B000C21B1 /* IORunnerInstaller */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = IORunnerInstaller; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -148,6 +162,8 @@
 		DE3214261D7059E40099CDAF /* DownloadDocker.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; name = DownloadDocker.sh; path = Travis/DownloadDocker.sh; sourceTree = "<group>"; };
 		DE3379571D36266000D2D6F2 /* MenuWidget.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MenuWidget.swift; path = IOGUI/MenuWidget.swift; sourceTree = "<group>"; };
 		DE39C4371D37A2F300A8C020 /* AppInfoWidget.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AppInfoWidget.swift; path = IOGUI/AppInfoWidget.swift; sourceTree = "<group>"; };
+		DE412D961D797FBC009B29BB /* IORunnerUpdater.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = IORunnerUpdater.h; path = IORunnerInstaller/IORunnerUpdater.h; sourceTree = SOURCE_ROOT; };
+		DE412D971D7980DF009B29BB /* IORunnerUpdater.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = IORunnerUpdater.c; path = IORunnerInstaller/IORunnerUpdater.c; sourceTree = SOURCE_ROOT; };
 		DE43E63A1D391FC000886A0B /* PopupWidget.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PopupWidget.swift; path = IOGUI/PopupWidget.swift; sourceTree = "<group>"; };
 		DE5BC2231D6C2DD6002AA7A3 /* CreateExtension.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = CreateExtension.sh; sourceTree = "<group>"; };
 		DE5BC2251D6C2DE1002AA7A3 /* CreateExtensionConfigs.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = CreateExtensionConfigs.sh; sourceTree = "<group>"; };
@@ -155,6 +171,9 @@
 		DE5ECB631D423F3600C06781 /* Project.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = Project.xcconfig; path = IORunner.xcodeproj/Configs/Project.xcconfig; sourceTree = "<group>"; };
 		DE654D6E1D4699A10046066C /* Makefile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.make; name = Makefile; path = IORunnerInstaller/Makefile; sourceTree = SOURCE_ROOT; };
 		DE7AF3521D67AC6200605905 /* SpawnProcess.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SpawnProcess.swift; path = IORunnerExtension/SpawnProcess.swift; sourceTree = SOURCE_ROOT; };
+		DE7CD3831D7AAE0800630119 /* BashScriptHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BashScriptHandler.swift; sourceTree = "<group>"; };
+		DE7CD3841D7AAE0800630119 /* Config.ini */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Config.ini; sourceTree = "<group>"; };
+		DE7CD3851D7AAE0800630119 /* Makefile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
 		DE7D5BB21D427B7F00888821 /* Error.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Error.swift; path = IOIni/Error.swift; sourceTree = "<group>"; };
 		DE7D5BB31D427B7F00888821 /* Makefile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.make; name = Makefile; path = IOIni/Makefile; sourceTree = "<group>"; };
 		DE7D5BB41D427B7F00888821 /* module.modulemap */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = "sourcecode.module-map"; name = module.modulemap; path = IOIni/module.modulemap; sourceTree = "<group>"; };
@@ -220,6 +239,16 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		DE1AEF8E1D7ADDCD005821CA /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				DE1AEF8F1D7ADDCD005821CA /* IOIni.framework in Frameworks */,
+				DE1AEF901D7ADDCD005821CA /* Foundation.framework in Frameworks */,
+				DE1AEF911D7ADDCD005821CA /* IORunnerExtension.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		DE21770E1D3D0A4B000C21B1 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -393,6 +422,8 @@
 				DEED6B441D5E73B20030CC1E /* InstallData.s */,
 				DE1B36E01D5F0CCB00D234A6 /* InstallConfig.s */,
 				DE0499341D6C1FBE009C1C44 /* Update.h */,
+				DE412D961D797FBC009B29BB /* IORunnerUpdater.h */,
+				DE412D971D7980DF009B29BB /* IORunnerUpdater.c */,
 			);
 			name = IORunnerInstaller;
 			path = IOProcessCheckerInstaller;
@@ -424,6 +455,17 @@
 				DE5BC2261D6C2ED8002AA7A3 /* CreateConstantsFile.sh */,
 			);
 			path = Make;
+			sourceTree = "<group>";
+		};
+		DE7CD3821D7AAE0800630119 /* BashScriptHandler */ = {
+			isa = PBXGroup;
+			children = (
+				DE7CD3831D7AAE0800630119 /* BashScriptHandler.swift */,
+				DE7CD3841D7AAE0800630119 /* Config.ini */,
+				DE7CD3851D7AAE0800630119 /* Makefile */,
+			);
+			name = BashScriptHandler;
+			path = Extensions/BashScriptHandler;
 			sourceTree = "<group>";
 		};
 		DE8F5DF11D2A4A9400BE7C35 /* Frameworks */ = {
@@ -469,6 +511,7 @@
 		DEE47AFA1D3A69F700D55F92 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
+				DE7CD3821D7AAE0800630119 /* BashScriptHandler */,
 				DEEC71681D68F33C0009D3E4 /* MysqlHandler */,
 				DEFBEA9D1D620F80008BA2D8 /* BouncyHandler */,
 				DEFBEA891D620461008BA2D8 /* SSHHandler */,
@@ -632,6 +675,7 @@
 				DEFBEA881D620446008BA2D8 /* libSSHHandler.dylib */,
 				DEFBEA9C1D620F77008BA2D8 /* libBouncyHandler.dylib */,
 				DEEC717A1D68F3460009D3E4 /* libMysqlHandler.dylib */,
+				DE1AEF971D7ADDCD005821CA /* libBashScriptHandler.dylib */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -655,6 +699,13 @@
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
+		DE1AEF921D7ADDCD005821CA /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		DE9F8EF91D353BFB006F9B9D /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
@@ -742,6 +793,25 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
+		DE1AEF891D7ADDCD005821CA /* BashScriptHandler */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = DE1AEF941D7ADDCD005821CA /* Build configuration list for PBXNativeTarget "BashScriptHandler" */;
+			buildPhases = (
+				DE1AEF8C1D7ADDCD005821CA /* Sources */,
+				DE1AEF8E1D7ADDCD005821CA /* Frameworks */,
+				DE1AEF921D7ADDCD005821CA /* Headers */,
+				DE1AEF931D7ADDCD005821CA /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				DE1AEF8A1D7ADDCD005821CA /* PBXTargetDependency */,
+			);
+			name = BashScriptHandler;
+			productName = TestHandler;
+			productReference = DE1AEF971D7ADDCD005821CA /* libBashScriptHandler.dylib */;
+			productType = "com.apple.product-type.library.dynamic";
+		};
 		DE2177101D3D0A4B000C21B1 /* IORunnerInstaller */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = DE2177171D3D0A4B000C21B1 /* Build configuration list for PBXNativeTarget "IORunnerInstaller" */;
@@ -1057,6 +1127,7 @@
 				DEFBEA7C1D620446008BA2D8 /* SSHHandler */,
 				DEFBEA901D620F77008BA2D8 /* BouncyHandler */,
 				DEEC716E1D68F3460009D3E4 /* MysqlHandler */,
+				DE1AEF891D7ADDCD005821CA /* BashScriptHandler */,
 			);
 		};
 /* End PBXProject section */
@@ -1072,6 +1143,20 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		DE1AEF931D7ADDCD005821CA /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\nLIBRARY_NAME=\"${EXECUTABLE_PREFIX}${PRODUCT_NAME}.${EXECUTABLE_EXTENSION}\"\nLIBRARY_SOURCE_PATH=\"${CONFIGURATION_BUILD_DIR}/${LIBRARY_NAME}\"\nLIBRARY_DESTINATION_DIR=\"/usr/local/IORunner/extensions/available\"\n\ncp $LIBRARY_SOURCE_PATH $LIBRARY_DESTINATION_DIR";
+			showEnvVarsInLog = 0;
+		};
 		DE892F1E1D354A03000EB9D9 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -1222,7 +1307,16 @@
 			buildActionMask = 0;
 			files = (
 				DE7D5BB81D427B7F00888821 /* parseINI.swift in Sources */,
+				DE7CD3871D7AAE0800630119 /* Makefile in Sources */,
 				DE7D5BB61D427B7F00888821 /* Error.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		DE1AEF8C1D7ADDCD005821CA /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				DE1AEF981D7ADDEB005821CA /* BashScriptHandler.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1234,6 +1328,7 @@
 				DE1B36E11D5F0CCC00D234A6 /* InstallConfig.s in Sources */,
 				DE2ECF441D51D26E00129548 /* IOStringHelper.c in Sources */,
 				DE2ECF451D51D27100129548 /* IOProcessHelper.c in Sources */,
+				DE412D981D7980DF009B29BB /* IORunnerUpdater.c in Sources */,
 				DE2ECF461D51D27300129548 /* IODirectory.c in Sources */,
 				DE2ECF471D51D27800129548 /* IORunnerInstaller.c in Sources */,
 			);
@@ -1340,6 +1435,11 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		DE1AEF8A1D7ADDCD005821CA /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = DE9F8EFB1D353BFB006F9B9D /* IORunnerExtension */;
+			targetProxy = DE1AEF8B1D7ADDCD005821CA /* PBXContainerItemProxy */;
+		};
 		DE77A6C11D72C3D100355DE6 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = DE9F8EFB1D353BFB006F9B9D /* IORunnerExtension */;
@@ -1363,6 +1463,110 @@
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
+		DE1AEF951D7ADDCD005821CA /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = DE5ECB631D423F3600C06781 /* Project.xcconfig */;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD)";
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				EXECUTABLE_PREFIX = lib;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = s;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = "";
+				SWIFT_INCLUDE_PATHS = "";
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				SWIFT_VERSION = 3.0;
+			};
+			name = Release;
+		};
+		DE1AEF961D7ADDCD005821CA /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = DE5ECB631D423F3600C06781 /* Project.xcconfig */;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD)";
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				EXECUTABLE_PREFIX = lib;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = NO;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = "";
+				SWIFT_INCLUDE_PATHS = "";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 3.0;
+			};
+			name = Debug;
+		};
 		DE2177151D3D0A4B000C21B1 /* Release */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = DE5ECB631D423F3600C06781 /* Project.xcconfig */;
@@ -1395,6 +1599,8 @@
 					"APP_NAME=\\\"IORunner\\\"",
 					"APP_PACKAGE_NAME=\\\"IORunner\\\"",
 					"DARWIN_SERVICE_NAME=\\\"com.ilkerozcan.iorunner.plist\\\"",
+					"APP_VERSION=\\\"1.0.1\\\"",
+					"APP_VERSION_INT=101",
 				);
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
@@ -1452,6 +1658,8 @@
 					"APP_NAME=\\\"IORunner\\\"",
 					"APP_PACKAGE_NAME=\\\"IORunner\\\"",
 					"DARWIN_SERVICE_NAME=\\\"com.ilkerozcan.iorunner.plist\\\"",
+					"APP_VERSION=\\\"1.0.1\\\"",
+					"APP_VERSION_INT=101",
 				);
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
@@ -2799,6 +3007,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		DE1AEF941D7ADDCD005821CA /* Build configuration list for PBXNativeTarget "BashScriptHandler" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				DE1AEF951D7ADDCD005821CA /* Release */,
+				DE1AEF961D7ADDCD005821CA /* Debug */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		DE2177171D3D0A4B000C21B1 /* Build configuration list for PBXNativeTarget "IORunnerInstaller" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

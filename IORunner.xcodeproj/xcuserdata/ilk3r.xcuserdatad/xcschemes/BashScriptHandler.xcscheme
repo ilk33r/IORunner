@@ -14,9 +14,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "DE2177101D3D0A4B000C21B1"
-               BuildableName = "IORunnerInstaller"
-               BlueprintName = "IORunnerInstaller"
+               BlueprintIdentifier = "DE1AEF891D7ADDCD005821CA"
+               BuildableName = "libBashScriptHandler.dylib"
+               BlueprintName = "BashScriptHandler"
                ReferencedContainer = "container:IORunner.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -29,45 +29,28 @@
       shouldUseLaunchSchemeArgsEnv = "YES">
       <Testables>
       </Testables>
-      <MacroExpansion>
-         <BuildableReference
-            BuildableIdentifier = "primary"
-            BlueprintIdentifier = "DE2177101D3D0A4B000C21B1"
-            BuildableName = "IORunnerInstaller"
-            BlueprintName = "IORunnerInstaller"
-            ReferencedContainer = "container:IORunner.xcodeproj">
-         </BuildableReference>
-      </MacroExpansion>
       <AdditionalOptions>
       </AdditionalOptions>
    </TestAction>
    <LaunchAction
-      buildConfiguration = "Debug"
+      buildConfiguration = "Release"
       selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
-      debugAsWhichUser = "root"
       launchStyle = "0"
       useCustomWorkingDirectory = "NO"
       ignoresPersistentStateOnLaunch = "NO"
       debugDocumentVersioning = "YES"
       debugServiceExtension = "internal"
       allowLocationSimulation = "YES">
-      <BuildableProductRunnable
-         runnableDebuggingMode = "0">
+      <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "DE2177101D3D0A4B000C21B1"
-            BuildableName = "IORunnerInstaller"
-            BlueprintName = "IORunnerInstaller"
+            BlueprintIdentifier = "DE1AEF891D7ADDCD005821CA"
+            BuildableName = "libBashScriptHandler.dylib"
+            BlueprintName = "BashScriptHandler"
             ReferencedContainer = "container:IORunner.xcodeproj">
          </BuildableReference>
-      </BuildableProductRunnable>
-      <CommandLineArguments>
-         <CommandLineArgument
-            argument = "/usr/local/IORunner"
-            isEnabled = "YES">
-         </CommandLineArgument>
-      </CommandLineArguments>
+      </MacroExpansion>
       <AdditionalOptions>
       </AdditionalOptions>
    </LaunchAction>
@@ -77,16 +60,15 @@
       savedToolIdentifier = ""
       useCustomWorkingDirectory = "NO"
       debugDocumentVersioning = "YES">
-      <BuildableProductRunnable
-         runnableDebuggingMode = "0">
+      <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "DE2177101D3D0A4B000C21B1"
-            BuildableName = "IORunnerInstaller"
-            BlueprintName = "IORunnerInstaller"
+            BlueprintIdentifier = "DE1AEF891D7ADDCD005821CA"
+            BuildableName = "libBashScriptHandler.dylib"
+            BlueprintName = "BashScriptHandler"
             ReferencedContainer = "container:IORunner.xcodeproj">
          </BuildableReference>
-      </BuildableProductRunnable>
+      </MacroExpansion>
    </ProfileAction>
    <AnalyzeAction
       buildConfiguration = "Debug">

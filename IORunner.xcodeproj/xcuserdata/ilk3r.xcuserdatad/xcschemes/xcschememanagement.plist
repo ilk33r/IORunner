@@ -4,6 +4,11 @@
 <dict>
 	<key>SchemeUserState</key>
 	<dict>
+		<key>BashScriptHandler.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>15</integer>
+		</dict>
 		<key>BouncyHandler.xcscheme</key>
 		<dict>
 			<key>orderHint</key>
@@ -82,6 +87,11 @@
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
+		<key>DE1AEF891D7ADDCD005821CA</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
 		<key>DE1F93391D5D9A6B008AC538</key>
 		<dict>
 			<key>primary</key>
