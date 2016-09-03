@@ -312,7 +312,12 @@ public class BashScriptHandler: AppHandlers {
 				
 				let strippedResponse = response.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
 				do {
+				#if os(Linux)
+					let internalExpression = try RegularExpression(pattern: "OK", options: .caseInsensitive)
+				#else
 					let internalExpression = try NSRegularExpression(pattern: "OK", options: .caseInsensitive)
+				#endif
+	
 					let matches = internalExpression.matches(in: strippedResponse, options: .reportProgress, range:NSMakeRange(0, strippedResponse.characters.count))
 					
 					if(matches.count > 0) {
