@@ -11,8 +11,8 @@
 public struct Constants {
 
 	public static let APP_NAME = "IO Runner"
-	public static let APP_VERSION = "1.0.1"
-	public static let APP_VERSION_INT = "101"
+	public static let APP_VERSION = "1.0.2"
+	public static let APP_VERSION_INT = "102"
 	public static let APP_CREDITS = "Copyright (c) 2016 Ilker Özcan"
 	public static let APP_PACKAGE_NAME = "IORunner"
 

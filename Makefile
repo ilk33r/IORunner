@@ -4,6 +4,7 @@ BUILD := release
 SOURCE_ROOT_DIR=$(shell pwd)
 BUILD_ROOT_DIR=$(SOURCE_ROOT_DIR)/Build
 MODULE_CACHE_PATH=$(BUILD_ROOT_DIR)/ModuleCache
+PACKAGE_ROOT_DIR=$(SOURCE_ROOT_DIR)/Packages
 
 OS = $(shell uname)
 SWIFT = swift
@@ -13,8 +14,8 @@ Linux_CLANG = clang++ $(shell dirname $(shell dirname $(SWIFT_LINUX_PATH)))/lib/
 CLANG = $($(OS)_CLANG)
 
 C_APP_NAME = "IO Runner"
-C_APP_VERSION = "1.0.1"
-C_APP_VERSION_INT = 101
+C_APP_VERSION = "1.0.2"
+C_APP_VERSION_INT = 102
 C_DARWIN_SERVICE_NAME = "com.ilkerozcan.iorunner.plist"
 C_APP_CREDITS = "Copyright (c) 2016 Ilker Özcan"
 C_APP_PACKAGE_NAME = "IORunner"
@@ -119,7 +120,8 @@ Copy_Linux_dependencies:
 	@ln -sf $(BUILD_ROOT_DIR)/lib/libicudata.so $(BUILD_ROOT_DIR)/lib/libicudata.so.55
 	@ln -sf $(BUILD_ROOT_DIR)/lib/libicudata.so $(BUILD_ROOT_DIR)/lib/libicudata.so.52
 	
-include $(SOURCE_ROOT_DIR)/$(MODULE_1_NAME)/Makefile $(SOURCE_ROOT_DIR)/$(MODULE_2_NAME)/Makefile $(SOURCE_ROOT_DIR)/$(MODULE_3_NAME)/Makefile \
+include $(PACKAGE_ROOT_DIR)/$(MODULE_1_NAME)/$(MODULE_1_NAME)/MakefileSub $(SOURCE_ROOT_DIR)/$(MODULE_2_NAME)/Makefile \
+	$(PACKAGE_ROOT_DIR)/$(MODULE_3_NAME)/$(MODULE_3_NAME)/MakefileSub \
 	$(SOURCE_ROOT_DIR)/$(MODULE_4_NAME)/Makefile $(SOURCE_ROOT_DIR)/Extensions/Makefile \
 	$(SOURCE_ROOT_DIR)/$(MODULE_NAME)Installer/Makefile
 	
@@ -158,9 +160,12 @@ deploy:
 source-dist: dist-clean
 	@mkdir -p $(BUILD_ROOT_DIR)
 	@mkdir -p $(BUILD_ROOT_DIR)/$(MODULE_NAME)
-	@cp -r $(SOURCE_ROOT_DIR)/$(MODULE_1_NAME) $(BUILD_ROOT_DIR)/$(MODULE_NAME)
+	@mkdir -p $(BUILD_ROOT_DIR)/$(MODULE_NAME)/Packages
+	@cp -r $(SOURCE_ROOT_DIR)/Packages/$(MODULE_1_NAME) $(BUILD_ROOT_DIR)/$(MODULE_NAME)/Packages
+	@rm -rf $(BUILD_ROOT_DIR)/$(MODULE_NAME)/Packages/$(MODULE_1_NAME)/.git*
 	@cp -r $(SOURCE_ROOT_DIR)/$(MODULE_2_NAME) $(BUILD_ROOT_DIR)/$(MODULE_NAME)
-	@cp -r $(SOURCE_ROOT_DIR)/$(MODULE_3_NAME) $(BUILD_ROOT_DIR)/$(MODULE_NAME)
+	@cp -r $(SOURCE_ROOT_DIR)/Packages/$(MODULE_3_NAME) $(BUILD_ROOT_DIR)/$(MODULE_NAME)/Packages
+	@rm -rf $(BUILD_ROOT_DIR)/$(MODULE_NAME)/Packages/$(MODULE_3_NAME)/.git*
 	@cp -r $(SOURCE_ROOT_DIR)/$(MODULE_4_NAME) $(BUILD_ROOT_DIR)/$(MODULE_NAME)
 	@cp -r $(SOURCE_ROOT_DIR)/$(MODULE_NAME)Installer $(BUILD_ROOT_DIR)/$(MODULE_NAME)
 	@cp -r $(SOURCE_ROOT_DIR)/Extensions $(BUILD_ROOT_DIR)/$(MODULE_NAME)

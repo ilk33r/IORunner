@@ -7,9 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		DE1338D61D358581002E109B /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DE8F5DF21D2A4A9400BE7C35 /* Foundation.framework */; };
-		DE1338E21D359886002E109B /* GUITypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEC3E5CC1D357FA500FB1662 /* GUITypes.swift */; };
-		DE1AEF8F1D7ADDCD005821CA /* IOIni.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = "_____Product_ini" /* IOIni.framework */; };
 		DE1AEF901D7ADDCD005821CA /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DE8F5DF21D2A4A9400BE7C35 /* Foundation.framework */; };
 		DE1AEF911D7ADDCD005821CA /* IORunnerExtension.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DE9F8EFC1D353BFB006F9B9D /* IORunnerExtension.framework */; };
 		DE1AEF981D7ADDEB005821CA /* BashScriptHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE7CD3831D7AAE0800630119 /* BashScriptHandler.swift */; };
@@ -27,62 +24,39 @@
 		DE2ECF451D51D27100129548 /* IOProcessHelper.c in Sources */ = {isa = PBXBuildFile; fileRef = DE2ECF3A1D51D25B00129548 /* IOProcessHelper.c */; };
 		DE2ECF461D51D27300129548 /* IODirectory.c in Sources */ = {isa = PBXBuildFile; fileRef = DE2ECF381D51D25B00129548 /* IODirectory.c */; };
 		DE2ECF471D51D27800129548 /* IORunnerInstaller.c in Sources */ = {isa = PBXBuildFile; fileRef = DE2ECF3C1D51D25B00129548 /* IORunnerInstaller.c */; };
-		DE3D9A1F1D3964040047785B /* IOIni.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = "_____Product_ini" /* IOIni.framework */; };
 		DE412D981D7980DF009B29BB /* IORunnerUpdater.c in Sources */ = {isa = PBXBuildFile; fileRef = DE412D971D7980DF009B29BB /* IORunnerUpdater.c */; };
 		DE7AF3531D67AC6200605905 /* SpawnProcess.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE7AF3521D67AC6200605905 /* SpawnProcess.swift */; };
-		DE7CD3871D7AAE0800630119 /* Makefile in Sources */ = {isa = PBXBuildFile; fileRef = DE7CD3851D7AAE0800630119 /* Makefile */; };
-		DE7D5BB61D427B7F00888821 /* Error.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE7D5BB21D427B7F00888821 /* Error.swift */; };
-		DE7D5BB81D427B7F00888821 /* parseINI.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE7D5BB51D427B7F00888821 /* parseINI.swift */; };
 		DE7D5BC01D4280DD00888821 /* AppHandlers.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE7D5BB91D4280D000888821 /* AppHandlers.swift */; };
 		DE7D5BC11D4280E100888821 /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE7D5BBA1D4280D000888821 /* Logger.swift */; };
-		DE7D5BC51D42860900888821 /* TitleAndFooterWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEB6EC611D376F2E007A1E30 /* TitleAndFooterWidget.swift */; };
 		DE892F251D3554E9000EB9D9 /* IORunnerExtension.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DE9F8EFC1D353BFB006F9B9D /* IORunnerExtension.framework */; };
 		DE892F261D3554F2000EB9D9 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DE8F5DF21D2A4A9400BE7C35 /* Foundation.framework */; };
+		DE8F5CE21D7EB7D30059F017 /* IOIni.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DE8F5CE11D7EB7D30059F017 /* IOIni.framework */; };
 		DE8F5DF31D2A4A9400BE7C35 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DE8F5DF21D2A4A9400BE7C35 /* Foundation.framework */; };
 		DE9F8F151D353C23006F9B9D /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DE8F5DF21D2A4A9400BE7C35 /* Foundation.framework */; };
 		DE9F8F181D353C37006F9B9D /* IORunnerExtension.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DE9F8EFC1D353BFB006F9B9D /* IORunnerExtension.framework */; };
-		DEA356CD1D34D69B00BE6E8E /* IOIni.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = "_____Product_ini" /* IOIni.framework */; settings = {ATTRIBUTES = (Required, ); }; };
-		DEB8433C1D452A4600E1AE5B /* AppInfoWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE39C4371D37A2F300A8C020 /* AppInfoWidget.swift */; };
-		DEB8433D1D452BDA00E1AE5B /* MenuWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE3379571D36266000D2D6F2 /* MenuWidget.swift */; };
-		DEB8433E1D452DCA00E1AE5B /* PopupWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE43E63A1D391FC000886A0B /* PopupWidget.swift */; };
-		DEB8433F1D452EC600E1AE5B /* ModulesWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE0EBB7E1D3896BC0036B004 /* ModulesWidget.swift */; };
-		DEB843401D45309F00E1AE5B /* BackgroundWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE21771B1D3D0D4B000C21B1 /* BackgroundWidget.swift */; };
-		DEB843411D4530CA00E1AE5B /* InputPopupWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE8EC34A1D3D239F00C4F522 /* InputPopupWidget.swift */; };
-		DEC3E5C01D357C2000FB1662 /* IOGUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DEC3E5AC1D3579CA00FB1662 /* IOGUI.framework */; };
-		DED6771A1D5B50D200B6F836 /* CursesHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = DED677191D5B50D200B6F836 /* CursesHelper.swift */; };
 		DEE47AFE1D3A6A1500D55F92 /* TestHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEE47AFC1D3A6A1100D55F92 /* TestHandler.swift */; };
-		DEE47AFF1D3A7D8000D55F92 /* IOIni.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = "_____Product_ini" /* IOIni.framework */; };
-		DEEC71721D68F3460009D3E4 /* IOIni.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = "_____Product_ini" /* IOIni.framework */; };
 		DEEC71731D68F3460009D3E4 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DE8F5DF21D2A4A9400BE7C35 /* Foundation.framework */; };
 		DEEC71741D68F3460009D3E4 /* IORunnerExtension.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DE9F8EFC1D353BFB006F9B9D /* IORunnerExtension.framework */; };
 		DEEC717B1D68F35D0009D3E4 /* MysqlHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEEC716B1D68F33C0009D3E4 /* MysqlHandler.swift */; };
 		DEED6B451D5E73B20030CC1E /* InstallData.s in Sources */ = {isa = PBXBuildFile; fileRef = DEED6B441D5E73B20030CC1E /* InstallData.s */; };
-		DEF667111D3A4EB700A56CA2 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DE8F5DF21D2A4A9400BE7C35 /* Foundation.framework */; };
-		DEFBEA0C1D61D0BA008BA2D8 /* IOIni.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = "_____Product_ini" /* IOIni.framework */; };
 		DEFBEA0D1D61D0BA008BA2D8 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DE8F5DF21D2A4A9400BE7C35 /* Foundation.framework */; };
 		DEFBEA0E1D61D0BA008BA2D8 /* IORunnerExtension.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DE9F8EFC1D353BFB006F9B9D /* IORunnerExtension.framework */; };
 		DEFBEA151D61D0D0008BA2D8 /* NginxHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEFBEA051D61D0A5008BA2D8 /* NginxHandler.swift */; };
-		DEFBEA221D61E802008BA2D8 /* IOIni.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = "_____Product_ini" /* IOIni.framework */; };
 		DEFBEA231D61E802008BA2D8 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DE8F5DF21D2A4A9400BE7C35 /* Foundation.framework */; };
 		DEFBEA241D61E802008BA2D8 /* IORunnerExtension.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DE9F8EFC1D353BFB006F9B9D /* IORunnerExtension.framework */; };
 		DEFBEA2B1D61E818008BA2D8 /* PHPFastCGIHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEFBEA1A1D61E7F3008BA2D8 /* PHPFastCGIHandler.swift */; };
-		DEFBEA361D61FA4D008BA2D8 /* IOIni.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = "_____Product_ini" /* IOIni.framework */; };
 		DEFBEA371D61FA4D008BA2D8 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DE8F5DF21D2A4A9400BE7C35 /* Foundation.framework */; };
 		DEFBEA381D61FA4D008BA2D8 /* IORunnerExtension.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DE9F8EFC1D353BFB006F9B9D /* IORunnerExtension.framework */; };
 		DEFBEA3F1D61FA53008BA2D8 /* DovecotHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEFBEA2E1D61FA35008BA2D8 /* DovecotHandler.swift */; };
-		DEFBEA4A1D61FBC5008BA2D8 /* IOIni.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = "_____Product_ini" /* IOIni.framework */; };
 		DEFBEA4B1D61FBC5008BA2D8 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DE8F5DF21D2A4A9400BE7C35 /* Foundation.framework */; };
 		DEFBEA4C1D61FBC5008BA2D8 /* IORunnerExtension.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DE9F8EFC1D353BFB006F9B9D /* IORunnerExtension.framework */; };
 		DEFBEA531D61FBCF008BA2D8 /* OpendkimHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEFBEA431D61FBC1008BA2D8 /* OpendkimHandler.swift */; };
-		DEFBEA581D61FCE4008BA2D8 /* IOIni.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = "_____Product_ini" /* IOIni.framework */; };
 		DEFBEA591D61FCE4008BA2D8 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DE8F5DF21D2A4A9400BE7C35 /* Foundation.framework */; };
 		DEFBEA5A1D61FCE4008BA2D8 /* IORunnerExtension.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DE9F8EFC1D353BFB006F9B9D /* IORunnerExtension.framework */; };
 		DEFBEA671D61FD06008BA2D8 /* PostfixHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEFBEA641D61FCF2008BA2D8 /* PostfixHandler.swift */; };
-		DEFBEA801D620446008BA2D8 /* IOIni.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = "_____Product_ini" /* IOIni.framework */; };
 		DEFBEA811D620446008BA2D8 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DE8F5DF21D2A4A9400BE7C35 /* Foundation.framework */; };
 		DEFBEA821D620446008BA2D8 /* IORunnerExtension.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DE9F8EFC1D353BFB006F9B9D /* IORunnerExtension.framework */; };
 		DEFBEA8F1D620492008BA2D8 /* SSHHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEFBEA8C1D620461008BA2D8 /* SSHHandler.swift */; };
-		DEFBEA941D620F77008BA2D8 /* IOIni.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = "_____Product_ini" /* IOIni.framework */; };
 		DEFBEA951D620F77008BA2D8 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DE8F5DF21D2A4A9400BE7C35 /* Foundation.framework */; };
 		DEFBEA961D620F77008BA2D8 /* IORunnerExtension.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DE9F8EFC1D353BFB006F9B9D /* IORunnerExtension.framework */; };
 		DEFBEAA31D620FA1008BA2D8 /* BouncyHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEFBEA9E1D620F80008BA2D8 /* BouncyHandler.swift */; };
@@ -110,31 +84,14 @@
 			remoteGlobalIDString = DE9F8EFB1D353BFB006F9B9D;
 			remoteInfo = ProcessCheckerExtension;
 		};
-		DEA356CB1D34D69600BE6E8E /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = __RootObject_ /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = "______Target_ini";
-			remoteInfo = ini;
-		};
-		DEC3E5C11D357C2400FB1662 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = __RootObject_ /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = DEC3E5AB1D3579CA00FB1662;
-			remoteInfo = CNCURSES;
-		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
 		DE0499341D6C1FBE009C1C44 /* Update.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Update.h; path = IORunnerInstaller/Update.h; sourceTree = SOURCE_ROOT; };
-		DE0EBB7E1D3896BC0036B004 /* ModulesWidget.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ModulesWidget.swift; path = IOGUI/ModulesWidget.swift; sourceTree = "<group>"; };
-		DE1338DF1D3597D6002E109B /* IOGUI-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "IOGUI-Bridging-Header.h"; path = "IOGUI/IOGUI-Bridging-Header.h"; sourceTree = "<group>"; };
 		DE1AEF971D7ADDCD005821CA /* libBashScriptHandler.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libBashScriptHandler.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
 		DE1B36E01D5F0CCB00D234A6 /* InstallConfig.s */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.asm; name = InstallConfig.s; path = IORunnerInstaller/InstallConfig.s; sourceTree = SOURCE_ROOT; };
 		DE1B36E21D5F296600D234A6 /* IOAssets.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = IOAssets.h; path = IORunnerInstaller/IOAssets.h; sourceTree = SOURCE_ROOT; };
 		DE2177111D3D0A4B000C21B1 /* IORunnerInstaller */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = IORunnerInstaller; sourceTree = BUILT_PRODUCTS_DIR; };
-		DE21771B1D3D0D4B000C21B1 /* BackgroundWidget.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = BackgroundWidget.swift; path = IOGUI/BackgroundWidget.swift; sourceTree = "<group>"; };
 		DE25C6091D6C65780013B2C8 /* Deploy.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; name = Deploy.sh; path = Travis/Deploy.sh; sourceTree = "<group>"; };
 		DE28D8501D61CB2200C357DA /* Config.ini */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Config.ini; path = Extensions/TestHandler/Config.ini; sourceTree = "<group>"; };
 		DE28D8511D61CB2200C357DA /* Makefile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.make; name = Makefile; path = Extensions/TestHandler/Makefile; sourceTree = "<group>"; };
@@ -160,11 +117,9 @@
 		DE2ECF3E1D51D25B00129548 /* IOStringHelper.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = IOStringHelper.c; path = IORunnerInstaller/IOStringHelper.c; sourceTree = SOURCE_ROOT; };
 		DE2ECF3F1D51D25B00129548 /* IOStringHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = IOStringHelper.h; path = IORunnerInstaller/IOStringHelper.h; sourceTree = SOURCE_ROOT; };
 		DE3214261D7059E40099CDAF /* DownloadDocker.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; name = DownloadDocker.sh; path = Travis/DownloadDocker.sh; sourceTree = "<group>"; };
-		DE3379571D36266000D2D6F2 /* MenuWidget.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MenuWidget.swift; path = IOGUI/MenuWidget.swift; sourceTree = "<group>"; };
-		DE39C4371D37A2F300A8C020 /* AppInfoWidget.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AppInfoWidget.swift; path = IOGUI/AppInfoWidget.swift; sourceTree = "<group>"; };
 		DE412D961D797FBC009B29BB /* IORunnerUpdater.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = IORunnerUpdater.h; path = IORunnerInstaller/IORunnerUpdater.h; sourceTree = SOURCE_ROOT; };
 		DE412D971D7980DF009B29BB /* IORunnerUpdater.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = IORunnerUpdater.c; path = IORunnerInstaller/IORunnerUpdater.c; sourceTree = SOURCE_ROOT; };
-		DE43E63A1D391FC000886A0B /* PopupWidget.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PopupWidget.swift; path = IOGUI/PopupWidget.swift; sourceTree = "<group>"; };
+		DE516DBB1D7F0140004979D5 /* PackagesUpdater.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; name = PackagesUpdater.sh; path = Travis/PackagesUpdater.sh; sourceTree = "<group>"; };
 		DE5BC2231D6C2DD6002AA7A3 /* CreateExtension.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = CreateExtension.sh; sourceTree = "<group>"; };
 		DE5BC2251D6C2DE1002AA7A3 /* CreateExtensionConfigs.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = CreateExtensionConfigs.sh; sourceTree = "<group>"; };
 		DE5BC2261D6C2ED8002AA7A3 /* CreateConstantsFile.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = CreateConstantsFile.sh; sourceTree = "<group>"; };
@@ -174,36 +129,25 @@
 		DE7CD3831D7AAE0800630119 /* BashScriptHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BashScriptHandler.swift; sourceTree = "<group>"; };
 		DE7CD3841D7AAE0800630119 /* Config.ini */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Config.ini; sourceTree = "<group>"; };
 		DE7CD3851D7AAE0800630119 /* Makefile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
-		DE7D5BB21D427B7F00888821 /* Error.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Error.swift; path = IOIni/Error.swift; sourceTree = "<group>"; };
-		DE7D5BB31D427B7F00888821 /* Makefile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.make; name = Makefile; path = IOIni/Makefile; sourceTree = "<group>"; };
-		DE7D5BB41D427B7F00888821 /* module.modulemap */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = "sourcecode.module-map"; name = module.modulemap; path = IOIni/module.modulemap; sourceTree = "<group>"; };
-		DE7D5BB51D427B7F00888821 /* parseINI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = parseINI.swift; path = IOIni/parseINI.swift; sourceTree = "<group>"; };
 		DE7D5BB91D4280D000888821 /* AppHandlers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AppHandlers.swift; path = IORunnerExtension/AppHandlers.swift; sourceTree = SOURCE_ROOT; };
 		DE7D5BBA1D4280D000888821 /* Logger.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Logger.swift; path = IORunnerExtension/Logger.swift; sourceTree = SOURCE_ROOT; };
 		DE7D5BBB1D4280D000888821 /* Makefile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.make; name = Makefile; path = IORunnerExtension/Makefile; sourceTree = SOURCE_ROOT; };
 		DE7D5BBC1D4280D000888821 /* module.modulemap */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = "sourcecode.module-map"; name = module.modulemap; path = IORunnerExtension/module.modulemap; sourceTree = SOURCE_ROOT; };
-		DE7D5BC21D42854200888821 /* Makefile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.make; name = Makefile; path = IOGUI/Makefile; sourceTree = "<group>"; };
-		DE7D5BC31D42854200888821 /* module.modulemap */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = "sourcecode.module-map"; name = module.modulemap; path = IOGUI/module.modulemap; sourceTree = "<group>"; };
-		DE8EC34A1D3D239F00C4F522 /* InputPopupWidget.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = InputPopupWidget.swift; path = IOGUI/InputPopupWidget.swift; sourceTree = "<group>"; };
+		DE8F5CE11D7EB7D30059F017 /* IOIni.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOIni.framework; path = DerivedData/Build/Products/Release/IOIni.framework; sourceTree = "<group>"; };
 		DE8F5DF21D2A4A9400BE7C35 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		DE8F83031D6989C500456BB5 /* Build.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; name = Build.sh; path = Travis/Build.sh; sourceTree = "<group>"; };
 		DE8F83041D698EC300456BB5 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		DE9F8EFC1D353BFB006F9B9D /* IORunnerExtension.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = IORunnerExtension.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		DEA356EC1D34EFB600BE6E8E /* libTestHandler.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libTestHandler.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
-		DEB6EC611D376F2E007A1E30 /* TitleAndFooterWidget.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TitleAndFooterWidget.swift; path = IOGUI/TitleAndFooterWidget.swift; sourceTree = "<group>"; };
 		DEBCAE491D5A160900224026 /* String.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = String.playground; sourceTree = "<group>"; };
 		DEC14BF11D5BC42D00F03DCF /* Makefile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
 		DEC14BF21D5BC42D00F03DCF /* LICENSE */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
-		DEC3E5AC1D3579CA00FB1662 /* IOGUI.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = IOGUI.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		DEC3E5CC1D357FA500FB1662 /* GUITypes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = GUITypes.swift; path = IOGUI/GUITypes.swift; sourceTree = "<group>"; };
-		DED677191D5B50D200B6F836 /* CursesHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CursesHelper.swift; path = IOGUI/CursesHelper.swift; sourceTree = "<group>"; };
 		DEE47AFC1D3A6A1100D55F92 /* TestHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TestHandler.swift; path = Extensions/TestHandler/TestHandler.swift; sourceTree = "<group>"; };
 		DEEC71691D68F33C0009D3E4 /* Config.ini */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Config.ini; sourceTree = "<group>"; };
 		DEEC716A1D68F33C0009D3E4 /* Makefile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
 		DEEC716B1D68F33C0009D3E4 /* MysqlHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MysqlHandler.swift; sourceTree = "<group>"; };
 		DEEC717A1D68F3460009D3E4 /* libMysqlHandler.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libMysqlHandler.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
 		DEEC717C1D6902AD0009D3E4 /* .travis.yml */ = {isa = PBXFileReference; lastKnownFileType = text; path = .travis.yml; sourceTree = "<group>"; };
-		DEEC717E1D6909530009D3E4 /* BeforeInstall.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; name = BeforeInstall.sh; path = Travis/BeforeInstall.sh; sourceTree = "<group>"; };
 		DEED6B441D5E73B20030CC1E /* InstallData.s */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.asm; name = InstallData.s; path = IORunnerInstaller/InstallData.s; sourceTree = SOURCE_ROOT; };
 		DEFBEA031D61D0A5008BA2D8 /* Config.ini */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Config.ini; sourceTree = "<group>"; };
 		DEFBEA041D61D0A5008BA2D8 /* Makefile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
@@ -235,7 +179,6 @@
 		DEFBEA9F1D620F80008BA2D8 /* Config.ini */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Config.ini; sourceTree = "<group>"; };
 		DEFBEAA01D620F80008BA2D8 /* Makefile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
 		"_____Product_BouncyProcessChecker" /* IORunner */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; path = IORunner; sourceTree = BUILT_PRODUCTS_DIR; };
-		"_____Product_ini" /* IOIni.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = IOIni.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -243,7 +186,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DE1AEF8F1D7ADDCD005821CA /* IOIni.framework in Frameworks */,
 				DE1AEF901D7ADDCD005821CA /* Foundation.framework in Frameworks */,
 				DE1AEF911D7ADDCD005821CA /* IORunnerExtension.framework in Frameworks */,
 			);
@@ -260,7 +202,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DE3D9A1F1D3964040047785B /* IOIni.framework in Frameworks */,
 				DE9F8F151D353C23006F9B9D /* Foundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -269,17 +210,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DEE47AFF1D3A7D8000D55F92 /* IOIni.framework in Frameworks */,
 				DE892F261D3554F2000EB9D9 /* Foundation.framework in Frameworks */,
 				DE892F251D3554E9000EB9D9 /* IORunnerExtension.framework in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		DEC3E5A81D3579CA00FB1662 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				DE1338D61D358581002E109B /* Foundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -287,7 +219,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DEEC71721D68F3460009D3E4 /* IOIni.framework in Frameworks */,
 				DEEC71731D68F3460009D3E4 /* Foundation.framework in Frameworks */,
 				DEEC71741D68F3460009D3E4 /* IORunnerExtension.framework in Frameworks */,
 			);
@@ -297,7 +228,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DEFBEA0C1D61D0BA008BA2D8 /* IOIni.framework in Frameworks */,
 				DEFBEA0D1D61D0BA008BA2D8 /* Foundation.framework in Frameworks */,
 				DEFBEA0E1D61D0BA008BA2D8 /* IORunnerExtension.framework in Frameworks */,
 			);
@@ -307,7 +237,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DEFBEA221D61E802008BA2D8 /* IOIni.framework in Frameworks */,
 				DEFBEA231D61E802008BA2D8 /* Foundation.framework in Frameworks */,
 				DEFBEA241D61E802008BA2D8 /* IORunnerExtension.framework in Frameworks */,
 			);
@@ -317,7 +246,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DEFBEA361D61FA4D008BA2D8 /* IOIni.framework in Frameworks */,
 				DEFBEA371D61FA4D008BA2D8 /* Foundation.framework in Frameworks */,
 				DEFBEA381D61FA4D008BA2D8 /* IORunnerExtension.framework in Frameworks */,
 			);
@@ -327,7 +255,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DEFBEA4A1D61FBC5008BA2D8 /* IOIni.framework in Frameworks */,
 				DEFBEA4B1D61FBC5008BA2D8 /* Foundation.framework in Frameworks */,
 				DEFBEA4C1D61FBC5008BA2D8 /* IORunnerExtension.framework in Frameworks */,
 			);
@@ -337,7 +264,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DEFBEA581D61FCE4008BA2D8 /* IOIni.framework in Frameworks */,
 				DEFBEA591D61FCE4008BA2D8 /* Foundation.framework in Frameworks */,
 				DEFBEA5A1D61FCE4008BA2D8 /* IORunnerExtension.framework in Frameworks */,
 			);
@@ -347,7 +273,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DEFBEA801D620446008BA2D8 /* IOIni.framework in Frameworks */,
 				DEFBEA811D620446008BA2D8 /* Foundation.framework in Frameworks */,
 				DEFBEA821D620446008BA2D8 /* IORunnerExtension.framework in Frameworks */,
 			);
@@ -357,7 +282,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DEFBEA941D620F77008BA2D8 /* IOIni.framework in Frameworks */,
 				DEFBEA951D620F77008BA2D8 /* Foundation.framework in Frameworks */,
 				DEFBEA961D620F77008BA2D8 /* IORunnerExtension.framework in Frameworks */,
 			);
@@ -367,18 +291,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 0;
 			files = (
-				DEC3E5C01D357C2000FB1662 /* IOGUI.framework in Frameworks */,
+				DE8F5CE21D7EB7D30059F017 /* IOIni.framework in Frameworks */,
 				DE9F8F181D353C37006F9B9D /* IORunnerExtension.framework in Frameworks */,
 				DE8F5DF31D2A4A9400BE7C35 /* Foundation.framework in Frameworks */,
-				DEA356CD1D34D69B00BE6E8E /* IOIni.framework in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		"___LinkPhase_ini" /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 0;
-			files = (
-				DEF667111D3A4EB700A56CA2 /* Foundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -429,17 +344,6 @@
 			path = IOProcessCheckerInstaller;
 			sourceTree = "<group>";
 		};
-		DE43E6331D391FA100886A0B /* IOIni */ = {
-			isa = PBXGroup;
-			children = (
-				DE7D5BB31D427B7F00888821 /* Makefile */,
-				DE7D5BB41D427B7F00888821 /* module.modulemap */,
-				DE7D5BB21D427B7F00888821 /* Error.swift */,
-				DE7D5BB51D427B7F00888821 /* parseINI.swift */,
-			);
-			name = IOIni;
-			sourceTree = "<group>";
-		};
 		DE5BC2221D6C2DD6002AA7A3 /* Bin */ = {
 			isa = PBXGroup;
 			children = (
@@ -471,6 +375,7 @@
 		DE8F5DF11D2A4A9400BE7C35 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				DE8F5CE11D7EB7D30059F017 /* IOIni.framework */,
 				DE8F5DF21D2A4A9400BE7C35 /* Foundation.framework */,
 			);
 			name = Frameworks;
@@ -487,25 +392,6 @@
 			);
 			name = IORunnerExtension;
 			path = ProcessCheckerExtension;
-			sourceTree = "<group>";
-		};
-		DEC3E5CB1D357F9200FB1662 /* IOGUI */ = {
-			isa = PBXGroup;
-			children = (
-				DE7D5BC21D42854200888821 /* Makefile */,
-				DE7D5BC31D42854200888821 /* module.modulemap */,
-				DE1338DF1D3597D6002E109B /* IOGUI-Bridging-Header.h */,
-				DEC3E5CC1D357FA500FB1662 /* GUITypes.swift */,
-				DE3379571D36266000D2D6F2 /* MenuWidget.swift */,
-				DEB6EC611D376F2E007A1E30 /* TitleAndFooterWidget.swift */,
-				DE39C4371D37A2F300A8C020 /* AppInfoWidget.swift */,
-				DE0EBB7E1D3896BC0036B004 /* ModulesWidget.swift */,
-				DE43E63A1D391FC000886A0B /* PopupWidget.swift */,
-				DE21771B1D3D0D4B000C21B1 /* BackgroundWidget.swift */,
-				DE8EC34A1D3D239F00C4F522 /* InputPopupWidget.swift */,
-				DED677191D5B50D200B6F836 /* CursesHelper.swift */,
-			);
-			name = IOGUI;
 			sourceTree = "<group>";
 		};
 		DEE47AFA1D3A69F700D55F92 /* Extensions */ = {
@@ -549,10 +435,10 @@
 		DEEC717D1D6909350009D3E4 /* Travis */ = {
 			isa = PBXGroup;
 			children = (
-				DEEC717E1D6909530009D3E4 /* BeforeInstall.sh */,
 				DE8F83031D6989C500456BB5 /* Build.sh */,
 				DE25C6091D6C65780013B2C8 /* Deploy.sh */,
 				DE3214261D7059E40099CDAF /* DownloadDocker.sh */,
+				DE516DBB1D7F0140004979D5 /* PackagesUpdater.sh */,
 			);
 			name = Travis;
 			sourceTree = "<group>";
@@ -647,8 +533,6 @@
 				"_____Configs_" /* Configs */,
 				"_____Sources_" /* Sources */,
 				DE9F8EFD1D353BFB006F9B9D /* IORunnerExtension */,
-				DEC3E5CB1D357F9200FB1662 /* IOGUI */,
-				DE43E6331D391FA100886A0B /* IOIni */,
 				DEE47AFA1D3A69F700D55F92 /* Extensions */,
 				DE2177121D3D0A4B000C21B1 /* IORunnerInstaller */,
 				"____Products_" /* Products */,
@@ -661,11 +545,9 @@
 		"____Products_" /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				"_____Product_ini" /* IOIni.framework */,
 				"_____Product_BouncyProcessChecker" /* IORunner */,
 				DEA356EC1D34EFB600BE6E8E /* libTestHandler.dylib */,
 				DE9F8EFC1D353BFB006F9B9D /* IORunnerExtension.framework */,
-				DEC3E5AC1D3579CA00FB1662 /* IOGUI.framework */,
 				DE2177111D3D0A4B000C21B1 /* IORunnerInstaller */,
 				DEFBEA141D61D0BA008BA2D8 /* libNginxHandler.dylib */,
 				DEFBEA2A1D61E802008BA2D8 /* libPHPFastCGIHandler.dylib */,
@@ -714,13 +596,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		DEA356EA1D34EFB600BE6E8E /* Headers */ = {
-			isa = PBXHeadersBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		DEC3E5A91D3579CA00FB1662 /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -777,13 +652,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		DEFBEA971D620F77008BA2D8 /* Headers */ = {
-			isa = PBXHeadersBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		DEFE3EBF1D683743007D73E8 /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -863,23 +731,6 @@
 			productName = TestHandler;
 			productReference = DEA356EC1D34EFB600BE6E8E /* libTestHandler.dylib */;
 			productType = "com.apple.product-type.library.dynamic";
-		};
-		DEC3E5AB1D3579CA00FB1662 /* IOGUI */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = DEC3E5B11D3579CA00FB1662 /* Build configuration list for PBXNativeTarget "IOGUI" */;
-			buildPhases = (
-				DEC3E5A71D3579CA00FB1662 /* Sources */,
-				DEC3E5A81D3579CA00FB1662 /* Frameworks */,
-				DEC3E5A91D3579CA00FB1662 /* Headers */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			name = IOGUI;
-			productName = CNCURSES;
-			productReference = DEC3E5AC1D3579CA00FB1662 /* IOGUI.framework */;
-			productType = "com.apple.product-type.framework";
 		};
 		DEEC716E1D68F3460009D3E4 /* MysqlHandler */ = {
 			isa = PBXNativeTarget;
@@ -1036,31 +887,12 @@
 			buildRules = (
 			);
 			dependencies = (
-				DEA356CC1D34D69600BE6E8E /* PBXTargetDependency */,
 				DE9F8F171D353C33006F9B9D /* PBXTargetDependency */,
-				DEC3E5C21D357C2400FB1662 /* PBXTargetDependency */,
 			);
 			name = IORunner;
 			productName = BouncyProcessChecker;
 			productReference = "_____Product_BouncyProcessChecker" /* IORunner */;
 			productType = "com.apple.product-type.tool";
-		};
-		"______Target_ini" /* IOIni */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = "_______Confs_ini" /* Build configuration list for PBXNativeTarget "IOIni" */;
-			buildPhases = (
-				CompilePhase_ini /* Sources */,
-				"___LinkPhase_ini" /* Frameworks */,
-				DEFE3EBF1D683743007D73E8 /* Headers */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			name = IOIni;
-			productName = ini;
-			productReference = "_____Product_ini" /* IOIni.framework */;
-			productType = "com.apple.product-type.framework";
 		};
 /* End PBXNativeTarget section */
 
@@ -1089,16 +921,6 @@
 						DevelopmentTeamName = "ALTEK BILGI TEKNOLOJILERI DANISMANLIK VE DIS TICARET A S";
 						ProvisioningStyle = Automatic;
 					};
-					DEC3E5AB1D3579CA00FB1662 = {
-						CreatedOnToolsVersion = 8.0;
-						DevelopmentTeam = 84AJTB523T;
-						DevelopmentTeamName = "ALTEK BILGI TEKNOLOJILERI DANISMANLIK VE DIS TICARET A S";
-						LastSwiftMigration = 0800;
-						ProvisioningStyle = Automatic;
-					};
-					"______Target_ini" = {
-						LastSwiftMigration = 0800;
-					};
 				};
 			};
 			buildConfigurationList = "___RootConfs_" /* Build configuration list for PBXProject "IORunner" */;
@@ -1113,10 +935,8 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				"______Target_ini" /* IOIni */,
 				"______Target_BouncyProcessChecker" /* IORunner */,
 				DE9F8EFB1D353BFB006F9B9D /* IORunnerExtension */,
-				DEC3E5AB1D3579CA00FB1662 /* IOGUI */,
 				DE2177101D3D0A4B000C21B1 /* IORunnerInstaller */,
 				DEA356EB1D34EFB600BE6E8E /* TestHandler */,
 				DEFBEA081D61D0BA008BA2D8 /* NginxHandler */,
@@ -1302,16 +1122,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		CompilePhase_ini /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 0;
-			files = (
-				DE7D5BB81D427B7F00888821 /* parseINI.swift in Sources */,
-				DE7CD3871D7AAE0800630119 /* Makefile in Sources */,
-				DE7D5BB61D427B7F00888821 /* Error.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		DE1AEF8C1D7ADDCD005821CA /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -1349,22 +1159,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				DEE47AFE1D3A6A1500D55F92 /* TestHandler.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		DEC3E5A71D3579CA00FB1662 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				DEB8433D1D452BDA00E1AE5B /* MenuWidget.swift in Sources */,
-				DEB843411D4530CA00E1AE5B /* InputPopupWidget.swift in Sources */,
-				DEB8433F1D452EC600E1AE5B /* ModulesWidget.swift in Sources */,
-				DE1338E21D359886002E109B /* GUITypes.swift in Sources */,
-				DEB8433C1D452A4600E1AE5B /* AppInfoWidget.swift in Sources */,
-				DEB8433E1D452DCA00E1AE5B /* PopupWidget.swift in Sources */,
-				DEB843401D45309F00E1AE5B /* BackgroundWidget.swift in Sources */,
-				DED6771A1D5B50D200B6F836 /* CursesHelper.swift in Sources */,
-				DE7D5BC51D42860900888821 /* TitleAndFooterWidget.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1449,16 +1243,6 @@
 			isa = PBXTargetDependency;
 			target = DE9F8EFB1D353BFB006F9B9D /* IORunnerExtension */;
 			targetProxy = DE9F8F161D353C33006F9B9D /* PBXContainerItemProxy */;
-		};
-		DEA356CC1D34D69600BE6E8E /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = "______Target_ini" /* IOIni */;
-			targetProxy = DEA356CB1D34D69600BE6E8E /* PBXContainerItemProxy */;
-		};
-		DEC3E5C21D357C2400FB1662 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = DEC3E5AB1D3579CA00FB1662 /* IOGUI */;
-			targetProxy = DEC3E5C11D357C2400FB1662 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -1814,29 +1598,6 @@
 			};
 			name = Debug;
 		};
-		DEA356E31D34EEFE00BE6E8E /* Debug */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = DE5ECB631D423F3600C06781 /* Project.xcconfig */;
-			buildSettings = {
-				CLANG_ENABLE_MODULES = YES;
-				DEFINES_MODULE = YES;
-				ENABLE_TESTABILITY = YES;
-				HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/IORunnerInstaller";
-				INFOPLIST_FILE = "";
-				LD_RUNPATH_SEARCH_PATHS = "$(TOOLCHAIN_DIR)/usr/lib/swift/macosx";
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/IORunnerInstaller",
-				);
-				OTHER_LDFLAGS = "$(inherited)";
-				OTHER_SWIFT_FLAGS = "$(inherited)";
-				PRODUCT_BUNDLE_IDENTIFIER = com.ilkerozcan.IOIni;
-				PRODUCT_MODULE_NAME = "$(TARGET_NAME:c99extidentifier)";
-				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
-				SWIFT_VERSION = 3.0;
-			};
-			name = Debug;
-		};
 		DEA356E41D34EEFE00BE6E8E /* Debug */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = DE5ECB631D423F3600C06781 /* Project.xcconfig */;
@@ -1846,6 +1607,10 @@
 				COPY_HEADERS_RUN_UNIFDEF = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEFINES_MODULE = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/DerivedData/Build/Products/Release",
+				);
 				GCC_OPTIMIZATION_LEVEL = 0;
 				LD_GENERATE_MAP_FILE = YES;
 				LD_RUNPATH_SEARCH_PATHS = "$(TOOLCHAIN_DIR)/usr/lib/swift/macosx @executable_path";
@@ -1965,151 +1730,6 @@
 				SWIFT_INCLUDE_PATHS = "";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 3.0;
-			};
-			name = Debug;
-		};
-		DEC3E5B21D3579CA00FB1662 /* Release */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = DE5ECB631D423F3600C06781 /* Project.xcconfig */;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES = YES;
-				CLANG_ANALYZER_NONNULL = YES;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
-				CLANG_CXX_LIBRARY = "libc++";
-				CLANG_ENABLE_MODULES = YES;
-				CLANG_ENABLE_OBJC_ARC = YES;
-				CLANG_WARN_BOOL_CONVERSION = YES;
-				CLANG_WARN_CONSTANT_CONVERSION = YES;
-				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
-				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
-				CLANG_WARN_EMPTY_BODY = YES;
-				CLANG_WARN_ENUM_CONVERSION = YES;
-				CLANG_WARN_INT_CONVERSION = YES;
-				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
-				CLANG_WARN_UNREACHABLE_CODE = YES;
-				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CODE_SIGN_IDENTITY = "";
-				COMBINE_HIDPI_IMAGES = YES;
-				COPY_HEADERS_RUN_UNIFDEF = NO;
-				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 1;
-				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				DEFINES_MODULE = YES;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				ENABLE_NS_ASSERTIONS = NO;
-				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				FRAMEWORK_VERSION = A;
-				GCC_C_LANGUAGE_STANDARD = gnu99;
-				GCC_NO_COMMON_BLOCKS = YES;
-				GCC_PREPROCESSOR_DEFINITIONS = "Darwin=1";
-				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
-				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
-				GCC_WARN_UNDECLARED_SELECTOR = YES;
-				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
-				GCC_WARN_UNUSED_FUNCTION = YES;
-				GCC_WARN_UNUSED_VARIABLE = YES;
-				INFOPLIST_FILE = "";
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
-				MACOSX_DEPLOYMENT_TARGET = 10.10;
-				MODULEMAP_FILE = "";
-				MODULEMAP_PRIVATE_FILE = "";
-				MTL_ENABLE_DEBUG_INFO = NO;
-				OTHER_LDFLAGS = "-lncurses";
-				PRECOMPS_INCLUDE_HEADERS_FROM_BUILT_PRODUCTS_DIR = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = com.ilkerozcan.IOGUI;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = "";
-				SKIP_INSTALL = YES;
-				SUPPORTED_PLATFORMS = macosx;
-				SWIFT_INCLUDE_PATHS = "";
-				SWIFT_INSTALL_OBJC_HEADER = YES;
-				SWIFT_OBJC_BRIDGING_HEADER = "IOGUI/IOGUI-Bridging-Header.h";
-				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
-				SWIFT_VERSION = 3.0;
-				USE_HEADERMAP = NO;
-				VERSIONING_SYSTEM = "apple-generic";
-				VERSION_INFO_PREFIX = "";
-			};
-			name = Release;
-		};
-		DEC3E5B31D3579CA00FB1662 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES = YES;
-				CLANG_ANALYZER_NONNULL = YES;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
-				CLANG_CXX_LIBRARY = "libc++";
-				CLANG_ENABLE_MODULES = YES;
-				CLANG_ENABLE_OBJC_ARC = YES;
-				CLANG_WARN_BOOL_CONVERSION = YES;
-				CLANG_WARN_CONSTANT_CONVERSION = YES;
-				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
-				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
-				CLANG_WARN_EMPTY_BODY = YES;
-				CLANG_WARN_ENUM_CONVERSION = YES;
-				CLANG_WARN_INT_CONVERSION = YES;
-				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
-				CLANG_WARN_UNREACHABLE_CODE = YES;
-				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CODE_SIGN_IDENTITY = "";
-				COMBINE_HIDPI_IMAGES = YES;
-				COPY_HEADERS_RUN_UNIFDEF = NO;
-				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 1;
-				DEBUG_INFORMATION_FORMAT = dwarf;
-				DEFINES_MODULE = YES;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				ENABLE_TESTABILITY = YES;
-				FRAMEWORK_VERSION = A;
-				GCC_C_LANGUAGE_STANDARD = gnu99;
-				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_NO_COMMON_BLOCKS = YES;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"DEBUG=1",
-					"$(inherited)",
-					"Darwin=1",
-				);
-				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
-				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
-				GCC_WARN_UNDECLARED_SELECTOR = YES;
-				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
-				GCC_WARN_UNUSED_FUNCTION = YES;
-				GCC_WARN_UNUSED_VARIABLE = YES;
-				INFOPLIST_FILE = "";
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
-				MACOSX_DEPLOYMENT_TARGET = 10.10;
-				MODULEMAP_FILE = "";
-				MODULEMAP_PRIVATE_FILE = "";
-				MTL_ENABLE_DEBUG_INFO = YES;
-				ONLY_ACTIVE_ARCH = NO;
-				OTHER_LDFLAGS = "-lncurses";
-				PRECOMPS_INCLUDE_HEADERS_FROM_BUILT_PRODUCTS_DIR = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = com.ilkerozcan.IOGUI;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = "";
-				SKIP_INSTALL = YES;
-				SUPPORTED_PLATFORMS = macosx;
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
-				SWIFT_INCLUDE_PATHS = "";
-				SWIFT_INSTALL_OBJC_HEADER = YES;
-				SWIFT_OBJC_BRIDGING_HEADER = "IOGUI/IOGUI-Bridging-Header.h";
-				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 3.0;
-				USE_HEADERMAP = NO;
-				VERSIONING_SYSTEM = "apple-generic";
-				VERSION_INFO_PREFIX = "";
 			};
 			name = Debug;
 		};
@@ -2954,6 +2574,10 @@
 				COPY_HEADERS_RUN_UNIFDEF = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEFINES_MODULE = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/DerivedData/Build/Products/Release",
+				);
 				GCC_OPTIMIZATION_LEVEL = s;
 				LD_GENERATE_MAP_FILE = YES;
 				LD_RUNPATH_SEARCH_PATHS = "$(TOOLCHAIN_DIR)/usr/lib/swift/macosx @executable_path";
@@ -2969,29 +2593,6 @@
 				SWIFT_VERSION = 3.0;
 				USE_HEADERMAP = NO;
 				VALID_ARCHS = "i386 x86_64";
-			};
-			name = Release;
-		};
-		_ReleaseConf_ini /* Release */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = DE5ECB631D423F3600C06781 /* Project.xcconfig */;
-			buildSettings = {
-				CLANG_ENABLE_MODULES = YES;
-				DEFINES_MODULE = YES;
-				ENABLE_TESTABILITY = YES;
-				HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/IORunnerInstaller";
-				INFOPLIST_FILE = "";
-				LD_RUNPATH_SEARCH_PATHS = "$(TOOLCHAIN_DIR)/usr/lib/swift/macosx";
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/IORunnerInstaller",
-				);
-				OTHER_LDFLAGS = "$(inherited)";
-				OTHER_SWIFT_FLAGS = "$(inherited)";
-				PRODUCT_BUNDLE_IDENTIFIER = com.ilkerozcan.IOIni;
-				PRODUCT_MODULE_NAME = "$(TARGET_NAME:c99extidentifier)";
-				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
-				SWIFT_VERSION = 3.0;
 			};
 			name = Release;
 		};
@@ -3039,15 +2640,6 @@
 			buildConfigurations = (
 				DEA356EE1D34EFB600BE6E8E /* Release */,
 				DEA356EF1D34EFB600BE6E8E /* Debug */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		DEC3E5B11D3579CA00FB1662 /* Build configuration list for PBXNativeTarget "IOGUI" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				DEC3E5B21D3579CA00FB1662 /* Release */,
-				DEC3E5B31D3579CA00FB1662 /* Debug */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -3138,15 +2730,6 @@
 			buildConfigurations = (
 				_ReleaseConf_BouncyProcessChecker /* Release */,
 				DEA356E41D34EEFE00BE6E8E /* Debug */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		"_______Confs_ini" /* Build configuration list for PBXNativeTarget "IOIni" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				_ReleaseConf_ini /* Release */,
-				DEA356E31D34EEFE00BE6E8E /* Debug */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

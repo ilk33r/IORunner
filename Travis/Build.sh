@@ -18,9 +18,10 @@ if [[ $TEST_BRANCH == $TRAVIS_BRANCH ]]; then
 			SWIFT_PATH='/usr/local/swift/bin'
 		fi
 
-		docker run -e "OS_RELEASE=${DOCKER_OS_RELEASE}" -e "PATH=${SWIFT_PATH}:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin" -e "TRAVIS_COMMIT=${TRAVIS_COMMIT}" -e "TRAVIS_IMAGE=${TRAVIS_IMAGE}" ilk3r/iorunner:${DOCKER_IMAGE} /bin/bash -c "cd /root/ilk33r/IORunner/; git reset --hard origin/master; git pull; make dist-clean; make dist; make deploy;"
+		docker run -e "OS_RELEASE=${DOCKER_OS_RELEASE}" -e "PATH=${SWIFT_PATH}:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin" -e "TRAVIS_COMMIT=${TRAVIS_COMMIT}" -e "TRAVIS_IMAGE=${TRAVIS_IMAGE}" ilk3r/iorunner:${DOCKER_IMAGE} /bin/bash -c "cd /root/ilk33r/IORunner/; git reset --hard origin/master; git pull; ./Travis/PackagesUpdater.sh; make dist-clean; make dist; make deploy;"
 
 	else
+		./Travis/PackagesUpdater.sh
 		make dist-clean
 		make dist
 		make deploy;
