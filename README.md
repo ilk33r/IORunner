@@ -18,6 +18,30 @@ All extensions have these methods.
 * --		
 * __forAsyncTask() -> Void__ calling from extension. This method working asynchronous.
 
+### Instructions
+
+* **Install dependencies**
+`:$ Travis/PackagesUpdater.sh`
+
+* **Build installer (Include IORunner and all extensions)**
+`:$ make dist`
+
+* **Build only IORunner**
+`:$ make`
+
+* **Build all extensions**
+`:$ make extensions`
+
+* **Clean project**
+`:$ make dist-clean`
+
+* **Generate extension skeleton**
+`:$ bin/CreateExtension.sh`
+
+* **For debug build**
+`:$ make dist BUILD=debug`
+
+
 ### Release Notes:
 
 #### V1.0.1
